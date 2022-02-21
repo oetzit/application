@@ -1,0 +1,34 @@
+{
+  "name": "oezi",
+  "version": "0.0.1",
+  "description": "Oetzi words - prototype",
+  "keywords": "",
+  "license": "",
+  "author": "Giovanni Moretti",
+  "homepage": ".",
+  "scripts": {
+    "build": "parcel build src/index.html --public-url ./",
+    "clean": "rm -rf ./node_modules/* && rm -rf ./node_modules/.bin && rm -rf ./node_modules/.yarn-integrity && rm -rf ./.cache && rm -rf ./dist",
+    "dev": "parcel src/index.html --open",
+    "start": "rm -rf dist && npm run build && npm run dev",
+    "deploy": "rm -rf dist && npm run build && rm -rf ../src/main/webapp/*.js && rm -rf ../src/main/webapp/*.css && rm -rf ../src/main/webapp/*.html && rm -rf ../src/main/webapp/assets && cp -r ./dist/* ../src/main/webapp/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.6.0"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "bootbox": "^5.5.2",
+    "eslint": "^8.1.0",
+    "phaser": "^3.55.2",
+    "bootstrap": "^4.4.0",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.0"
+  }
+}
