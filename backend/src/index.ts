@@ -46,6 +46,40 @@ server.route({
   },
 });
 
+server.route({
+  method: "POST",
+  url: "/CheckTranscription",
+  schema: {
+    body: {
+      type: "object",
+      properties: {
+        deltaTime: { type: "number" },
+        refData: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            image: { type: "string" },
+          },
+        },
+        transcription: { type: "string" },
+      },
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          hitTheTarget: { type: "boolean" },
+        },
+      },
+    },
+  },
+  handler: function (request, reply) {
+    reply.send({
+      hitTheTarget: true,
+    });
+  },
+});
+
 server.listen(process.env.PORT as string, "0.0.0.0", function (err, address) {
   if (err) {
     server.log.error(err);
