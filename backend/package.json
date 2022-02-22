@@ -1,0 +1,24 @@
+{
+  "name": "oetzi-backend",
+  "version": "0.0.1",
+  "description": "Ötzi game backend.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "watch": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "fastify": "^3.27.1",
+    "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "url": "https://gitlab.inf.unibz.it/commul/oetzi"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node"
+  ]
+}
