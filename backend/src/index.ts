@@ -1,7 +1,13 @@
 import fastify from "fastify";
+import fastifyCors from "fastify-cors";
 
 const server = fastify({
   logger: false,
+});
+
+server.register(fastifyCors, {
+  // TODO: use the correct origins
+  origin: "*",
 });
 
 server.get("/", function (request, reply) {

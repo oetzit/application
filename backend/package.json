@@ -18,7 +18,8 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
-    "fastify": "^3.27.1"
+    "fastify": "^3.27.1",
+    "fastify-cors": "^6.0.2"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
