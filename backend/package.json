@@ -20,6 +20,7 @@
   "dependencies": {
     "fastify": "^3.27.1",
     "fastify-cors": "^6.0.2",
+    "json-schema-to-ts": "^1.6.5",
     "knex": "^1.0.3"
   },
   "devDependencies": {

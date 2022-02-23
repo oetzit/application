@@ -1,6 +1,7 @@
 import fastify from "fastify";
 import fastifyCors from "fastify-cors";
 import { connection } from "./db";
+import { FromSchema } from "json-schema-to-ts";
 
 const server = fastify({
   logger: false,
@@ -51,11 +52,9 @@ server.route({
   },
 });
 
-server.route({
-  method: "POST",
-  url: "/CheckTranscription",
-  schema: {
-    body: {
+//=[ CheckTranscription ]=======================================================
+
+const CheckTranscriptionBodySchema = {
       type: "object",
       properties: {
         deltaTime: { type: "number" },
@@ -65,10 +64,18 @@ server.route({
             id: { type: "number" },
             image: { type: "string" },
           },
+      required: ["id", "image"],
         },
         transcription: { type: "string" },
       },
-    },
+  required: ["deltaTime", "refData", "transcription"],
+} as const;
+
+server.route<{ Body: FromSchema<typeof CheckTranscriptionBodySchema> }>({
+  method: "POST",
+  url: "/CheckTranscription",
+  schema: {
+    body: CheckTranscriptionBodySchema,
     response: {
       200: {
         type: "object",
