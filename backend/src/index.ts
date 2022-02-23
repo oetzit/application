@@ -4,7 +4,13 @@ import { connection } from "./db";
 import { FromSchema } from "json-schema-to-ts";
 
 const server = fastify({
-  logger: false,
+  logger: {
+    prettyPrint: {
+      // TODO: disable in prod
+      translateTime: "HH:MM:ss Z",
+      ignore: "pid,hostname",
+    },
+  },
 });
 
 server.register(fastifyCors, {
@@ -98,11 +104,4 @@ server.route<{ Body: FromSchema<typeof CheckTranscriptionBodySchema> }>({
   },
 });
 
-server.listen(process.env.PORT as string, "0.0.0.0", function (err, address) {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
-  console.log(`Your app is listening on ${address}`);
-  server.log.info(`server listening on ${address}`);
-});
+server.listen(process.env.PORT as string, "0.0.0.0");
