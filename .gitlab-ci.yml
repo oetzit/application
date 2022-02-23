@@ -1,0 +1,32 @@
+image: node:16-alpine
+
+stages:
+  - setup
+
+be-setup-job:
+  stage: setup
+  cache:
+    - key:
+        files:
+          - backend/package-lock.json
+      paths:
+        - backend/node_modules
+  script:
+    # TODO: drop python once we stop using sqlite3 in CI (soon, please)
+    - apk add --update python2 build-base
+    - cd backend
+    - npm install
+    - echo Success!
+
+fe-setup-job:
+  stage: setup
+  cache:
+    - key:
+        files:
+          - frontend/package-lock.json
+      paths:
+        - frontend/node_modules
+  script:
+    - cd frontend
+    - npm install
+    - echo Success!
