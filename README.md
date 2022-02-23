@@ -27,7 +27,7 @@ To spin it up for development,
 ```bash
 cd frontend
 npm install
-npm run start
+npm run serve
 ```
 
 Also, remember to
