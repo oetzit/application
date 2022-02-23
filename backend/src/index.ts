@@ -55,19 +55,19 @@ server.route({
 //=[ CheckTranscription ]=======================================================
 
 const CheckTranscriptionBodySchema = {
+  type: "object",
+  properties: {
+    deltaTime: { type: "number" },
+    refData: {
       type: "object",
       properties: {
-        deltaTime: { type: "number" },
-        refData: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            image: { type: "string" },
-          },
-      required: ["id", "image"],
-        },
-        transcription: { type: "string" },
+        id: { type: "number" },
+        image: { type: "string" },
       },
+      required: ["id", "image"],
+    },
+    transcription: { type: "string" },
+  },
   required: ["deltaTime", "refData", "transcription"],
 } as const;
 
