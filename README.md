@@ -13,7 +13,7 @@ cd backend
 npm install
 npm exec knex migrate:latest
 npm exec knex seed:run
-PORT=8080 npm run watch
+PORT=8080 npm run serve
 ```
 
 The webserver will be abailable at `http://localhost:8080`.

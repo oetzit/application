@@ -4,8 +4,7 @@
   "description": "Ötzi game backend.",
   "main": "src/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "watch": "nodemon src/index.ts",
+    "serve": "nodemon src/index.ts",
     "build": "tsc",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
