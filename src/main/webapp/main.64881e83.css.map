@@ -1,1 +1,0 @@
-{"version":3,"sources":["override.css"],"names":[],"mappings":"AAAA,gBACE,YACF","file":"main.64881e83.css","sourceRoot":"../src","sourcesContent":[".bootbox-cancel{\n  display: none;\n}\n"]}
