@@ -85,7 +85,13 @@ server.route<{ Body: FromSchema<typeof CheckTranscriptionBodySchema> }>({
       },
     },
   },
-  handler: function (request, reply) {
+  handler: async function (request, reply) {
+    // TODO: actually check the word
+    await connection.table("game_results").insert({
+      id_image: request.body.refData.id,
+      transcription: request.body.transcription,
+      gametime: request.body.deltaTime,
+    });
     reply.send({
       hitTheTarget: true,
     });
