@@ -1,5 +1,6 @@
 import fastify from "fastify";
 import fastifyCors from "fastify-cors";
+import { connection } from "./db";
 
 const server = fastify({
   logger: false,
@@ -37,11 +38,15 @@ server.route({
       },
     },
   },
-  handler: function (request, reply) {
+  handler: async function (request, reply) {
+    // TODO: skip images already used in current game
+    const image = await connection
+      .table("images")
+      .orderByRaw("RANDOM()")
+      .first();
     reply.send({
-      id: 0,
-      image:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAA3SURBVBhXYyAXeHh43AeDhIQEqBAEAIX+g8H379+hQhAAlwACqBAEVFRUQESnT58OFSIRMDAAABZDJ2qjC6hLAAAAAElFTkSuQmCC",
+      id: image.id,
+      image: image.image,
     });
   },
 });
