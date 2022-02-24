@@ -1,9 +1,31 @@
-image: node:16-alpine
+variables:
+  DOCKER_TLS_CERTDIR: "" # HACK: see https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
 
 stages:
+  - build
   - setup
 
+be-build-job:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
+  script:
+    - >
+      docker build
+      --rm --no-cache
+      --target production
+      --tag=$CI_REGISTRY_IMAGE/backend:${CI_COMMIT_SHA}
+      --tag=$CI_REGISTRY_IMAGE/backend:${CI_COMMIT_REF_NAME}
+      backend
+    - docker image push --all-tags $CI_REGISTRY_IMAGE/backend
+  only:
+    - main
+
 be-setup-job:
+  image: node:16-alpine
   stage: setup
   cache:
     - key:
@@ -19,6 +41,7 @@ be-setup-job:
     - echo Success!
 
 fe-setup-job:
+  image: node:16-alpine
   stage: setup
   cache:
     - key:
