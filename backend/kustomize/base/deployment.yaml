@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oetzi-webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oetzi-webserver
+  template:
+    metadata:
+      labels:
+        app: oetzi-webserver
+    spec:
+      containers:
+        - name: oetzi-webserver
+          # NOTE: use `minikube image load oetzi:latest` to push into container runtime
+          image: oetzi:latest
+          # NOTE: Never is useful only for locla testing in order to load image from cache
+          imagePullPolicy: Never
+          resources: {}
+          ports:
+            - name: http
+              containerPort: 80
+          command: ["npm", "run", "serve"]
+          env:
+            - name: PORT
+              value: "80"
+            - name: DATABASE_URL
+              value: postgres://db_user:db_pass@database/db_name
+

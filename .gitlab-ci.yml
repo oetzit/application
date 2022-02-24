@@ -3,9 +3,10 @@ variables:
 
 stages:
   - build
+  - deploy
   - setup
 
-be-build-job:
+.be-build-job:
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   stage: build
@@ -26,7 +27,33 @@ be-build-job:
   only:
     - main
 
-be-setup-job:
+be-deploy-job:
+  variables:
+    KUBECTL_VERSION: v1.8.10
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
+
+  stage: deploy
+  tags:
+    - commul
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
+    # NOTE: version is too ald and don't have sha256 available
+    #- wget https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl.sha256
+    # - echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
+    - mv kubectl /usr/bin/ && chmod +x /usr/bin/kubectl
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
+  script:
+    - kubectl version --client
+    - echo YAY!
+    - docker pull ${IMAGE_NAME}:main
+    #- kubectl --namespace kommul-dev set image deployment/merlin browser=${CONTAINER_IMAGE}:${CI_COMMIT_SHA}
+  only:
+    - main
+
+.be-setup-job:
   image: node:16-alpine
   stage: setup
   cache:
@@ -42,7 +69,7 @@ be-setup-job:
     - npm install
     - echo Success!
 
-fe-setup-job:
+.fe-setup-job:
   image: node:16-alpine
   stage: setup
   cache:
