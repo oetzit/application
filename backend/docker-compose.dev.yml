@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   webserver:
@@ -10,7 +10,22 @@ services:
       - ./src:/app/src
       - ./nodemon.json:/app/nodemon.json
     ports:
-      - '8080:8080'
+      - "8080:8080"
     environment:
       - PORT=8080
+      - DATABASE_URL=postgres://db_user:db_pass@database/db_name
     command: npm run serve
+  database:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=db_name
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=db_pass
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    # TODO: preserve db data; skipped rn as Win permissions are being annoying.
+    #volumes:
+    #  - ./postgres-data:/var/lib/postgresql/data

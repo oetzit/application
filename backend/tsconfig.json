@@ -13,7 +13,7 @@
 
     // Customization
     //"moduleResolution": "node",
-    "rootDir": "./src",
+    //"rootDir": "./src",
     "baseUrl": "./src",
     "outDir": "./dist"
   },
