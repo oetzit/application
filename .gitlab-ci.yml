@@ -6,6 +6,8 @@ stages:
   - setup
 
 be-build-job:
+  variables:
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   stage: build
   image: docker:latest
   services:
@@ -17,10 +19,10 @@ be-build-job:
       docker build
       --rm --no-cache
       --target production
-      --tag=$CI_REGISTRY_IMAGE/backend:${CI_COMMIT_SHA}
-      --tag=$CI_REGISTRY_IMAGE/backend:${CI_COMMIT_REF_NAME}
+      --tag=$IMAGE_NAME:${CI_COMMIT_SHA}
+      --tag=$IMAGE_NAME:${CI_COMMIT_REF_NAME}
       backend
-    - docker image push --all-tags $CI_REGISTRY_IMAGE/backend
+    - docker image push --all-tags $IMAGE_NAME
   only:
     - main
 
