@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oetzi-database
+spec:
+  selector:
+    matchLabels:
+      app: oetzi-database
+  template:
+    metadata:
+      labels:
+        app: oetzi-database
+    spec:
+      containers:
+        - name: oetzi-database
+          image: postgres:14-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: pg-data
+              mountPath: /var/lib/postgresql/data
+          env:
+            - name: POSTGRES_DB
+              value: db_name
+            - name: POSTGRES_USER
+              value: db_user
+            - name: POSTGRES_PASSWORD
+              value: db_pass
+          resources: {}
+      volumes:
+        - name: pg-data
+          persistentVolumeClaim:
+            claimName: pg-data-pvc

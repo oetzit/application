@@ -27,5 +27,5 @@ spec:
             - name: PORT
               value: "80"
             - name: DATABASE_URL
-              value: postgres://db_user:db_pass@database/db_name
+              value: postgres://db_user:db_pass@oetzi-database/db_name
 
