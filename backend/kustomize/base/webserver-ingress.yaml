@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: oetzi
+  name: ingress
 spec:
   rules:
     - host: oetzi.eurac
@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: oetzi-webserver
+                name: webserver
                 port:
                   name: http

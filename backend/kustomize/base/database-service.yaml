@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: oetzi-database
+  name: database
 spec:
   selector:
-    app: oetzi-database
+    component: database
   ports:
     - port: 5432
       targetPort: 5432
