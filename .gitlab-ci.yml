@@ -27,7 +27,7 @@ stages:
   only:
     - main
 
-be-deploy-job:
+.be-deploy-job:
   variables:
     KUBECTL_VERSION: v1.8.10
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
@@ -82,3 +82,40 @@ be-deploy-job:
     - cd frontend
     - npm install
     - echo Success!
+
+fe-deploy-job:
+  variables:
+    GLIBC_URL: https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk
+    BUTLER_URL: https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+    # NOTE: this key is a throwaway, we'll store one in secrets
+    BUTLER_API_KEY: 0UsKHAvtO2aXBJMPeR6bZHxSv9BRQ0zIvFPdFdRW
+  image: node:16-alpine
+  stage: deploy
+  cache:
+    - key:
+        files:
+          - frontend/package-lock.json
+      paths:
+        - frontend/node_modules
+  before_script:
+    - "#=[ install tools ]====================="
+    # NOTE: Alpine Linux stuff if linked with muslc. Butler is linked with glibc, and this causes an error -- see https://stackoverflow.com/a/66974607/6438061 for details. We need to install a compatibility layer: https://github.com/sgerrand/alpine-pkg-glibc#installing
+    - "#-[ install glibc ]---------------------"
+    - wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget -O glibc.apk $GLIBC_URL
+    - apk add glibc.apk
+    - rm glibc.apk
+    - "#-[ install unzip ]---------------------"
+    - apk add --no-cache unzip
+    - "#-[ install butler ]--------------------"
+    - wget -O butler.zip $BUTLER_URL
+    - unzip butler.zip *.so -d /usr/local/lib
+    - unzip butler.zip butler -d /usr/local/bin
+    - chmod +x /usr/local/bin/butler
+    - rm butler.zip
+    - butler -V
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+    - butler push dist paolobrasolin/oetzi:html5
