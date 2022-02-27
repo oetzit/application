@@ -1,18 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: database
+  name: deployment
 spec:
-  selector:
-    matchLabels:
-      component: database
   template:
-    metadata:
-      labels:
-        component: database
     spec:
       containers:
-        - name: database
+        - name: pg
           image: postgres:14-alpine
           ports:
             - containerPort: 5432
@@ -30,4 +24,4 @@ spec:
       volumes:
         - name: pgdata
           persistentVolumeClaim:
-            claimName: database-pvc
+            claimName: pvc

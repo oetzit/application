@@ -1,10 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: database
+  name: service
 spec:
-  selector:
-    component: database
   ports:
     - port: 5432
       targetPort: 5432

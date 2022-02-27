@@ -1,12 +1,8 @@
 kind: Kustomization
 resources:
-  - database-deployment.yaml
-  - database-pvc.yaml
-  - database-service.yaml
-  - webserver-deployment.yaml
-  - webserver-ingress.yaml
-  - webserver-service.yaml
+  - ./database
+  - ./webserver
 # namespace: kommul-dev
 namePrefix: oetzi-
 commonLabels:
-  app: oetzi
+  app.kubernetes.io/part-of: oetzi

@@ -1,19 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webserver
+  name: deployment
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      component: webserver
   template:
-    metadata:
-      labels:
-        component: webserver
     spec:
       containers:
-        - name: webserver
+        - name: oetzi
           # NOTE: use `minikube image load oetzi:latest` to push into container runtime
           image: oetzi:latest
           # NOTE: Never is useful only for locla testing in order to load image from cache
@@ -27,4 +21,4 @@ spec:
             - name: PORT
               value: "80"
             - name: DATABASE_URL
-              value: postgres://db_user:db_pass@oetzi-database/db_name
+              value: postgres://db_user:db_pass@oetzi-database-service/db_name
