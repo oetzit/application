@@ -1,0 +1,9 @@
+- op: replace
+  path: /metadata/annotations/nginx.ingress.kubernetes.io~1rewrite-target
+  value: /$2
+- op: replace
+  path: /spec/rules/0/host
+  value: minikube.localhost
+- op: replace
+  path: /spec/rules/0/http/paths/0/path
+  value: /oetzi(/|$)(.*)
