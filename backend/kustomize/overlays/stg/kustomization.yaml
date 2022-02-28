@@ -3,7 +3,7 @@ resources:
   - ../../base
 namespace: kommul-dev
 commonLabels:
-  eurac.edu/environment: dev
+  eurac.edu/environment: stg
   app.kubernetes.io/part-of: oetzi
   app.kubernetes.io/managed-by: kustomize
 patchesStrategicMerge:
