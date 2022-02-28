@@ -1,0 +1,17 @@
+kind: Kustomization
+resources:
+  - ../../base
+commonLabels:
+  environment: stg
+patchesStrategicMerge:
+  - database.deployment.yaml
+  - webserver.deployment.yaml
+secretGenerator:
+  # TODO: avoid using literals
+  - literals:
+      - username=db_user
+      - password=db_pass
+      - database=db_name
+      - url=postgres://db_user:db_pass@oetzi-database-service/db_name
+    name: oetzi-database-credentials
+    type: Opaque
