@@ -2,7 +2,8 @@ kind: Kustomization
 resources:
   - ../../base
 commonLabels:
-  environment: dev
+  eurac.edu/environment: dev
+  app.kubernetes.io/part-of: oetzi
   app.kubernetes.io/managed-by: kustomize
 patchesStrategicMerge:
   - database.deployment.yaml
