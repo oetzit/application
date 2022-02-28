@@ -4,10 +4,10 @@ metadata:
   name: ingress
 spec:
   rules:
-    - host: oetzi.eurac
+    - host: PLACEHOLER
       http:
         paths:
-          - path: /
+          - path: PLACEHOLDER
             pathType: Prefix
             backend:
               service:

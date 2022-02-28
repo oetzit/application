@@ -18,4 +18,3 @@ spec:
             - name: PORT
               value: "80"
             - name: DATABASE_URL
-              value: postgres://db_user:db_pass@oetzi-database-service/db_name

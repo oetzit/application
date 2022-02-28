@@ -15,11 +15,8 @@ spec:
               mountPath: /var/lib/postgresql/data
           env:
             - name: POSTGRES_DB
-              value: db_name
             - name: POSTGRES_USER
-              value: db_user
             - name: POSTGRES_PASSWORD
-              value: db_pass
           resources: {}
       volumes:
         - name: pgdata
