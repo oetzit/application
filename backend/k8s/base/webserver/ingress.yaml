@@ -10,7 +10,5 @@ spec:
           - path: PLACEHOLDER
             pathType: Prefix
             backend:
-              service:
-                name: service
-                port:
-                  name: http
+              serviceName: service
+              servicePort: 80
