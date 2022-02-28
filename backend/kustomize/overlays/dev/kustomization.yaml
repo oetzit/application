@@ -21,3 +21,19 @@ secretGenerator:
       - url=postgres://db_user:db_pass@oetzi-database-service/db_name
     name: oetzi-database-credentials
     type: Opaque
+patchesJSON6902:
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: oetzi-webserver-ingress
+    patch: |-
+      - op: replace
+        path: /metadata/annotations/nginx.ingress.kubernetes.io~1rewrite-target
+        value: /$2
+      - op: replace
+        path: /spec/rules/0/host
+        value: minikube.localhost
+      - op: replace
+        path: /spec/rules/0/http/paths/0/path
+        value: /oetzi(/|$)(.*)
