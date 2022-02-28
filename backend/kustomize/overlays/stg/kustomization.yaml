@@ -28,4 +28,4 @@ patchesJSON6902:
       version: v1
       kind: Ingress
       name: oetzi-webserver-ingress
-    patch: webserver.ingress.patch.yaml
+    path: webserver.ingress.patch.yaml
