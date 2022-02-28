@@ -25,8 +25,8 @@ secretGenerator:
     type: Opaque
 patchesJSON6902:
   - target:
-      group: networking.k8s.io
-      version: v1
+      group: extensions
+      version: v1beta1
       kind: Ingress
       name: oetzi-webserver-ingress
     path: webserver.ingress.patch.yaml
