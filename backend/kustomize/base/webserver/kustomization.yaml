@@ -7,3 +7,4 @@ namePrefix: webserver-
 commonLabels:
   app.kubernetes.io/name: nodejs
   app.kubernetes.io/component: webserver
+  app.kubernetes.io/managed-by: kustomize

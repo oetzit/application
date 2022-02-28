@@ -3,6 +3,7 @@ resources:
   - ../../base
 commonLabels:
   environment: stg
+  app.kubernetes.io/managed-by: kustomize
 patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
