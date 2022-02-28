@@ -83,7 +83,7 @@ stages:
     - npm install
     - echo Success!
 
-fe-deploy-job:
+.fe-deploy-job:
   variables:
     GLIBC_URL: https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk
     BUTLER_URL: https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
@@ -114,6 +114,7 @@ fe-deploy-job:
     - chmod +x /usr/local/bin/butler
     - rm butler.zip
     - butler -V
+    # NOTE: sometimes this fails with error `runtime/cgo: pthread_create failed: Operation not permitted` and I'm not sure why. A strict Docker's seccomp policy would explain this, but then why is it flaky?!
   script:
     - cd frontend
     - npm install
