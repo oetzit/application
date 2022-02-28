@@ -1,6 +1,7 @@
 kind: Kustomization
 resources:
   - ../../base
+namespace: kommul-dev
 commonLabels:
   environment: stg
   app.kubernetes.io/managed-by: kustomize
