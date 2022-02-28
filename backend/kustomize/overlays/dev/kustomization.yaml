@@ -7,6 +7,11 @@ commonLabels:
 patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
+images:
+  - name: oetzi-webserver-image
+    # NOTE: use `minikube image load oetzi:latest` to push into container runtime
+    newName: oetzi
+    newTag: latest
 secretGenerator:
   - literals:
       - username=db_user

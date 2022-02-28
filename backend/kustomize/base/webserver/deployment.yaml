@@ -8,10 +8,7 @@ spec:
     spec:
       containers:
         - name: oetzi
-          # NOTE: use `minikube image load oetzi:latest` to push into container runtime
-          image: oetzi:latest
-          # NOTE: Never is useful only for locla testing in order to load image from cache
-          imagePullPolicy: Never
+          image: oetzi-webserver-image
           resources: {}
           ports:
             - name: http

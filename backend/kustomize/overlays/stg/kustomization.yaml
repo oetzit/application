@@ -8,6 +8,10 @@ commonLabels:
 patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
+images:
+  - name: oetzi-webserver-image
+    newName: gitlab.inf.unibz.it:4567/commul/oetzi/backend
+    newTag: latest
 secretGenerator:
   # TODO: avoid using literals
   - literals:
