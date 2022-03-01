@@ -27,10 +27,11 @@ be-build-job:
       --target production
       --tag=$IMAGE_NAME:${CI_COMMIT_SHA}
       --tag=$IMAGE_NAME:${CI_COMMIT_REF_NAME}
+      --tag=$IMAGE_NAME:${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
       backend
     - docker image push --all-tags $IMAGE_NAME
   only:
-    - main # TODO: tags
+    - tags
     - development
 
 #==[ Backend deployment ]=======================================================
@@ -69,8 +70,8 @@ be-prd-deploy-job:
   variables:
     K8S_NAMESPACE: kommul
     K8S_DEPLOYMENT: oetzi-prd-deployment
-  only: # TODO: only on tag
-    - main
+  only:
+    - tags
 
 be-stg-deploy-job:
   extends: .be-deploy-job
@@ -134,8 +135,8 @@ fe-prd-deploy-job:
     url: https://eurac.itch.io/oetzi
   variables:
     GAME_NAME: oetzi
-  only: # TODO: only on tag
-    - main
+  only:
+    - tags
 
 fe-stg-deploy-job:
   extends: .fe-deploy-job
