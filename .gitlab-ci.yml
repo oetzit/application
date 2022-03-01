@@ -120,7 +120,11 @@ fe-build-job:
   before_script:
     - ./ci/install-butler-on-alpine.sh
   script:
-    - butler push frontend/dist eurac/$GAME_NAME:html5
+    - >
+      butler push 
+      frontend/dist
+      eurac/$GAME_NAME:html5
+      --userversion ${CI_COMMIT_REF_NAME}
 
 fe-prd-deploy-job:
   extends: .fe-deploy-job
