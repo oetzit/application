@@ -59,7 +59,7 @@ be-build-job:
   script:
     - kubectl version --client
     - docker pull ${IMAGE_NAME}:${CI_COMMIT_SHA}
-    #- kubectl --namespace $K8S_NAMESPACE set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
+    - kubectl --namespace $K8S_NAMESPACE set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
 
 be-prd-deploy-job:
   extends: .be-deploy-job
