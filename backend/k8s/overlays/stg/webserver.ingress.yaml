@@ -3,13 +3,13 @@ kind: Ingress
 metadata:
   name: oetzi-webserver-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: kommul-dev.eurac.edu
       http:
         paths:
-          - path: /oetzi(/|$)(.*)
+          - path: /oetzi
             backend:
               serviceName: oetzi-webserver-service
               servicePort: 80
