@@ -107,6 +107,9 @@ fe-build-job:
       - frontend/dist/
     # TODO: set expiration in docker registry too
     expire_in: 1 week
+  only:
+    - tags
+    - development
 
 #==[ Frontend deployment ]======================================================
 
