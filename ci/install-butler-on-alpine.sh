@@ -32,4 +32,4 @@ chmod +x /usr/local/bin/butler
 rm butler.zip
 butler -V
 
-# NOTE: sometimes this fails with error `runtime/cgo: pthread_create failed: Operation not permitted` and I'm not sure why. A strict Docker's seccomp policy would explain this, but then why is it flaky?!
+# NOTE: sometimes this fails with error `runtime/cgo: pthread_create failed: Operation not permitted` and I'm not sure why. A strict Docker's seccomp policy would explain this, but then why is it flaky?! **UPDATE**: it appears that I was right and setting `tags: [commul]` selects only runners with extended policies.
