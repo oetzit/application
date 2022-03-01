@@ -39,32 +39,18 @@ be-build-job:
 
 .be-deploy-job:
   image: alpine:latest
-  # image: $DOCKER_IMAGE
   stage: deploy
   needs:
     - job: be-build-job
-      artifacts: false # TODO: maybe we can get the build image as an artifact?
+      artifacts: false
   tags:
     - commul
-  # services:
-  #   - docker:dind
   variables:
-    KUBECTL_VERSION: v1.8.10
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
-    - "#==[ install kubectl ]=================="
-    - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
-    # NOTE: version is too ald and don't have sha256 available
-    #- wget https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl.sha256
-    # - echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
-    - mv kubectl /usr/bin/ && chmod +x /usr/bin/kubectl
-    - "#==[ configure kubectl ]================"
-    - kubectl config set-cluster "k8sproduction" --server="$KUBE_URL" --certificate-authority="$KUBE_CA_PEM_FILE"
-    - kubectl config set-credentials "gitlab-deploy" --token=$K8S_PRODUCTION_TOKEN
-    - kubectl config set-context "$CI_PROJECT_ID" --cluster="k8sproduction" --user="gitlab-deploy" --namespace="$K8S_NAMESPACE"
-    - kubectl config use-context "$CI_PROJECT_ID"
+    - ./ci/install-kubectl-on-alpine.sh
   script:
-    - kubectl set image deployment/$K8S_DEPLOYMENT oetzi=${IMAGE_NAME}:${CI_COMMIT_SHA}
+    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzi=${IMAGE_NAME}:${CI_COMMIT_SHA} --namespace=${K8S_NAMESPACE}
 
 be-prd-deploy-job:
   extends: .be-deploy-job
@@ -130,7 +116,7 @@ fe-build-job:
     - ./ci/install-butler-on-alpine.sh
   script:
     - >
-      butler push 
+      butler push
       frontend/dist
       eurac/$GAME_NAME:html5
       --userversion ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
