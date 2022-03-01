@@ -83,12 +83,10 @@ stages:
     - npm install
     - echo Success!
 
-.fe-deploy-job:
+fe-deploy-job:
   variables:
     GLIBC_URL: https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk
     BUTLER_URL: https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
-    # NOTE: this key is a throwaway, we'll store one in secrets
-    BUTLER_API_KEY: 0UsKHAvtO2aXBJMPeR6bZHxSv9BRQ0zIvFPdFdRW
   image: node:16-alpine
   stage: deploy
   cache:
@@ -119,4 +117,4 @@ stages:
     - cd frontend
     - npm install
     - npm run build
-    - butler push dist paolobrasolin/oetzi:html5
+    - butler push dist eurac/oetzi:html5
