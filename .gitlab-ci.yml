@@ -4,7 +4,6 @@ variables:
 stages:
   - build
   - deploy
-  - setup
 
 .be-build-job:
   variables:
@@ -27,17 +26,18 @@ stages:
   only:
     - main
 
-.be-deploy-job:
-  variables:
-    KUBECTL_VERSION: v1.8.10
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
+#==[ Backend deployment ]=======================================================
 
+.be-deploy-job:
+  image: docker:latest
   stage: deploy
   tags:
     - commul
-  image: docker:latest
   services:
     - docker:dind
+  variables:
+    KUBECTL_VERSION: v1.8.10
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
     - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
     # NOTE: version is too ald and don't have sha256 available
@@ -47,41 +47,32 @@ stages:
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
   script:
     - kubectl version --client
-    - echo YAY!
-    - docker pull ${IMAGE_NAME}:main
-    #- kubectl --namespace kommul-dev set image deployment/merlin browser=${CONTAINER_IMAGE}:${CI_COMMIT_SHA}
-  only:
+    - docker pull ${IMAGE_NAME}:${CI_COMMIT_SHA}
+    #- kubectl --namespace $K8S_NAMESPACE set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
+
+be-prd-deploy-job:
+  extends: .be-deploy-job
+  environment:
+    name: production/backend
+    deployment_tier: production
+    url: https://kommul.eurac.edu/oetzi
+  variables:
+    K8S_NAMESPACE: kommul
+    K8S_DEPLOYMENT: oetzi-prd-deployment
+  only: # TODO: only on tag
     - main
 
-.be-setup-job:
-  image: node:16-alpine
-  stage: setup
-  cache:
-    - key:
-        files:
-          - backend/package-lock.json
-      paths:
-        - backend/node_modules
-  script:
-    # TODO: drop python once we stop using sqlite3 in CI (soon, please)
-    - apk add --update python2 build-base
-    - cd backend
-    - npm install
-    - echo Success!
-
-.fe-setup-job:
-  image: node:16-alpine
-  stage: setup
-  cache:
-    - key:
-        files:
-          - frontend/package-lock.json
-      paths:
-        - frontend/node_modules
-  script:
-    - cd frontend
-    - npm install
-    - echo Success!
+be-stg-deploy-job:
+  extends: .be-deploy-job
+  environment:
+    name: staging/backend
+    deployment_tier: staging
+    url: https://kommul-dev.eurac.edu/oetzi
+  variables:
+    K8S_NAMESPACE: kommul-dev
+    K8S_DEPLOYMENT: oetzi-stg-deployment
+  only:
+    - development
 
 #==[ Frontend deployment ]======================================================
 
