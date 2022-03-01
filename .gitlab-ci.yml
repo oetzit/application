@@ -38,6 +38,9 @@ be-build-job:
 .be-deploy-job:
   image: docker:latest
   stage: deploy
+  needs:
+    - job: be-build-job
+      artifacts: false # TODO: maybe we can get the build image as an artifact?
   tags:
     - commul
   services:
