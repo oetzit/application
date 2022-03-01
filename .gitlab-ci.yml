@@ -7,6 +7,8 @@ stages:
 
 #==[ Backend build ]============================================================
 
+# TODO: cache docker layers
+# TODO: build ts
 be-build-job:
   image: docker:latest
   stage: build
@@ -98,7 +100,7 @@ fe-build-job:
     - npm run build
   artifacts:
     paths:
-      - dist/
+      - frontend/dist/
 
 #==[ Frontend deployment ]======================================================
 
