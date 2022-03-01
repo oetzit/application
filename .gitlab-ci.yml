@@ -10,6 +10,8 @@ stages:
 be-build-job:
   image: docker:latest
   stage: build
+  tags:
+    - commul
   services:
     - docker:dind
   variables:
