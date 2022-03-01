@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base
+  - webserver.ingress.yaml
 namespace: kommul-dev
 commonLabels:
   eurac.edu/environment: stg
@@ -23,10 +24,3 @@ secretGenerator:
       - url=postgres://db_user:db_pass@oetzi-database-service/db_name
     name: oetzi-database-credentials
     type: Opaque
-patchesJSON6902:
-  - target:
-      group: extensions
-      version: v1beta1
-      kind: Ingress
-      name: oetzi-webserver-ingress
-    path: webserver.ingress.patch.yaml

@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oetzi-webserver-ingress
+  #annotations:
+  #  nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: minikube.localhost
+      http:
+        paths:
+          - path: / #oetzi(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: oetzi-webserver-service
+                port:
+                  number: 80
