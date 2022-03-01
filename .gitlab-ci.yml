@@ -69,7 +69,7 @@ be-build-job:
     - kubectl config set-context "$CI_PROJECT_ID" --cluster="k8sproduction" --user="gitlab-deploy" --namespace="$K8S_NAMESPACE"
     - kubectl config use-context "$CI_PROJECT_ID"
   script:
-    - kubectl set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
+    - kubectl set image deployment/$K8S_DEPLOYMENT oetzi=${IMAGE_NAME}:${CI_COMMIT_SHA}
 
 be-prd-deploy-job:
   extends: .be-deploy-job
