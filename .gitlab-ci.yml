@@ -50,16 +50,19 @@ be-build-job:
     KUBECTL_VERSION: v1.8.10
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
+    - "#==[ install kubectl ]=================="
     - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
     # NOTE: version is too ald and don't have sha256 available
     #- wget https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl.sha256
     # - echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
     - mv kubectl /usr/bin/ && chmod +x /usr/bin/kubectl
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
+    - "#==[ configure kubectl ]================"
+    - kubectl config set-cluster "k8sproduction" --server="$KUBE_URL" --certificate-authority="$KUBE_CA_PEM_FILE"
+    - kubectl config set-credentials "gitlab-deploy" --token=$K8S_PRODUCTION_TOKEN
+    - kubectl config set-context "$CI_PROJECT_ID" --cluster="k8sproduction" --user="gitlab-deploy" --namespace="$K8S_NAMESPACE"
+    - kubectl config use-context "$CI_PROJECT_ID"
   script:
-    - kubectl version --client
-    - docker pull ${IMAGE_NAME}:${CI_COMMIT_SHA}
-    - kubectl --namespace $K8S_NAMESPACE set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
+    - kubectl set image deployment/$K8S_DEPLOYMENT webserver=${IMAGE_NAME}:${CI_COMMIT_SHA}
 
 be-prd-deploy-job:
   extends: .be-deploy-job
