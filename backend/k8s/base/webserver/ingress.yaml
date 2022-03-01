@@ -8,7 +8,7 @@ spec:
       http:
         paths:
           - path: PLACEHOLDER
-            pathType: Prefix
+            # pathType: Prefix # requires k8s>=v1.18
             backend:
               serviceName: service
               servicePort: 80
