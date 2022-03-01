@@ -79,11 +79,11 @@ be-stg-deploy-job:
   only:
     - development
 
-#==[ Frontend deployment ]======================================================
+#==[ Frontend build ]===========================================================
 
-.fe-deploy-job:
+fe-build-job:
   image: node:16-alpine
-  stage: deploy
+  stage: build
   tags:
     - commul
   cache:
@@ -92,13 +92,25 @@ be-stg-deploy-job:
           - frontend/package-lock.json
       paths:
         - frontend/node_modules
-  before_script:
-    - ./ci/install-butler-on-alpine.sh
   script:
     - cd frontend
     - npm install
     - npm run build
-    - butler push dist eurac/$GAME_NAME:html5
+  artifacts:
+    paths:
+      - dist/
+
+#==[ Frontend deployment ]======================================================
+
+.fe-deploy-job:
+  image: alpine:latest
+  stage: deploy
+  tags:
+    - commul
+  before_script:
+    - ./ci/install-butler-on-alpine.sh
+  script:
+    - butler push frontend/dist eurac/$GAME_NAME:html5
 
 fe-prd-deploy-job:
   extends: .fe-deploy-job
