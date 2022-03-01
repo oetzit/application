@@ -88,6 +88,8 @@ stages:
 .fe-deploy-job:
   image: node:16-alpine
   stage: deploy
+  tags:
+    - commul
   cache:
     - key:
         files:
