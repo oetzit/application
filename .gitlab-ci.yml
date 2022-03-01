@@ -101,12 +101,17 @@ fe-build-job:
   artifacts:
     paths:
       - frontend/dist/
+    # TODO: set expiration in docker registry too
+    expire_in: 1 week
 
 #==[ Frontend deployment ]======================================================
 
 .fe-deploy-job:
   image: alpine:latest
   stage: deploy
+  needs:
+    - job: fe-build-job
+      artifacts: true
   tags:
     - commul
   before_script:
