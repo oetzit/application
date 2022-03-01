@@ -49,6 +49,12 @@ be-build-job:
   variables:
     KUBECTL_VERSION: v1.8.10
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
+  cache:
+    - key:
+        files:
+          - frontend/package-lock.json
+      paths:
+        - frontend/node_modules
   before_script:
     - "#==[ install kubectl ]=================="
     - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
@@ -72,7 +78,7 @@ be-prd-deploy-job:
     url: https://kommul.eurac.edu/oetzi
   variables:
     K8S_NAMESPACE: kommul
-    K8S_DEPLOYMENT: oetzi-prd-deployment
+    K8S_DEPLOYMENT: oetzi-webserver-deployment
   only:
     - tags
 
@@ -84,7 +90,7 @@ be-stg-deploy-job:
     url: https://kommul-dev.eurac.edu/oetzi
   variables:
     K8S_NAMESPACE: kommul-dev
-    K8S_DEPLOYMENT: oetzi-stg-deployment
+    K8S_DEPLOYMENT: oetzi-webserver-deployment
   only:
     - development
 
