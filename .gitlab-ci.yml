@@ -5,13 +5,15 @@ stages:
   - build
   - deploy
 
-.be-build-job:
-  variables:
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
-  stage: build
+#==[ Backend build ]============================================================
+
+be-build-job:
   image: docker:latest
+  stage: build
   services:
     - docker:dind
+  variables:
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
   script:
@@ -24,7 +26,8 @@ stages:
       backend
     - docker image push --all-tags $IMAGE_NAME
   only:
-    - main
+    - main # TODO: tags
+    - development
 
 #==[ Backend deployment ]=======================================================
 
