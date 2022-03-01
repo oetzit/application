@@ -1,5 +1,6 @@
 variables:
   DOCKER_TLS_CERTDIR: "" # HACK: see https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
+  DOCKER_IMAGE: "docker:20.10.12"
 
 stages:
   - build
@@ -10,7 +11,7 @@ stages:
 # TODO: cache docker layers
 # TODO: build ts
 be-build-job:
-  image: docker:latest
+  image: $DOCKER_IMAGE
   stage: build
   tags:
     - commul
@@ -37,7 +38,7 @@ be-build-job:
 #==[ Backend deployment ]=======================================================
 
 .be-deploy-job:
-  image: docker:latest
+  image: $DOCKER_IMAGE
   stage: deploy
   needs:
     - job: be-build-job
