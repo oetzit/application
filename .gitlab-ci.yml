@@ -83,12 +83,11 @@ stages:
     - npm install
     - echo Success!
 
-fe-deploy-job:
+#==[ Frontend deployment ]======================================================
+
+.fe-deploy-job:
   image: node:16-alpine
   stage: deploy
-  environment:
-    name: production
-    url: https://staging.example.com
   cache:
     - key:
         files:
@@ -101,4 +100,26 @@ fe-deploy-job:
     - cd frontend
     - npm install
     - npm run build
-    - butler push dist eurac/oetzi:html5
+    - butler push dist eurac/$GAME_NAME:html5
+
+fe-prd-deploy-job:
+  extends: .fe-deploy-job
+  environment:
+    name: production/frontend
+    deployment_tier: production
+    url: https://eurac.itch.io/oetzi
+  variables:
+    GAME_NAME: oetzi
+  only: # TODO: only on tag
+    - main
+
+fe-stg-deploy-job:
+  extends: .fe-deploy-job
+  environment:
+    name: staging/frontend
+    deployment_tier: staging
+    url: https://eurac.itch.io/oetzi-staging
+  variables:
+    GAME_NAME: oetzi-staging
+  only:
+    - development
