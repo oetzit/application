@@ -42,6 +42,12 @@ Finally you apply the `dev` manifest and open a tunnel:
 
 ```bash
 minikube kubectl -- apply -k backend/k8s/overlays/dev/
+```
+
+For your sanity, remember to open a tunnel and ensure the `ingress` is enabled:
+
+```bash
+minikube addons enable ingress
 minikube tunnel
 ```
 
