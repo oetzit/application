@@ -124,7 +124,7 @@ fe-build-job:
       butler push 
       frontend/dist
       eurac/$GAME_NAME:html5
-      --userversion ${CI_COMMIT_REF_NAME}
+      --userversion ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
 
 fe-prd-deploy-job:
   extends: .fe-deploy-job
