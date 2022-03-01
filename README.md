@@ -20,7 +20,63 @@ The webserver will be abailable at `http://localhost:8080`.
 
 ### Deployment
 
-**CAVEAT:** the cluster has `k8s 1.10.11` but **you must use `kubectl 1.11.0`**, otherwise the schema validation breaks since `1.10.11` schemas aren't around anymore.
+**NOTE:** currently we have `k8s 1.10.11` on cluster. This causes quite a few problems in reproducing the environment easily, mostly due to the fact that `1.10.11` schemas aren't around anymore and early versions of `minikube` are not easy to get.
+
+### `dev`
+
+First you get the latest `minikube` up and running:
+
+```bash
+winget install minikibe
+minikube start
+```
+
+Then you build the backend image and push it to the runtime cache of `minikube`:
+
+```bash
+docker build -t oetzi:latest backend/
+minikube image load oetzi:latest
+```
+
+Finally you apply the `dev` manifest and open a tunnel:
+
+```bash
+minikube kubectl -- apply -k backend/k8s/overlays/dev/
+minikube tunnel
+```
+
+That's it!
+
+#### Tentatively reproducing the cluster
+
+Our current cluster has `k8s 1.10.11`.
+
+The earliest `minikube` available via `choco` reaches that, but apparently even `minikube 1.11.0` only supports up to `k8s 1.13.0` so there's no use going down that road.
+
+The earliest `minikube` available via `winget` is `1.15.1`, so we might as well go with it.
+
+```bash
+winget install minikibe --version=1.15.1
+```
+
+This way we can get back to `k8s 1.13.0`:
+
+```bash
+minikube start --kubernetes-version=v1.13.0
+```
+
+Finally, we can deploy:
+
+```bash
+# NOTE: we're using an updated kubectl on the host machine to run kustomize...
+kubectl kustomize backend/k8s/overlays/dev | minikube kubectl -- apply -f -
+# NOTE: ... a modern version would afford us this instead
+#   minikube kubectl -- apply -k dev
+```
+
+#### `stg`/`prd`
+
+**IMPORTANT:** while the cluster has `k8s 1.10.11` and you can easily get `kubectl 1.10.11`, **you must use `kubectl 1.11.0`** because `1.10.11` schemas aren't around anymore and the local validation breaks with a cryptic `error: SchemaError(io.k8s.apimachinery.pkg.apis.meta.v1.APIGroup_v2): invalid object doesn't have additional properties`.
 
 ```bash
 # Please validate before deploying (1.11.0 is the closest available schema version)
