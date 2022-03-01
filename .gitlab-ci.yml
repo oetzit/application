@@ -38,24 +38,19 @@ be-build-job:
 #==[ Backend deployment ]=======================================================
 
 .be-deploy-job:
-  image: $DOCKER_IMAGE
+  image: alpine:latest
+  # image: $DOCKER_IMAGE
   stage: deploy
   needs:
     - job: be-build-job
       artifacts: false # TODO: maybe we can get the build image as an artifact?
   tags:
     - commul
-  services:
-    - docker:dind
+  # services:
+  #   - docker:dind
   variables:
     KUBECTL_VERSION: v1.8.10
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
-  cache:
-    - key:
-        files:
-          - frontend/package-lock.json
-      paths:
-        - frontend/node_modules
   before_script:
     - "#==[ install kubectl ]=================="
     - wget https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
