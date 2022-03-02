@@ -10,9 +10,8 @@ stages:
 
 #==[ Prepare node ]=============================================================
 
-fe-cache-node-job:
+.fe-node-job:
   image: node:16-alpine
-  stage: setup
   tags:
     - commul
   cache:
@@ -21,35 +20,75 @@ fe-cache-node-job:
         - frontend/package-lock.json
     paths:
       - frontend/.npm/
-  script:
+  before_script:
     - cd frontend
     - npm ci --cache .npm --prefer-offline
   only:
     - tags
     - development
+
+.be-node-job:
+  image: node:16-alpine
+  tags:
+    - commul
+  cache:
+    key:
+      files:
+        - backend/package-lock.json
+    paths:
+      - backend/.npm/
+  before_script:
+    - cd backend
+    - npm ci --cache .npm --prefer-offline
+  only:
+    - tags
+    - development
+
+fe-cache-node-job:
+  extends: .fe-node-job
+  stage: setup
+
+be-cache-node-job:
+  extends: .be-node-job
+  stage: setup
 
 #==[ Frontend checks ]==========================================================
 
-fe-check-node-job:
+fe-lint-node-job:
+  extends: .fe-node-job
+  stage: check
   needs:
     - fe-cache-node-job
-  image: node:16-alpine
-  stage: check
-  tags:
-    - commul
-  cache:
-    key:
-      files:
-        - frontend/package-lock.json
-    paths:
-      - frontend/.npm/
   script:
     - cd frontend
-    - npm ci --cache .npm --prefer-offline
+    - npm run style:check
+
+fe-test-node-job:
+  extends: .fe-node-job
+  stage: check
+  needs:
+    - fe-cache-node-job
+  script:
+    - cd frontend
     - npm run test
-  only:
-    - tags
-    - development
+
+be-lint-node-job:
+  extends: .be-node-job
+  stage: check
+  needs:
+    - be-cache-node-job
+  script:
+    - cd backend
+    - npm run style:check
+
+be-test-node-job:
+  extends: .be-node-job
+  stage: check
+  needs:
+    - be-cache-node-job
+  script:
+    - cd backend
+    - npm run test
 
 #==[ Backend build ]============================================================
 
