@@ -16,8 +16,7 @@ stages:
   tags:
     - shared
   only:
-    - tags
-    - development
+    - pushes
 
 .fe-node-job:
   <<: *node-job
@@ -124,6 +123,9 @@ build-fe-node-job:
     paths:
       - frontend/dist/
     expire_in: 1 week
+  only:
+    - tags
+    - development
 
 #--[ Backend ]------------------------------------------------------------------
 
