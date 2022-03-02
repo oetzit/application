@@ -30,7 +30,7 @@ stages:
 .be-node-job:
   image: node:16-alpine
   tags:
-    - commul
+    - shared
   cache:
     key:
       files:
