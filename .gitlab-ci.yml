@@ -164,7 +164,7 @@ build-fe-node-job:
     - job: build-fe-node-job
       artifacts: true
   tags:
-    - shared
+    - commul # NOTE: we can't use shared because extended seccomp policies are needed
   before_script:
     - ./ci/install-butler-on-alpine.sh
   script:
