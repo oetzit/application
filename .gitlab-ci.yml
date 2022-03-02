@@ -70,6 +70,7 @@ cache-be-node-job:
   stage: check
   needs:
     - cache-fe-node-job
+  allow_failure: true # TODO: disallow!
 
 format-fe-node-job:
   <<: *check-fe-node-job
@@ -93,6 +94,7 @@ test-fe-node-job:
   stage: check
   needs:
     - cache-be-node-job
+  allow_failure: true # TODO: disallow!
 
 format-be-node-job:
   <<: *check-be-node-job
