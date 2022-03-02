@@ -47,10 +47,14 @@ stages:
 fe-cache-node-job:
   extends: .fe-node-job
   stage: setup
+  script:
+    - echo "Done!"
 
 be-cache-node-job:
   extends: .be-node-job
   stage: setup
+  script:
+    - echo "Done!"
 
 #==[ Frontend checks ]==========================================================
 
