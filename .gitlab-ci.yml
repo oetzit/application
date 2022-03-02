@@ -64,7 +64,6 @@ fe-lint-node-job:
   needs:
     - fe-cache-node-job
   script:
-    - cd frontend
     - npm run style:check
 
 fe-test-node-job:
@@ -73,7 +72,6 @@ fe-test-node-job:
   needs:
     - fe-cache-node-job
   script:
-    - cd frontend
     - npm run test
 
 be-lint-node-job:
@@ -82,7 +80,6 @@ be-lint-node-job:
   needs:
     - be-cache-node-job
   script:
-    - cd backend
     - npm run style:check
 
 be-test-node-job:
@@ -91,7 +88,6 @@ be-test-node-job:
   needs:
     - be-cache-node-job
   script:
-    - cd backend
     - npm run test
 
 #==[ Backend build ]============================================================
