@@ -13,7 +13,7 @@ stages:
 .fe-node-job:
   image: node:16-alpine
   tags:
-    - commul
+    - shared
   cache:
     key:
       files:
@@ -58,13 +58,21 @@ be-cache-node-job:
 
 #==[ Frontend checks ]==========================================================
 
+fe-format-node-job:
+  extends: .fe-node-job
+  stage: check
+  needs:
+    - fe-cache-node-job
+  script:
+    - npm run format:check
+
 fe-lint-node-job:
   extends: .fe-node-job
   stage: check
   needs:
     - fe-cache-node-job
   script:
-    - npm run style:check
+    - npm run lint:check
 
 fe-test-node-job:
   extends: .fe-node-job
@@ -74,13 +82,21 @@ fe-test-node-job:
   script:
     - npm run test
 
+be-format-node-job:
+  extends: .be-node-job
+  stage: check
+  needs:
+    - be-cache-node-job
+  script:
+    - npm run format:check
+
 be-lint-node-job:
   extends: .be-node-job
   stage: check
   needs:
     - be-cache-node-job
   script:
-    - npm run style:check
+    - npm run lint:check
 
 be-test-node-job:
   extends: .be-node-job
