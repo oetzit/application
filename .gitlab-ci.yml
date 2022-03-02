@@ -132,7 +132,7 @@ build-be-job:
   image: docker:20.10.12
   stage: build
   tags:
-    - shared
+    - commul # NOTE: we need commul (not shared) because of credentials in environment
   services:
     - docker:dind
   variables:
