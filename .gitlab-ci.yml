@@ -202,7 +202,7 @@ stg-fe-deploy-job:
   image: alpine:latest
   stage: deploy
   needs:
-    - job: be-build-job
+    - job: build-be-job
       artifacts: false
   tags:
     - shared
