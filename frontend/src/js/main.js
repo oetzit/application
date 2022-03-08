@@ -196,6 +196,7 @@ function create() {
     this.cameras.main.width / this.cameras.main.height,
   );
   this.scale.refresh();
+  initAndBindGuessPreview(this);
 }
 
 function createAnim(key, refKey, from, to) {
@@ -472,4 +473,27 @@ class enemy {
 
 function setAnimation(obj, idleKey) {
   obj.play({ key: idleKey, repeat: -1 });
+}
+
+function initAndBindGuessPreview(scene) {
+  var textEntry = scene.add.text(10, scene.cameras.main.height / 2 - 32, "", {
+    font: "bold 64px Courier",
+    fill: "#ffffff",
+  });
+  scene.input.keyboard.on("keydown", function (event) {
+    if (
+      event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE &&
+      textEntry.text.length > 0
+    ) {
+      textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1);
+    } else if (
+      event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE ||
+      (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.A &&
+        event.keyCode <= Phaser.Input.Keyboard.KeyCodes.Z)
+    ) {
+      textEntry.text += event.key;
+    } else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER) {
+      textEntry.text = textEntry.text.substr(0, 0);
+    }
+  });
 }
