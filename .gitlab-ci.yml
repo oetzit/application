@@ -114,19 +114,32 @@ test-be-node-job:
 
 #--[ Frontend ]-----------------------------------------------------------------
 
-build-fe-node-job:
+prd-build-fe-node-job:
+  extends: .fe-node-job
+  stage: build
+  variables:
+    NODE_ENV: production
+  script:
+    - npm run build -- --out-dir dist/prd
+  artifacts:
+    paths:
+      - frontend/dist/prd
+    expire_in: 1 week
+  only:
+    - tags
+
+stg-build-fe-node-job:
   extends: .fe-node-job
   stage: build
   variables:
     NODE_ENV: staging
   script:
-    - npm run build
+    - npm run build -- --out-dir dist/stg
   artifacts:
     paths:
-      - frontend/dist/
+      - frontend/dist/stg
     expire_in: 1 week
   only:
-    - tags
     - development
 
 #--[ Backend ]------------------------------------------------------------------
@@ -164,9 +177,6 @@ build-be-job:
 .fe-deploy-job:
   image: alpine:latest
   stage: deploy
-  needs:
-    - job: build-fe-node-job
-      artifacts: true
   tags:
     - commul # NOTE: we can't use shared because extended seccomp policies are needed
   before_script:
@@ -174,30 +184,37 @@ build-be-job:
   script:
     - >
       butler push
-      frontend/dist
+      $DIST_PATH
       eurac/$GAME_NAME:html5
       --userversion ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
 
-# TODO: we need separate build job for prd
 prd-fe-deploy-job:
   extends: .fe-deploy-job
+  needs:
+    - job: prd-build-fe-node-job
+      artifacts: true
   environment:
     name: production/frontend
     deployment_tier: production
     url: https://eurac.itch.io/oetzi
   variables:
     GAME_NAME: oetzi
+    DIST_PATH: frontend/dist/prd
   only:
     - tags
 
 stg-fe-deploy-job:
   extends: .fe-deploy-job
+  needs:
+    - job: stg-build-fe-node-job
+      artifacts: true
   environment:
     name: staging/frontend
     deployment_tier: staging
     url: https://eurac.itch.io/oetzi-staging
   variables:
     GAME_NAME: oetzi-staging
+    DIST_PATH: frontend/dist/stg
   only:
     - development
 
