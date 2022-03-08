@@ -188,7 +188,7 @@ function create() {
     onComplete: function () {
       setAnimation(player, "player_idle");
       gameRunning = true;
-      gameStart();
+      gameStart(this.parent.scene);
     },
   });
 
@@ -208,17 +208,17 @@ function createAnim(key, refKey, from, to) {
   });
 }
 
-function gameStart() {
+function gameStart(scene) {
   let waitTime = 200;
   for (let i = 0; i < maxEnemyNumber; i++) {
     setTimeout(() => {
-      dispatchEnemy();
+      dispatchEnemy(scene);
     }, waitTime);
     waitTime += Math.floor(Math.random() * 4000 + 4000);
   }
 }
 
-function dispatchEnemy() {
+function dispatchEnemy(scene) {
   let e = new enemy();
 
   axios
@@ -229,14 +229,23 @@ function dispatchEnemy() {
       e.refData = response.data;
       imageInUse.push(e.refData.id);
 
-      e.run((v) => {
-        imageInUse.splice(imageInUse.indexOf(e.refData.id), 1);
-        if (gameRunning) {
-          setTimeout(() => {
-            dispatchEnemy();
-          }, Math.floor(Math.random() * 10000 + 3000));
-        }
-      });
+      const imageData = `data:image/png;base64,${response.data.image}`;
+      scene.textures.addBase64(`WORD-${response.data.id}`, imageData);
+
+      scene.textures.once(
+        "addtexture",
+        function () {
+          e.run((v) => {
+            imageInUse.splice(imageInUse.indexOf(e.refData.id), 1);
+            if (gameRunning) {
+              setTimeout(() => {
+                dispatchEnemy(scene);
+              }, Math.floor(Math.random() * 10000 + 3000));
+            }
+          });
+        },
+        scene,
+      );
     });
 }
 
@@ -255,10 +264,12 @@ class enemy {
       scale = 3;
     }
 
+    let flag = scene.add.sprite(400, 300, `WORD-${this.refData.id}`);
     let enemy = scene.physics.add
       .sprite(-100, scene.cameras.main.height - 100, randomEnemyType)
       .setScale(scale)
       .setInteractive();
+
     enemy.typeName = randomEnemyType;
     scene.physics.add.collider(enemy, ground);
     enemy.flipX = true;
