@@ -5,6 +5,11 @@ import "popper.js";
 import "bootstrap";
 import * as bootbox from "bootbox";
 import "../css/override.css";
+import path from "path";
+
+const BACKEND_URL = new URL(process.env.BACKEND_URL);
+const backendEndpointURL = (endpoint) =>
+  new URL(path.join(BACKEND_URL.pathname, endpoint), BACKEND_URL);
 
 let config = {
   type: Phaser.AUTO,
@@ -85,8 +90,6 @@ function preload() {
     frameHeight: 76,
   });
 }
-
-window.OetziWordsSiteUrlPrefix = process.env.BACKEND_URL;
 
 let gameRunning = false;
 let player;
@@ -218,7 +221,7 @@ function dispatchEnemy() {
   let e = new enemy();
 
   axios
-    .post(window.OetziWordsSiteUrlPrefix + "GetImage", {
+    .post(backendEndpointURL("GetImage"), {
       sessionImages: imageInUse,
     })
     .then(function (response) {
@@ -310,7 +313,7 @@ class enemy {
           }
 
           axios
-            .post(window.OetziWordsSiteUrlPrefix + "CheckTranscription", {
+            .post(backendEndpointURL("CheckTranscription"), {
               refData: me.refData,
               transcription: result,
               deltaTime: deltaTime,
