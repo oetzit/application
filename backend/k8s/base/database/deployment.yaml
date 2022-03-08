@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: deployment
 spec:
+  strategy:
+    type: Recreate # trivially avoids multi-mount error on persistent volumes in exchange for some downtime
   template:
     spec:
       containers:
