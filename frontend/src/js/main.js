@@ -86,8 +86,7 @@ function preload() {
   });
 }
 
-// window.OetziWordsSiteUrlPrefix = "http://localhost:8080/oetzi_words/" //use this to develop
-window.OetziWordsSiteUrlPrefix = "http://localhost:8080/"; // use this to deploy
+window.OetziWordsSiteUrlPrefix = process.env.BACKEND_URL;
 
 let gameRunning = false;
 let player;
