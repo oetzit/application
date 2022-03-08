@@ -22,4 +22,4 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: oetzi-database-credentials
-                  key: username
+                  key: password
