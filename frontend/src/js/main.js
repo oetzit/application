@@ -100,6 +100,7 @@ let imageInUse = [];
 let enemyNumber = 0;
 let ground;
 let consecutiveMissing = 0;
+let onscreenEnemies = [];
 
 /* game params */
 let enemies = ["bear", "wolf", "deer", "boar"];
@@ -220,6 +221,7 @@ function gameStart(scene) {
 
 function dispatchEnemy(scene) {
   let e = new enemy();
+  onscreenEnemies.push(e);
 
   axios
     .post(backendEndpointURL("GetImage"), {
@@ -270,6 +272,8 @@ class enemy {
       .setScale(scale)
       .setInteractive();
 
+    this.sprite = enemy;
+
     enemy.typeName = randomEnemyType;
     scene.physics.add.collider(enemy, ground);
     enemy.flipX = true;
@@ -287,176 +291,6 @@ class enemy {
         callback(me);
       },
       onStop: function () {},
-    });
-
-    enemy.on("pointerdown", function (pointer) {
-      let hit = true;
-      enemy.disableInteractive();
-      // here invoke image
-      enemy.movement.pause();
-      setAnimation(enemy, enemy.typeName + "_idle");
-      fadeBG.setVisible(true);
-
-      let beginTime = new Date().getTime();
-
-      console.log(me.refData.image);
-
-      bootbox.prompt({
-        // title: "<p>Please write the transcription in the box below:</p>", message: "<p><img style='max-width: 470px' src='" + window.OetziWordsSiteUrlPrefix + 'images/' + me.refData.filename + "'/></p>", centerVertical: true, closeButton: false, buttons: {
-        title: "<p>Please write the transcription in the box below:</p>",
-        message:
-          "<p><img style='max-width: 470px' src='data:image/png;base64, " +
-          me.refData.image +
-          "'/></p>",
-        centerVertical: true,
-        closeButton: false,
-        buttons: {
-          confirm: {
-            label: "Confirm",
-          },
-        },
-        callback: function (result) {
-          let endTime = new Date().getTime();
-          let deltaTime = endTime - beginTime;
-          fadeBG.setVisible(false);
-
-          if (result.trim().length === 0) {
-            hit = false;
-          }
-
-          axios
-            .post(backendEndpointURL("CheckTranscription"), {
-              refData: me.refData,
-              transcription: result,
-              deltaTime: deltaTime,
-            })
-            .then(function (response) {
-              // console.log(response.data);
-
-              hit = response.data.hitTheTarget;
-              if (consecutiveMissing >= 3 && deltaTime >= 3000) {
-                consecutiveMissing = 0;
-                hit = true;
-              }
-              if (hit) {
-                consecutiveMissing = 0;
-              } else {
-                consecutiveMissing++;
-              }
-
-              let startPoint = new Phaser.Math.Vector2(player.x, player.y);
-              let controlPoint1 = new Phaser.Math.Vector2(
-                enemy.x + (player.x - enemy.x) / 2,
-                scene.cameras.main.height - (player.x - enemy.x),
-              );
-
-              let endPoint = new Phaser.Math.Vector2(
-                enemy.x + enemy.width * 1.6,
-                scene.cameras.main.height - 60,
-              );
-              let message = scene.add
-                .sprite(
-                  scene.cameras.main.width / 2,
-                  scene.cameras.main.height / 2,
-                )
-                .setScale(1);
-
-              // hit / missing <--- message
-              if (!hit) {
-                endPoint = new Phaser.Math.Vector2(
-                  -500,
-                  scene.cameras.main.height - 60,
-                );
-                message.play({ key: "missing", repeat: 1 });
-                message.on("animationcomplete", () => {
-                  message.anims.remove("miss");
-                  message.destroy();
-                });
-              } else {
-                let message = scene.add
-                  .sprite(
-                    scene.cameras.main.width / 2,
-                    scene.cameras.main.height / 2,
-                  )
-                  .setScale(1);
-                message.play({ key: "hit", repeat: 1 });
-                message.on("animationcomplete", () => {
-                  message.anims.remove("hit");
-                  message.destroy();
-                });
-              }
-
-              let curve = new Phaser.Curves.QuadraticBezier(
-                startPoint,
-                controlPoint1,
-                endPoint,
-              );
-
-              let graphics = scene.add.graphics();
-              graphics.lineStyle(1, 0xff00ff, 1);
-
-              // curve.draw(graphics); // decomment to see the trajectory
-
-              let spear = scene.add.follower(curve);
-
-              // console.log(player.x + " " + enemy.x);
-              if (hit) {
-                spear.startFollow({
-                  positionOnPath: true,
-                  duration: (scene.cameras.main.width - enemy.x) * 3,
-                  rotateToPath: true,
-                  verticalAdjust: true,
-                  scale: 3,
-                  onComplete: (x, y) => {
-                    console.log("done");
-                    let spearHitObj = scene.add
-                      .sprite(
-                        enemy.x + enemy.width * 1.6 - 10,
-                        scene.cameras.main.height - 60,
-                      )
-                      .setScale(2);
-                    setAnimation(spearHitObj, "spearHitAni");
-                    spear.anims.stop("spearAni");
-                    spear.anims.remove("spearAni");
-                    spear.destroy();
-                    setTimeout(() => {
-                      enemy.flipX = false;
-                      setAnimation(enemy, enemy.typeName + "_run");
-                      enemy.movement.stop();
-                      scene.tweens.add({
-                        targets: enemy,
-                        x: -500,
-                        duration: 5000,
-                        onComplete: function () {
-                          enemy.destroy();
-                          callback(me);
-                        },
-                      });
-                    }, 3000);
-                    setTimeout(() => {
-                      spearHitObj.destroy();
-                    }, 4000);
-                  },
-                });
-              } else {
-                enemy.setInteractive();
-                enemy.movement.resume();
-                setAnimation(enemy, enemy.typeName + "_walk");
-                spear.startFollow({
-                  positionOnPath: true,
-                  duration: 3000,
-                  rotateToPath: true,
-                  verticalAdjust: true,
-                  scale: 3,
-                });
-              }
-
-              spear.scale = 2;
-              spear.anims.play("spearAni");
-              //console.log(enemy.typeName);
-            });
-        }, //callback bootbox
-      });
     });
 
     // here to implement health
@@ -504,7 +338,132 @@ function initAndBindGuessPreview(scene) {
     ) {
       textEntry.text += event.key;
     } else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER) {
+      submitTranscription(textEntry.text);
       textEntry.text = textEntry.text.substr(0, 0);
     }
   });
+}
+
+function shootSpear(enemy, hit) {
+  let startPoint = new Phaser.Math.Vector2(player.x, player.y);
+  let controlPoint1 = new Phaser.Math.Vector2(
+    enemy.x + (player.x - enemy.x) / 2,
+    scene.cameras.main.height - (player.x - enemy.x),
+  );
+
+  let endPoint = new Phaser.Math.Vector2(
+    enemy.x + enemy.width * 1.6,
+    scene.cameras.main.height - 60,
+  );
+  let message = scene.add
+    .sprite(scene.cameras.main.width / 2, scene.cameras.main.height / 2)
+    .setScale(1);
+
+  // hit / missing <--- message
+  if (!hit) {
+    endPoint = new Phaser.Math.Vector2(-500, scene.cameras.main.height - 60);
+    message.play({ key: "missing", repeat: 1 });
+    message.on("animationcomplete", () => {
+      message.anims.remove("miss");
+      message.destroy();
+    });
+  } else {
+    let message = scene.add
+      .sprite(scene.cameras.main.width / 2, scene.cameras.main.height / 2)
+      .setScale(1);
+    message.play({ key: "hit", repeat: 1 });
+    message.on("animationcomplete", () => {
+      message.anims.remove("hit");
+      message.destroy();
+    });
+  }
+
+  let curve = new Phaser.Curves.QuadraticBezier(
+    startPoint,
+    controlPoint1,
+    endPoint,
+  );
+
+  let graphics = scene.add.graphics();
+  graphics.lineStyle(1, 0xff00ff, 1);
+
+  curve.draw(graphics); // decomment to see the trajectory
+
+  let spear = scene.add.follower(curve);
+
+  // console.log(player.x + " " + enemy.x);
+  if (hit) {
+    spear.startFollow({
+      positionOnPath: true,
+      duration: (scene.cameras.main.width - enemy.x) * 3,
+      rotateToPath: true,
+      verticalAdjust: true,
+      scale: 3,
+      onComplete: (x, y) => {
+        console.log("done");
+        let spearHitObj = scene.add
+          .sprite(
+            enemy.x + enemy.width * 1.6 - 10,
+            scene.cameras.main.height - 60,
+          )
+          .setScale(2);
+        setAnimation(spearHitObj, "spearHitAni");
+        spear.anims.stop("spearAni");
+        spear.anims.remove("spearAni");
+        spear.destroy();
+        setTimeout(() => {
+          enemy.flipX = false;
+          setAnimation(enemy, enemy.typeName + "_run");
+          enemy.movement.stop();
+          scene.tweens.add({
+            targets: enemy,
+            x: -500,
+            duration: 5000,
+            onComplete: function () {
+              enemy.destroy();
+              //callback(enemy); // ???
+            },
+          });
+        }, 3000);
+        setTimeout(() => {
+          spearHitObj.destroy();
+        }, 4000);
+      },
+    });
+  } else {
+    enemy.setInteractive();
+    enemy.movement.resume();
+    setAnimation(enemy, enemy.typeName + "_walk");
+    spear.startFollow({
+      positionOnPath: true,
+      duration: 3000,
+      rotateToPath: true,
+      verticalAdjust: true,
+      scale: 3,
+    });
+  }
+
+  spear.scale = 2;
+  spear.anims.play("spearAni");
+}
+
+function submitTranscription(transcription) {
+  // TODO: guess the enemy if any
+  const enemy = onscreenEnemies[0].sprite;
+
+  let hit = true;
+  enemy.disableInteractive();
+  // here invoke image
+  enemy.movement.pause();
+  setAnimation(enemy, enemy.typeName + "_idle");
+  fadeBG.setVisible(true);
+
+  // let beginTime = new Date().getTime();
+  // let endTime = new Date().getTime();
+  // let deltaTime = endTime - beginTime;
+  fadeBG.setVisible(false);
+
+  hit = transcription == "fuffa";
+
+  shootSpear(enemy, hit);
 }
