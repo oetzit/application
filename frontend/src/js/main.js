@@ -1,10 +1,5 @@
 import * as Phaser from "phaser";
 import axios from "axios";
-import "jquery";
-import "popper.js";
-import "bootstrap";
-import * as bootbox from "bootbox";
-import "../css/override.css";
 import path from "path";
 
 const BACKEND_URL = new URL(process.env.BACKEND_URL);
