@@ -44,7 +44,6 @@ function preload() {
   this.load.image("b11", "assets/background_layers/Layer_0000_9.png");
   this.load.image("logo", "assets/background_layers/Logo.png");
   this.load.image("ground", "assets/background_layers/ground.png");
-  this.load.image("fadeBG", "assets/background_layers/fadeBG.png");
 
   this.load.spritesheet("oezi", "assets/sprites/player/oezi.png", {
     frameWidth: 27,
@@ -87,8 +86,6 @@ function preload() {
 let gameRunning = false;
 let player;
 let scene;
-let foreBG;
-let fadeBG;
 let imageInUse = [];
 let enemyNumber = 0;
 let ground;
@@ -103,19 +100,28 @@ let enemiesSpeed = 50000;
 
 function create() {
   scene = this;
-  for (let i = 0; i <= 10; i++) {
-    this.add
-      .tileSprite(
-        0,
-        0,
-        this.cameras.main.width,
-        this.cameras.main.height,
-        "b" + i,
-      )
-      .setOrigin(0)
-      .setScrollFactor(0);
-  }
-  this.add.image(this.cameras.main.width / 2, 100, "logo").setScale(0.3);
+
+  // Draw background forest
+  ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
+    (textureKey) => {
+      this.add
+        .tileSprite(
+          0,
+          0,
+          this.cameras.main.width,
+          this.cameras.main.height,
+          textureKey,
+        )
+        .setOrigin(0, 0.2)
+        .setScale(1.3);
+    },
+  );
+
+  // Draw foreground grass
+  this.add
+    .tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, "b11")
+    .setAlpha(0.6)
+    .setOrigin(0, -0.03);
 
   createAnim("player_idle", "oezi", 1, 5);
   createAnim("player_run", "oezi", 6, 13);
@@ -151,22 +157,6 @@ function create() {
     )
     .setScale(3)
     .setInteractive();
-
-  foreBG = this.add
-    .tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, "b11")
-    .setOrigin(0, 0);
-  fadeBG = this.add
-    .tileSprite(
-      0,
-      0,
-      this.cameras.main.width,
-      this.cameras.main.height,
-      "fadeBG",
-    )
-    .setOrigin(0)
-    .setScrollFactor(0)
-    .setInteractive();
-  fadeBG.setVisible(false);
 
   player.flipX = true;
 
@@ -272,8 +262,7 @@ class enemy {
     enemy.flipX = true;
 
     setAnimation(enemy, enemy.typeName + "_walk");
-    scene.children.bringToTop(foreBG);
-    scene.children.bringToTop(fadeBG);
+    // TODO: bring animal below grass
 
     enemy.movement = scene.tweens.add({
       targets: enemy,
@@ -380,7 +369,7 @@ function shootSpear(enemy, hit) {
   let graphics = scene.add.graphics();
   graphics.lineStyle(1, 0xff00ff, 1);
 
-  curve.draw(graphics); // decomment to see the trajectory
+  // curve.draw(graphics); // decomment to see the trajectory
 
   let spear = scene.add.follower(curve);
 
@@ -449,12 +438,10 @@ function submitTranscription(transcription) {
   // here invoke image
   enemy.movement.pause();
   setAnimation(enemy, enemy.typeName + "_idle");
-  fadeBG.setVisible(true);
 
   // let beginTime = new Date().getTime();
   // let endTime = new Date().getTime();
   // let deltaTime = endTime - beginTime;
-  fadeBG.setVisible(false);
 
   hit = transcription == "fuffa";
 
