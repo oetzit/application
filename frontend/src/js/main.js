@@ -8,13 +8,11 @@ const backendEndpointURL = (endpoint) =>
 
 let config = {
   type: Phaser.AUTO,
+  width: 1200,
+  height: 800,
   pixelArt: true,
-
-  backgroundColor: "#000",
-  scale: {
-    parent: "gioco",
-    mode: Phaser.Scale.SHOW_ALL,
-  },
+  autoCenter: Phaser.Scale.CENTER_BOTH,
+  scaleMode: Phaser.Scale.FIT,
   physics: {
     default: "arcade",
     arcade: {
