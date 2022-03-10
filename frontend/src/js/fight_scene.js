@@ -255,6 +255,8 @@ function shootSpear(enemy, hit, scene = fightScene) {
       message.anims.remove("hit");
       message.destroy();
     });
+    // TODO: ew.
+    window.onscreenEnemies.splice(window.onscreenEnemies.indexOf(enemy), 1);
   }
 
   let curve = new Phaser.Curves.QuadraticBezier(
