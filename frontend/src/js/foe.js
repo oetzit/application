@@ -1,5 +1,4 @@
-let enemies = ["bear", "wolf", "deer", "boar"];
-let enemiesSpeed = 50000;
+let SPECIES = ["bear", "wolf", "deer", "boar"];
 
 class Foe {
   constructor(scene, word) {
@@ -7,7 +6,7 @@ class Foe {
     this.scene.foes.push(this);
     this.word = word;
     this.addClue();
-    this.run();
+    this.addAnimal();
   }
 
   addClue() {
@@ -20,64 +19,42 @@ class Foe {
   }
 
   addClueSprite() {
-    this.scene.add.sprite(400, 300, this.word.id);
+    // TODO: position
+    this.clueSprite = this.scene.add.sprite(400, 300, this.word.id);
   }
 
-  run() {
-    let me = this;
-    let randomEnemyType = enemies[Math.floor(Math.random() * 4 + 0)];
+  addAnimal() {
+    this.species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
 
     let scale = 2;
-    if (randomEnemyType === "deer") {
+    if (this.species === "deer") {
       scale = 2.5;
-    } else if (randomEnemyType === "bear") {
+    } else if (this.species === "bear") {
       scale = 3;
     }
 
-    let enemy = this.scene.physics.add
-      .sprite(-100, this.scene.cameras.main.height - 100, randomEnemyType)
-      .setScale(scale)
+    this.animalSprite = this.scene.physics.add
+      .sprite(-100, this.scene.cameras.main.height - 100, this.species)
+      .setScale(-1 * scale, scale)
       .setInteractive();
 
-    this.sprite = enemy;
+    this.scene.physics.add.collider(this.animalSprite, this.scene.ground);
 
-    enemy.typeName = randomEnemyType;
-    this.scene.physics.add.collider(enemy, this.scene.ground);
-    enemy.flipX = true;
-
-    setAnimation(enemy, enemy.typeName + "_walk");
+    setAnimation(this.animalSprite, this.species + "_walk");
     // TODO: bring animal below grass
 
-    enemy.movement = this.scene.tweens.add({
-      targets: enemy,
-      x: this.scene.cameras.main.width + 300,
-      duration: enemiesSpeed,
-      onComplete: function () {
-        enemy.destroy();
-        callback(me);
-      },
-      onStop: function () {},
-    });
+    this.animalSprite.body.setVelocity(100, 0);
 
     // here to implement health
-    this.scene.physics.add.overlap(this.scene.player, enemy, (p, nemico) => {
-      nemico.disableInteractive();
-      nemico.body.enable = false;
-      nemico.movement.pause();
-      nemico.play(nemico.typeName + "_idle");
-      setTimeout(() => {
-        nemico.play(nemico.typeName + "_run");
-        nemico.movement.stop();
-        this.scene.tweens.add({
-          targets: nemico,
-          x: this.scene.cameras.main.width + 100,
-          duration: 2000,
-          onComplete: function () {
-            nemico.destroy();
-          },
-        });
-      }, 3000);
-    });
+    this.scene.physics.add.overlap(
+      this.scene.player,
+      this.animalSprite,
+      (player, nemico) => {
+        nemico.play(this.species + "_run");
+        this.animalSprite.body.setVelocity(300, 0);
+        setTimeout(() => nemico.destroy(), 2000);
+      },
+    );
   }
 }
 
