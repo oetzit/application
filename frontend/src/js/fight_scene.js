@@ -320,28 +320,22 @@ function dispatchEnemy(scene) {
   let e = new enemy(scene);
   window.onscreenEnemies.push(e);
 
-  backend
-    .post("GetImage", {
-      sessionImages: [],
-    })
-    .then(function (response) {
-      e.refData = response.data;
+  backend.post("GetImage", {}).then(function (response) {
+    e.refData = response.data;
 
-      const imageData = `data:image/png;base64,${response.data.image}`;
-      scene.textures.addBase64(`WORD-${response.data.id}`, imageData);
-
-      scene.textures.once(
-        "addtexture",
-        function () {
-          e.run((v) => {
-            setTimeout(() => {
-              dispatchEnemy(scene);
-            }, Math.floor(Math.random() * 10000 + 3000));
-          });
-        },
-        scene,
-      );
-    });
+    scene.textures.addBase64(`WORD-${response.data.id}`, response.data.image);
+    scene.textures.once(
+      "addtexture",
+      function () {
+        e.run((v) => {
+          setTimeout(() => {
+            dispatchEnemy(scene);
+          }, Math.floor(Math.random() * 10000 + 3000));
+        });
+      },
+      scene,
+    );
+  });
 }
 
 export default fightScene;

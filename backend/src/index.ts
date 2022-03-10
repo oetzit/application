@@ -26,34 +26,32 @@ server.route({
   method: "POST",
   url: "/GetImage",
   schema: {
-    body: {
-      type: "object",
-      properties: {
-        sessionImages: {
-          type: "array",
-          items: { type: "number" },
-        },
-      },
-    },
+    // body: {},
     response: {
       200: {
         type: "object",
         properties: {
-          id: { type: "number" },
+          id: { type: "string", format: "uuid" },
           image: { type: "string" },
+          ocr_confidence: { type: "number", minimum: 0, maximum: 1 },
+          ocr_transcript: { type: "string" },
         },
       },
     },
   },
   handler: async function (request, reply) {
-    // TODO: skip images already used in current game
-    const image = await connection
-      .table("images")
+    // TODO: skip images already used in current game (overkill? we prolly have thousands so collisions should be irrelevant...)
+    const word = await connection
+      .table("words")
+      .whereBetween("ocr_confidence", [0.4, 0.8]) // i.e. needs improvement but it's not trash
+      .whereRaw(`"ocr_transcript" ~ '^[[:alpha:]]+$'`) // i.e. no numbers nor symbols
       .orderByRaw("RANDOM()")
       .first();
     reply.send({
-      id: image.id,
-      image: image.image,
+      id: word.id,
+      image: word.image,
+      ocr_confidence: word.ocr_confidence,
+      ocr_transcript: word.ocr_transcript,
     });
   },
 });
