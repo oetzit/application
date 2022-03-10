@@ -3,6 +3,8 @@ import Phaser from "phaser";
 import enemy from "./enemy";
 import backend from "./backend";
 
+import levenshtein from "damerau-levenshtein";
+
 const fightScene = new Phaser.Scene("fight");
 
 let onscreenEnemies = [];
@@ -292,21 +294,33 @@ function shootSpear(enemy, hit, scene = fightScene) {
 
 function submitTranscription(transcription) {
   // TODO: guess the enemy if any
-  const enemy = window.onscreenEnemies[0].sprite;
+  let similarity = 0;
+  let match = null;
+  window.onscreenEnemies.forEach((foe) => {
+    const s = levenshtein(
+      transcription.toLowerCase(),
+      foe.word.ocr_transcript.toLowerCase(),
+    ).similarity;
+    if (s <= similarity) return;
+    similarity = s;
+    match = foe;
+  });
 
-  let hit = true;
-  enemy.disableInteractive();
+  console.log(similarity, match.word.ocr_transcript);
+
+  // TODO: we can have near misses depending on similarity!
+  let hit = similarity >= 0.9;
+  let enemy = match;
+  enemy.sprite.disableInteractive();
   // here invoke image
-  enemy.movement.pause();
-  setAnimation(enemy, enemy.typeName + "_idle");
+  enemy.sprite.movement.pause();
+  setAnimation(enemy.sprite, enemy.sprite.typeName + "_idle");
 
   // let beginTime = new Date().getTime();
   // let endTime = new Date().getTime();
   // let deltaTime = endTime - beginTime;
 
-  hit = transcription == "fuffa";
-
-  shootSpear(enemy, hit);
+  shootSpear(enemy.sprite, hit);
 }
 
 function gameStart(scene) {
@@ -321,7 +335,7 @@ function dispatchEnemy(scene) {
   window.onscreenEnemies.push(e);
 
   backend.post("GetImage", {}).then(function (response) {
-    e.refData = response.data;
+    e.word = response.data;
 
     scene.textures.addBase64(`WORD-${response.data.id}`, response.data.image);
     scene.textures.once(

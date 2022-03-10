@@ -2,7 +2,7 @@ let enemies = ["bear", "wolf", "deer", "boar"];
 let enemiesSpeed = 50000;
 
 class enemy {
-  refData = null;
+  word = null;
 
   constructor(scene) {
     this.scene = scene;
@@ -19,7 +19,7 @@ class enemy {
       scale = 3;
     }
 
-    let flag = this.scene.add.sprite(400, 300, `WORD-${this.refData.id}`);
+    let flag = this.scene.add.sprite(400, 300, `WORD-${this.word.id}`);
     let enemy = this.scene.physics.add
       .sprite(-100, this.scene.cameras.main.height - 100, randomEnemyType)
       .setScale(scale)
