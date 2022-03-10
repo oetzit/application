@@ -326,15 +326,17 @@ function shootSpear(enemy, hit, scene = fightScene) {
 }
 
 function submitTranscription(transcription) {
-  // TODO: guess the enemy if any
+  if (window.onscreenEnemies.length < 1) return;
+
   let similarity = 0;
   let match = null;
+
   window.onscreenEnemies.forEach((foe) => {
     const s = levenshtein(
       transcription.toLowerCase(),
       foe.word.ocr_transcript.toLowerCase(),
     ).similarity;
-    if (s <= similarity) return;
+    if (s < similarity) return;
     similarity = s;
     match = foe;
   });
