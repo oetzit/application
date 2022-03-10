@@ -367,20 +367,7 @@ function gameStart(scene) {
 
 function dispatchEnemy(scene) {
   backend.post("GetImage", {}).then(function (response) {
-    let e = new Foe(scene, response.data);
-
-    scene.textures.addBase64(`WORD-${response.data.id}`, response.data.image);
-    scene.textures.once(
-      "addtexture",
-      function () {
-        e.run((v) => {
-          setTimeout(() => {
-            dispatchEnemy(scene);
-          }, Math.floor(Math.random() * 10000 + 3000));
-        });
-      },
-      scene,
-    );
+    new Foe(scene, response.data);
   });
 }
 

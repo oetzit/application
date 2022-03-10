@@ -6,9 +6,24 @@ class Foe {
     this.scene = scene;
     this.scene.foes.push(this);
     this.word = word;
+    this.addClue();
+    this.run();
   }
 
-  run(callback) {
+  addClue() {
+    this.scene.textures.addBase64(this.word.id, this.word.image);
+    this.scene.textures.once(
+      "addtexture",
+      this.addClueSprite.bind(this),
+      this.scene,
+    );
+  }
+
+  addClueSprite() {
+    this.scene.add.sprite(400, 300, this.word.id);
+  }
+
+  run() {
     let me = this;
     let randomEnemyType = enemies[Math.floor(Math.random() * 4 + 0)];
 
@@ -19,7 +34,6 @@ class Foe {
       scale = 3;
     }
 
-    let flag = this.scene.add.sprite(400, 300, `WORD-${this.word.id}`);
     let enemy = this.scene.physics.add
       .sprite(-100, this.scene.cameras.main.height - 100, randomEnemyType)
       .setScale(scale)
@@ -60,7 +74,6 @@ class Foe {
           duration: 2000,
           onComplete: function () {
             nemico.destroy();
-            callback(me);
           },
         });
       }, 3000);
