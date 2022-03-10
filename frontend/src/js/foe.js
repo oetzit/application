@@ -35,8 +35,9 @@ class Foe {
 
     this.animalSprite = this.scene.physics.add
       .sprite(-100, this.scene.cameras.main.height - 100, this.species)
-      .setScale(-1 * scale, scale)
+      .setScale(scale)
       .setInteractive();
+    this.animalSprite.flipX = true;
 
     this.scene.physics.add.collider(this.animalSprite, this.scene.ground);
 

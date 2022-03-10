@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import nr from "newton-raphson-method";
+
 import Foe from "./foe";
 import backend from "./backend";
 
@@ -8,8 +10,10 @@ import levenshtein from "damerau-levenshtein";
 const fightScene = new Phaser.Scene("fight");
 
 fightScene.foes = [];
+fightScene.spears = [];
 fightScene.preload = preload;
 fightScene.create = create;
+fightScene.update = update;
 
 function setAnimation(obj, idleKey) {
   obj.play({ key: idleKey, repeat: -1 });
@@ -222,23 +226,11 @@ function initAndBindGuessPreview(scene) {
 }
 
 function shootSpear(enemy, hit, scene = fightScene) {
-  let startPoint = new Phaser.Math.Vector2(scene.player.x, scene.player.y);
-  let controlPoint1 = new Phaser.Math.Vector2(
-    enemy.x + (scene.player.x - enemy.x) / 2,
-    scene.cameras.main.height - (scene.player.x - enemy.x),
-  );
-
-  let endPoint = new Phaser.Math.Vector2(
-    enemy.x + enemy.width * 1.6,
-    scene.cameras.main.height - 60,
-  );
   let message = scene.add
     .sprite(scene.cameras.main.width / 2, scene.cameras.main.height / 2)
     .setScale(1);
 
-  // hit / missing <--- message
   if (!hit) {
-    endPoint = new Phaser.Math.Vector2(-500, scene.cameras.main.height - 60);
     message.play({ key: "missing", repeat: 1 });
     message.on("animationcomplete", () => {
       message.anims.remove("miss");
@@ -257,69 +249,46 @@ function shootSpear(enemy, hit, scene = fightScene) {
     scene.foes.splice(scene.foes.indexOf(enemy), 1);
   }
 
-  let curve = new Phaser.Curves.QuadraticBezier(
-    startPoint,
-    controlPoint1,
-    endPoint,
-  );
+  let spear = scene.add.sprite(scene.player.x, scene.player.y, "spear");
+  scene.spears.push(spear);
+  scene.physics.world.enable(spear);
+  scene.physics.add.collider(spear, scene.ground);
+  spear.body.setBounce(0.2);
 
-  let graphics = scene.add.graphics();
-  graphics.lineStyle(1, 0xff00ff, 1);
+  const dx = scene.player.x - enemy.x;
+  const dy = 0;
+  const v = 450; // MAGIC NUMBER
+  const w = 100;
+  const g = 200;
+  // TODO: maybe introduce damping
+  // TODO: expand and use analytic derivative
+  const f = (theta) =>
+    2 * dy * Math.pow(w - v * Math.cos(theta), 2) +
+    2 * v * Math.sin(theta) * (w - v * Math.cos(theta)) * dx +
+    g * Math.pow(dx, 2);
 
-  // curve.draw(graphics); // decomment to see the trajectory
+  const theta = nr(f, Math.PI, {
+    verbose: true,
+    maxIterations: 100,
+  });
 
-  let spear = scene.add.follower(curve);
+  const t = dx / (w - v * Math.cos(theta));
 
-  // console.log(player.x + " " + enemy.x);
-  if (hit) {
-    spear.startFollow({
-      positionOnPath: true,
-      duration: (scene.cameras.main.width - enemy.x) * 3,
-      rotateToPath: true,
-      verticalAdjust: true,
-      scale: 3,
-      onComplete: (x, y) => {
-        let spearHitObj = scene.add
-          .sprite(
-            enemy.x + enemy.width * 1.6 - 10,
-            scene.cameras.main.height - 60,
-          )
-          .setScale(2);
-        setAnimation(spearHitObj, "spearHitAni");
-        spear.anims.stop("spearAni");
-        spear.anims.remove("spearAni");
-        spear.destroy();
-        setTimeout(() => {
-          enemy.flipX = false;
-          setAnimation(enemy, enemy.typeName + "_run");
-          enemy.movement.stop();
-          scene.tweens.add({
-            targets: enemy,
-            x: -500,
-            duration: 5000,
-            onComplete: function () {
-              enemy.destroy();
-              //callback(enemy); // ???
-            },
-          });
-        }, 3000);
-        setTimeout(() => {
-          spearHitObj.destroy();
-        }, 4000);
-      },
-    });
-  } else {
-    enemy.setInteractive();
-    enemy.movement.resume();
-    setAnimation(enemy, enemy.typeName + "_walk");
-    spear.startFollow({
-      positionOnPath: true,
-      duration: 3000,
-      rotateToPath: true,
-      verticalAdjust: true,
-      scale: 3,
-    });
+  if (theta) {
+    spear.body.setVelocity(v * Math.cos(theta), v * Math.sin(theta));
   }
+
+  scene.physics.add.overlap(spear, enemy, (player, nemico) => {
+    scene.physics.world.removeCollider(this);
+    // TODO: fancy bounce
+    scene.spears.splice(scene.spears.indexOf(spear), 1);
+    spear.destroy();
+    // TODO: refactor into flee method
+    nemico.play(nemico.species + "_run");
+    nemico.flipX = false;
+    nemico.body.setVelocity(-200, 0);
+    setTimeout(() => nemico.destroy(), 2000);
+  });
 
   spear.scale = 2;
   spear.anims.play("spearAni");
@@ -346,16 +315,8 @@ function submitTranscription(transcription, scene) {
   // TODO: we can have near misses depending on similarity!
   let hit = similarity >= 0.9;
   let enemy = match;
-  enemy.sprite.disableInteractive();
-  // here invoke image
-  enemy.sprite.movement.pause();
-  setAnimation(enemy.sprite, enemy.sprite.typeName + "_idle");
 
-  // let beginTime = new Date().getTime();
-  // let endTime = new Date().getTime();
-  // let deltaTime = endTime - beginTime;
-
-  shootSpear(enemy.sprite, hit);
+  shootSpear(enemy.animalSprite, hit);
 }
 
 function gameStart(scene) {
@@ -368,6 +329,12 @@ function gameStart(scene) {
 function dispatchEnemy(scene) {
   backend.post("GetImage", {}).then(function (response) {
     new Foe(scene, response.data);
+  });
+}
+
+function update() {
+  this.spears.forEach((spear) => {
+    spear.setRotation(spear.body.velocity.angle());
   });
 }
 
