@@ -166,24 +166,57 @@ function create() {
   initAndBindGuessPreview(this);
 }
 
+const LETTERS_KEYCODES = new Set([
+  Phaser.Input.Keyboard.KeyCodes.SPACE,
+  Phaser.Input.Keyboard.KeyCodes.A,
+  Phaser.Input.Keyboard.KeyCodes.B,
+  Phaser.Input.Keyboard.KeyCodes.C,
+  Phaser.Input.Keyboard.KeyCodes.D,
+  Phaser.Input.Keyboard.KeyCodes.E,
+  Phaser.Input.Keyboard.KeyCodes.F,
+  Phaser.Input.Keyboard.KeyCodes.G,
+  Phaser.Input.Keyboard.KeyCodes.H,
+  Phaser.Input.Keyboard.KeyCodes.I,
+  Phaser.Input.Keyboard.KeyCodes.J,
+  Phaser.Input.Keyboard.KeyCodes.K,
+  Phaser.Input.Keyboard.KeyCodes.L,
+  Phaser.Input.Keyboard.KeyCodes.M,
+  Phaser.Input.Keyboard.KeyCodes.N,
+  Phaser.Input.Keyboard.KeyCodes.O,
+  Phaser.Input.Keyboard.KeyCodes.P,
+  Phaser.Input.Keyboard.KeyCodes.Q,
+  Phaser.Input.Keyboard.KeyCodes.R,
+  Phaser.Input.Keyboard.KeyCodes.S,
+  Phaser.Input.Keyboard.KeyCodes.T,
+  Phaser.Input.Keyboard.KeyCodes.U,
+  Phaser.Input.Keyboard.KeyCodes.V,
+  Phaser.Input.Keyboard.KeyCodes.W,
+  Phaser.Input.Keyboard.KeyCodes.X,
+  Phaser.Input.Keyboard.KeyCodes.Y,
+  Phaser.Input.Keyboard.KeyCodes.Z,
+  219, // ß
+  186, // ü
+  192, // ö
+  222, // ä
+]);
+
 function initAndBindGuessPreview(scene) {
   var textEntry = scene.add.text(10, scene.cameras.main.height / 2 - 32, "", {
     font: "bold 64px Courier",
     fill: "#ffffff",
   });
   scene.input.keyboard.on("keydown", function (event) {
-    if (
+    if (LETTERS_KEYCODES.has(event.keyCode)) {
+      textEntry.text += event.key;
+    } else if (
       event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE &&
       textEntry.text.length > 0
     ) {
       textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1);
     } else if (
-      event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE ||
-      (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.A &&
-        event.keyCode <= Phaser.Input.Keyboard.KeyCodes.Z)
+      event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
+      textEntry.text.length > 0
     ) {
-      textEntry.text += event.key;
-    } else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER) {
       submitTranscription(textEntry.text);
       textEntry.text = textEntry.text.substr(0, 0);
     }
