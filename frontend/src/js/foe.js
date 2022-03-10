@@ -1,11 +1,11 @@
 let enemies = ["bear", "wolf", "deer", "boar"];
 let enemiesSpeed = 50000;
 
-class enemy {
-  word = null;
-
-  constructor(scene) {
+class Foe {
+  constructor(scene, word) {
     this.scene = scene;
+    this.scene.foes.push(this);
+    this.word = word;
   }
 
   run(callback) {
@@ -72,4 +72,4 @@ function setAnimation(obj, idleKey) {
   obj.play({ key: idleKey, repeat: -1 });
 }
 
-export default enemy;
+export default Foe;

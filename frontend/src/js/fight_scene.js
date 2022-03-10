@@ -1,15 +1,13 @@
 import Phaser from "phaser";
 
-import enemy from "./enemy";
+import Foe from "./foe";
 import backend from "./backend";
 
 import levenshtein from "damerau-levenshtein";
 
 const fightScene = new Phaser.Scene("fight");
 
-let onscreenEnemies = [];
-window.onscreenEnemies = onscreenEnemies;
-
+fightScene.foes = [];
 fightScene.preload = preload;
 fightScene.create = create;
 
@@ -217,7 +215,7 @@ function initAndBindGuessPreview(scene) {
       event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
       textEntry.text.length > 0
     ) {
-      submitTranscription(textEntry.text);
+      submitTranscription(textEntry.text, scene);
       textEntry.text = textEntry.text.substr(0, 0);
     }
   });
@@ -256,7 +254,7 @@ function shootSpear(enemy, hit, scene = fightScene) {
       message.destroy();
     });
     // TODO: ew.
-    window.onscreenEnemies.splice(window.onscreenEnemies.indexOf(enemy), 1);
+    scene.foes.splice(scene.foes.indexOf(enemy), 1);
   }
 
   let curve = new Phaser.Curves.QuadraticBezier(
@@ -327,13 +325,13 @@ function shootSpear(enemy, hit, scene = fightScene) {
   spear.anims.play("spearAni");
 }
 
-function submitTranscription(transcription) {
-  if (window.onscreenEnemies.length < 1) return;
+function submitTranscription(transcription, scene) {
+  if (scene.foes.length < 1) return;
 
   let similarity = 0;
   let match = null;
 
-  window.onscreenEnemies.forEach((foe) => {
+  scene.foes.forEach((foe) => {
     const s = levenshtein(
       transcription.toLowerCase(),
       foe.word.ocr_transcript.toLowerCase(),
@@ -368,11 +366,8 @@ function gameStart(scene) {
 }
 
 function dispatchEnemy(scene) {
-  let e = new enemy(scene);
-  window.onscreenEnemies.push(e);
-
   backend.post("GetImage", {}).then(function (response) {
-    e.word = response.data;
+    let e = new Foe(scene, response.data);
 
     scene.textures.addBase64(`WORD-${response.data.id}`, response.data.image);
     scene.textures.once(
