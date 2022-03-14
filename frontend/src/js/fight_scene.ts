@@ -1,22 +1,20 @@
 import "phaser";
 
 import Foe from "./foe";
+import Spear from "./spear";
 import backend from "./backend";
 
 // TODO: write interfaces
-import nr from "newton-raphson-method";
 import levenshtein from "damerau-levenshtein";
 
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
-  spears: Array<Phaser.GameObjects.Sprite>;
   ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   constructor() {
     super("fight");
     this.foes = [];
-    this.spears = [];
   }
 
   preload() {
@@ -164,11 +162,39 @@ export default class FightScene extends Phaser.Scene {
     initAndBindGuessPreview(this);
   }
 
-  update() {
-    // TODO: re-enable
-    // this.spears.forEach((spear) => {
-    //   spear.setRotation(spear.body.velocity.angle());
-    // });
+  showMissMessage() {
+    const message = this.add
+      .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, "miss")
+      .setScale(1);
+    message.play({ key: "missing", repeat: 1 });
+    message.on("animationcomplete", () => {
+      message.anims.remove("miss");
+      message.destroy();
+    });
+  }
+
+  showHitMessage() {
+    const message = this.add
+      .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, "hit")
+      .setScale(1);
+    message.play({ key: "hit", repeat: 1 });
+    message.on("animationcomplete", () => {
+      message.anims.remove("hit");
+      message.destroy();
+    });
+  }
+
+  shootSpear(enemy: Phaser.GameObjects.Sprite, hit: boolean) {
+    const scene = this;
+    if (!hit) {
+      this.showMissMessage();
+    } else {
+      this.showHitMessage();
+      // TODO: ew.
+      scene.foes.splice(scene.foes.indexOf(enemy), 1); // FIXME
+    }
+
+    new Spear(this, this.player, enemy);
   }
 }
 
@@ -250,86 +276,6 @@ function initAndBindGuessPreview(scene: FightScene) {
   );
 }
 
-function shootSpear(
-  enemy: Phaser.GameObjects.Sprite,
-  hit: boolean,
-  scene: FightScene,
-) {
-  if (!hit) {
-    const message = scene.add
-      .sprite(
-        scene.cameras.main.width / 2,
-        scene.cameras.main.height / 2,
-        "miss",
-      )
-      .setScale(1);
-    message.play({ key: "missing", repeat: 1 });
-    message.on("animationcomplete", () => {
-      message.anims.remove("miss");
-      message.destroy();
-    });
-  } else {
-    const message = scene.add
-      .sprite(
-        scene.cameras.main.width / 2,
-        scene.cameras.main.height / 2,
-        "hit",
-      )
-      .setScale(1);
-    message.play({ key: "hit", repeat: 1 });
-    message.on("animationcomplete", () => {
-      message.anims.remove("hit");
-      message.destroy();
-    });
-    // TODO: ew.
-    scene.foes.splice(scene.foes.indexOf(enemy), 1); // FIXME
-  }
-
-  const spear = scene.add.sprite(scene.player.x, scene.player.y, "spear");
-  scene.spears.push(spear);
-  scene.physics.world.enable(spear);
-  scene.physics.add.collider(spear, scene.ground);
-  spear.body.setBounce(0.2);
-
-  const dx = scene.player.x - enemy.x;
-  const dy = 0;
-  const v = 450; // MAGIC NUMBER
-  const w = 100;
-  const g = 200;
-  // TODO: maybe introduce damping
-  // TODO: expand and use analytic derivative
-  const f = (theta) =>
-    2 * dy * Math.pow(w - v * Math.cos(theta), 2) +
-    2 * v * Math.sin(theta) * (w - v * Math.cos(theta)) * dx +
-    g * Math.pow(dx, 2);
-
-  const theta = nr(f, Math.PI, {
-    verbose: true,
-    maxIterations: 100,
-  });
-
-  const t = dx / (w - v * Math.cos(theta));
-
-  if (theta) {
-    spear.body.setVelocity(v * Math.cos(theta), v * Math.sin(theta));
-  }
-
-  scene.physics.add.overlap(spear, enemy, (player, nemico) => {
-    scene.physics.world.removeCollider(this);
-    // TODO: fancy bounce
-    scene.spears.splice(scene.spears.indexOf(spear), 1);
-    spear.destroy();
-    // TODO: refactor into flee method
-    nemico.play(nemico.species + "_run");
-    nemico.flipX = false;
-    nemico.body.setVelocity(-200, 0);
-    setTimeout(() => nemico.destroy(), 2000);
-  });
-
-  spear.scale = 2;
-  spear.anims.play("spearAni");
-}
-
 function submitTranscription(transcription: string, scene: FightScene) {
   if (scene.foes.length < 1) return;
 
@@ -354,7 +300,7 @@ function submitTranscription(transcription: string, scene: FightScene) {
   const hit = similarity >= 0.9;
   const enemy = match;
 
-  shootSpear(enemy.animalSprite, hit, scene);
+  scene.shootSpear(enemy.animalSprite, hit);
 }
 
 function gameStart(scene: any) {

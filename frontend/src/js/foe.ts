@@ -53,6 +53,13 @@ class Foe {
       .setInteractive();
     this.animalSprite.flipX = true;
 
+    this.animalSprite.flee = function () {
+      this.play(this.species + "_run");
+      this.flipX = false;
+      this.body.setVelocity(-200, 0);
+      setTimeout(() => this.destroy(), 2000); // TODO: disappear offscreen
+    };
+
     this.scene.physics.add.collider(this.animalSprite, this.scene.ground);
 
     setAnimation(this.animalSprite, this.species + "_walk");

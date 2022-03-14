@@ -2,6 +2,8 @@ import * as Phaser from "phaser";
 
 import FightScene from "./fight_scene";
 
+export const GRAVITY_Y = 200;
+
 const config = {
   type: Phaser.AUTO,
   width: 1200,
@@ -12,7 +14,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 200 },
+      gravity: { y: GRAVITY_Y },
       debug: true,
     },
   },
