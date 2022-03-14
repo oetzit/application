@@ -48,7 +48,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
         this.hitTarget.bind(this),
       );
     } else {
-      console.error("Cannot hit foe. :(");
+      console.error("Cannot hit critter. :(");
     }
   }
 
