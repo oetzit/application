@@ -252,7 +252,7 @@ const LETTERS_KEYCODES = new Set([
 ]);
 
 function initAndBindGuessPreview(scene: FightScene) {
-  const textEntry = scene.add.text(10, scene.cameras.main.height / 2 - 32, "", {
+  const textEntry = scene.add.text(100, scene.cameras.main.height / 2, "", {
     font: "bold 64px Courier",
     color: "#ffffff",
   });
