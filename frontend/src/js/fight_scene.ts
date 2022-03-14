@@ -194,7 +194,7 @@ export default class FightScene extends Phaser.Scene {
       scene.foes.splice(scene.foes.indexOf(enemy), 1); // FIXME
     }
 
-    new Spear(this, this.player, enemy);
+    new Spear(this, this.player, hit ? enemy : undefined);
   }
 }
 

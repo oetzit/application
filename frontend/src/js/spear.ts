@@ -8,15 +8,16 @@ const SPEED = 450;
 
 class Spear extends Phaser.Physics.Arcade.Sprite {
   source: Phaser.GameObjects.Sprite;
-  target: Phaser.GameObjects.Sprite;
+  target: Phaser.GameObjects.Sprite | undefined;
   body: Phaser.Physics.Arcade.Body;
 
   constructor(
     scene: FightScene,
     source: Phaser.GameObjects.Sprite,
-    target: Phaser.GameObjects.Sprite,
+    target: Phaser.GameObjects.Sprite | undefined,
   ) {
     super(scene, scene.player.x, scene.player.y, "spear");
+    this.play({ key: "spearAni", repeat: -1 });
     scene.add.existing(this);
 
     this.setScale(3);
@@ -27,27 +28,63 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
     //scene.physics.world.enableBody(this, Phaser.Physics.Arcade.DYNAMIC_BODY);
     this.body = new Phaser.Physics.Arcade.Body(scene.physics.world, this);
     scene.physics.world.add(this.body);
-    scene.physics.add.collider(this, scene.ground);
+    scene.physics.add.collider(this, scene.ground, this.hitGround.bind(this));
     this.body.setBounce(0, 0.2); // TODO: bounce only at small angles
 
-    const theta = this.calculateSuccessfulLaunchAngle(source, target);
-
-    if (theta) {
-      this.body.setVelocity(SPEED * Math.cos(theta), SPEED * Math.sin(theta));
+    if (this.target) {
+      this.shootTarget();
     } else {
-      console.error("Cannot hit foe.");
+      this.shootGround();
     }
-
-    scene.physics.add.overlap(this, this.target, (_, hitTarget) => {
-      scene.physics.world.removeCollider(this);
-      this.destroy();
-      hitTarget.flee();
-    });
-
-    // this.anims.play("spearAni");
   }
 
-  preUpdate(): void {
+  shootTarget() {
+    const theta = this.calculateSuccessfulLaunchAngle(this.source, this.target);
+    if (theta) {
+      this.body.setVelocity(SPEED * Math.cos(theta), SPEED * Math.sin(theta));
+      this.scene.physics.add.overlap(
+        this,
+        this.target,
+        this.hitTarget.bind(this),
+      );
+    } else {
+      console.error("Cannot hit foe. :(");
+    }
+  }
+
+  hitTarget() {
+    this.scene.physics.world.removeCollider(this);
+    // TODO: bounce?
+    this.destroy();
+    this.target.flee();
+  }
+
+  shootGround() {
+    const theta = Math.random() * 2 * Math.PI;
+    this.body.setVelocity(SPEED * Math.cos(theta), SPEED * Math.sin(theta));
+  }
+
+  hitGround() {
+    // this.scene.physics.world.remove(this.body);
+    this.body.setEnable(false);
+    this.play({ key: "spearHitAni", repeat: -1, frameRate: 48 });
+    this.setRotation(this.rotation - Math.PI / 2);
+    this.scene.tweens.add({
+      targets: this,
+      alpha: 0,
+      ease: "Linear",
+      delay: 500,
+      duration: 1500,
+      onComplete: this.destroy.bind(this),
+    });
+  }
+
+  preUpdate(time, delta): void {
+    super.preUpdate(time, delta); // NOTE: this preserves sprite animations
+    if (this.body.enable) this.alignToVelocity();
+  }
+
+  alignToVelocity() {
     const velocity = this.body.velocity as Phaser.Math.Vector2;
     this.setRotation(velocity.angle());
   }
