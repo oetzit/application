@@ -185,13 +185,14 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
-  shootSpear(enemy: Phaser.GameObjects.Sprite, hit: boolean) {
+  shootSpear(enemy: Critter, hit: boolean) {
     const scene = this;
     if (!hit) {
       this.showMissMessage();
     } else {
       this.showHitMessage();
       // TODO: ew.
+      enemy.clue.delete();
       scene.foes.splice(scene.foes.indexOf(enemy), 1); // FIXME
     }
 

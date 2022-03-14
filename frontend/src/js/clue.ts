@@ -43,6 +43,17 @@ class Clue extends Phaser.GameObjects.Sprite {
       duration: 100,
     });
   }
+
+  delete() {
+    this.scene.tweens.add({
+      targets: this,
+      alpha: 0,
+      ease: "Linear",
+      delay: 0,
+      duration: 500,
+    });
+    this.destroy();
+  }
 }
 
 export default Clue;
