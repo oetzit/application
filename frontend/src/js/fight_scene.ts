@@ -151,7 +151,6 @@ export default class FightScene extends Phaser.Scene {
       duration: 2000,
       onComplete: () => {
         setAnimation(this.player, "player_idle");
-        gameStart(this);
       },
     });
 
@@ -160,6 +159,7 @@ export default class FightScene extends Phaser.Scene {
     );
     this.scale.refresh();
     initAndBindGuessPreview(this);
+    gameStart(this);
   }
 
   showMissMessage() {
@@ -304,9 +304,7 @@ function submitTranscription(transcription: string, scene: FightScene) {
 }
 
 function gameStart(scene: any) {
-  setTimeout(() => {
-    dispatchEnemy(scene);
-  }, 200);
+  dispatchEnemy(scene);
 }
 
 function dispatchEnemy(scene: any) {
