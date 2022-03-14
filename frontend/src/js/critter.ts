@@ -3,6 +3,9 @@ import Clue from "./clue";
 import FightScene from "./fight_scene";
 
 const SPECIES = ["bear", "wolf", "deer", "boar"];
+const WALK_VELOCITY = 100;
+const FLEE_VELOCITY = -200;
+const ESCAPE_VELOCITY = 300;
 
 class Critter extends Phaser.Physics.Arcade.Sprite {
   clue: Clue;
@@ -37,7 +40,7 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.play({ key: this.species + "_walk", repeat: -1 });
     // TODO: bring animal below grass
 
-    this.body.setVelocity(100, 0);
+    this.body.setVelocity(WALK_VELOCITY, 0);
 
     // here to implement health
     this.scene.physics.add.overlap(
@@ -45,8 +48,11 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
       this,
       (_player, _enemy) => {
         this.play(this.species + "_run");
-        this.body.setVelocity(300, 0);
-        setTimeout(() => this.destroy(), 2000);
+        this.body.setVelocity(ESCAPE_VELOCITY, 0);
+        this.clue.delete();
+        setTimeout(() => {
+          this.destroy();
+        }, 2000);
       },
     );
   }
@@ -54,11 +60,8 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
   flee() {
     this.play(this.species + "_run");
     this.flipX = false;
-    this.body.setVelocity(-200, 0);
-    setTimeout(() => {
-      this.clue.delete();
-      this.destroy();
-    }, 2000); // TODO: disappear offscreen
+    this.body.setVelocity(FLEE_VELOCITY, 0);
+    setTimeout(() => this.destroy(), 2000); // TODO: disappear offscreen
   }
 }
 
