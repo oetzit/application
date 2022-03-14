@@ -35,6 +35,10 @@ class Clue extends Phaser.GameObjects.Sprite {
 
   showTexture() {
     this.setTexture(this.word.id);
+    const x =
+      (this.scene.cameras.main.width - this.width - 100) * Math.random();
+    const y = (400 - 100) * Math.random() + 100;
+    this.setPosition(x, y);
     this.scene.tweens.add({
       targets: this,
       alpha: 1,
