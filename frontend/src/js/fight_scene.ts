@@ -306,7 +306,16 @@ function submitTranscription(transcription: string, scene: FightScene) {
 }
 
 function gameStart(scene: any) {
+  spawn(scene);
+  // dispatchEnemy(scene);
+}
+
+function spawn(scene: any) {
   dispatchEnemy(scene);
+  scene.time.now;
+  const delay =
+    (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
+  setTimeout(() => spawn(scene), delay);
 }
 
 function dispatchEnemy(scene: any) {
