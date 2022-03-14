@@ -50,9 +50,9 @@ class Clue extends Phaser.GameObjects.Sprite {
       alpha: 0,
       ease: "Linear",
       delay: 0,
-      duration: 500,
+      duration: 100,
+      onComplete: this.destroy.bind(this),
     });
-    this.destroy();
   }
 }
 
