@@ -1,8 +1,8 @@
 import * as Phaser from "phaser";
 
-import fightScene from "./fight_scene";
+import FightScene from "./fight_scene";
 
-let config = {
+const config = {
   type: Phaser.AUTO,
   width: 1200,
   height: 800,
@@ -13,11 +13,10 @@ let config = {
     default: "arcade",
     arcade: {
       gravity: { y: 200 },
-      debug: false,
+      debug: true,
     },
   },
-  scene: fightScene,
+  scene: FightScene,
 };
 
-const game = new Phaser.Game(config);
-window.game = game;
+new Phaser.Game(config);

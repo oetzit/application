@@ -1,9 +1,23 @@
-let SPECIES = ["bear", "wolf", "deer", "boar"];
+import "phaser";
+
+const SPECIES = ["bear", "wolf", "deer", "boar"];
+
+interface wordObject {
+  id: string;
+  image: string;
+  ocr_confidence: number;
+  ocr_transcript: string;
+}
 
 class Foe {
-  constructor(scene, word) {
+  scene: Phaser.Scene;
+  clueSprite: Phaser.GameObjects.Sprite;
+  animalSprite: Phaser.GameObjects.Sprite;
+  word: wordObject;
+  species: string;
+
+  constructor(scene: Phaser.Scene, word: wordObject) {
     this.scene = scene;
-    this.scene.foes.push(this);
     this.word = word;
     this.addClue();
     this.addAnimal();
