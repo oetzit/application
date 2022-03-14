@@ -55,7 +55,10 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.play(this.species + "_run");
     this.flipX = false;
     this.body.setVelocity(-200, 0);
-    setTimeout(() => this.destroy(), 2000); // TODO: disappear offscreen
+    setTimeout(() => {
+      this.clue.delete();
+      this.destroy();
+    }, 2000); // TODO: disappear offscreen
   }
 }
 
