@@ -12,6 +12,7 @@ export default class FightScene extends Phaser.Scene {
   foes: Array<Critter>;
   ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  cluesGroup: Phaser.Physics.Arcade.Group;
 
   constructor() {
     super("fight");
@@ -75,6 +76,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   create() {
+    this.initCluesGroup();
     // Draw background forest
     ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
       (textureKey) => {
@@ -124,9 +126,8 @@ export default class FightScene extends Phaser.Scene {
 
     this.ground = this.physics.add
       .staticImage(0, this.cameras.main.height - 25, "ground")
-      .setScale(1)
-      .refreshBody();
-    this.ground.setImmovable(true);
+      .refreshBody()
+      .setImmovable(true);
     // TODO: re-enable
     //this.ground.body.allowGravity = false;
 
@@ -197,6 +198,22 @@ export default class FightScene extends Phaser.Scene {
     }
 
     new Spear(this, this.player, hit ? enemy : undefined);
+  }
+
+  initCluesGroup() {
+    const bounds = new Phaser.Geom.Rectangle(
+      0,
+      0,
+      this.cameras.main.width,
+      this.cameras.main.height / 2,
+    );
+    this.cluesGroup = this.physics.add.group({
+      collideWorldBounds: true,
+      customBoundsRectangle: bounds,
+      bounceY: 0.2,
+      dragY: 180,
+    });
+    this.physics.add.collider(this.cluesGroup, this.cluesGroup);
   }
 }
 

@@ -10,13 +10,14 @@ interface WordObject {
 
 class Clue extends Phaser.GameObjects.Sprite {
   word: WordObject;
+  scene: FightScene;
 
   constructor(scene: FightScene, word: WordObject) {
     // TODO: set positions
     super(scene, 400, 300, word.id);
 
     this.setAlpha(0);
-    this.scene.add.existing(this);
+    scene.add.existing(this);
 
     this.scene = scene;
     this.word = word;
@@ -35,12 +36,15 @@ class Clue extends Phaser.GameObjects.Sprite {
 
   showTexture() {
     this.setTexture(this.word.id);
+    this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
+    this.scene.physics.world.add(this.body);
+    this.scene.cluesGroup.add(this);
+
     const x =
-      (this.scene.cameras.main.width - this.width - 100) * Math.random() +
-      50 +
+      (this.scene.cameras.main.width - this.width - 10) * Math.random() +
+      5 +
       this.width / 2;
-    const y = (400 - 100) * Math.random() + 100;
-    this.setPosition(x, y);
+    this.setPosition(x, 50);
     this.scene.tweens.add({
       targets: this,
       alpha: 1,
