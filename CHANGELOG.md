@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `FE` Clues appear and fade on top of forest.
+- `FE` Spears have physics, and either scare animals away or stab the ground.
+- `FE` The player can just type; no clicking, no modals.
+- `FE` Typed words are matched with onscreen ones by Levenshtein distance.
+- `BE` Seed procedure from Quack.
+- `BE`/`FE` Revise DB schema and API to handle words.
+
+### Changed
+
+- `FE` Complete rewrite in TypeScript.
+
 ## [0.1.0] - 2022-03-02
 
 ### Added
