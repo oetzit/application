@@ -2,6 +2,7 @@ import fastify from "fastify";
 import fastifyCors from "fastify-cors";
 import { connection } from "./db";
 import { FromSchema } from "json-schema-to-ts";
+import fastifySwagger from "fastify-swagger";
 
 const server = fastify({
   logger: {
@@ -16,6 +17,31 @@ const server = fastify({
 server.register(fastifyCors, {
   // TODO: use the correct origins
   origin: "*",
+});
+
+server.register(fastifySwagger, {
+  exposeRoute: true,
+  routePrefix: "/api/doc",
+  swagger: {
+    info: {
+      title: "Ötzi",
+      description: "Ötzi app backend API",
+      version: "0.1.0",
+    },
+    host: "localhost:8080",
+    schemes: ["http", "https"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+    tags: [],
+    definitions: {},
+    // securityDefinitions: {
+    //   apiKey: {
+    //     type: "apiKey",
+    //     name: "apiKey",
+    //     in: "header",
+    //   },
+    // },
+  },
 });
 
 server.get("/", function (request, reply) {

@@ -23,6 +23,7 @@
     "axios": "^0.26.0",
     "fastify": "^3.27.1",
     "fastify-cors": "^6.0.2",
+    "fastify-swagger": "^5.0.0",
     "json-schema-to-ts": "^1.6.5",
     "knex": "^1.0.3",
     "pg": "^8.7.3",
