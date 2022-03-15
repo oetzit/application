@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2022-03-15
+
 ### Added
 
 - `FE` Clues appear and fade on top of forest.
@@ -40,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.1.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...development
+[0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.2.0
 [0.1.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.0.1...0.1.0
 [0.0.1]: https://gitlab.inf.unibz.it/commul/oetzi/tree/v0.0.1
