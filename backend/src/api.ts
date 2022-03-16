@@ -6,7 +6,7 @@ import { connection } from "./db";
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
 
 const ParamsSchema = Type.Object({
-  id: Type.String({ format: "uuid" }),
+  game_id: Type.String({ format: "uuid" }),
 });
 
 type ParamsType = Static<typeof ParamsSchema>;
@@ -18,6 +18,8 @@ const GameSchema = Type.Object({
 });
 
 type GameType = Static<typeof GameSchema>;
+
+const GamePatchSchema = Type.Omit(GameSchema, ["id"]);
 
 const WordSchema = Type.Object({
   id: Type.String({ format: "uuid" }),
@@ -50,12 +52,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
       if (word === undefined) {
         reply.code(404).send();
       } else {
-        reply.code(200).send({
-          id: word.id,
-          image: word.image,
-          ocr_confidence: word.ocr_confidence,
-          ocr_transcript: word.ocr_transcript,
-        });
+        reply.code(200).send(word);
       }
     },
   });
@@ -65,7 +62,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     Reply: GameType;
   }>({
     method: "GET",
-    url: "/games/:id",
+    url: "/games/:game_id",
     schema: {
       params: ParamsSchema,
       response: {
@@ -75,7 +72,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
     handler: async (request, reply) => {
       const game = await connection<GameType>("games")
-        .where("id", request.params.id)
+        .where("id", request.params.game_id)
         .first();
       if (game === undefined) {
         reply.code(404).send();
@@ -105,15 +102,13 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
   });
 
-  const GamePatchSchema = Type.Omit(GameSchema, ["id"]);
-
   fastify.route<{
     Params: ParamsType;
     Body: Static<typeof GamePatchSchema>;
     Reply: GameType;
   }>({
     method: "PATCH",
-    url: "/games/:id",
+    url: "/games/:game_id",
     schema: {
       params: ParamsSchema,
       body: GamePatchSchema,
@@ -123,7 +118,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
     handler: async (request, reply) => {
       const game = await connection<GameType>("games")
-        .where("id", request.params.id)
+        .where("id", request.params.game_id)
         .first();
       if (game === undefined) {
         reply.code(404).send();
