@@ -58,9 +58,9 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .orderByRaw("RANDOM()")
         .first();
       if (word === undefined) {
-        reply.code(404);
+        reply.code(404).send();
       } else {
-        reply.send({
+        reply.code(200).send({
           id: word.id,
           image: word.image,
           ocr_confidence: word.ocr_confidence,
@@ -88,9 +88,9 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .where("id", request.params.id)
         .first();
       if (game === undefined) {
-        reply.code(404);
+        reply.code(404).send();
       } else {
-        reply.send({
+        reply.code(200).send({
           id: game.id,
         });
       }
