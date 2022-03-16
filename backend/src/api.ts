@@ -5,18 +5,9 @@ import { connection } from "./db";
 
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
 
-const GameParamsSchema = Type.Object({
-  game_id: Type.String({ format: "uuid" }),
+const IdInParamsSchema = Type.Object({
+  id: Type.String({ format: "uuid" }),
 });
-
-type GameParamsType = Static<typeof GameParamsSchema>;
-
-const ClueParamsSchema = Type.Object({
-  game_id: Type.String({ format: "uuid" }),
-  clue_id: Type.String({ format: "uuid" }),
-});
-
-type ClueParamsType = Static<typeof ClueParamsSchema>;
 
 const ClueSchema = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
@@ -64,6 +55,8 @@ const WordSchema = Type.Object({
 
 type WordType = Static<typeof WordSchema>;
 
+//==============================================================================
+
 const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   fastify.route<{
     Reply: WordType;
@@ -92,13 +85,13 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: GameParamsType;
+    Params: Static<typeof IdInParamsSchema>;
     Reply: GameType;
   }>({
     method: "GET",
-    url: "/games/:game_id",
+    url: "/games/:id",
     schema: {
-      params: GameParamsSchema,
+      params: IdInParamsSchema,
       response: {
         200: GameSchema,
         404: {}, // TODO: JSend error
@@ -106,7 +99,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
     handler: async (request, reply) => {
       const game = await connection<GameType>("games")
-        .where("id", request.params.game_id)
+        .where("id", request.params.id)
         .first();
       if (game === undefined) {
         reply.code(404).send();
@@ -137,14 +130,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: GameParamsType;
+    Params: Static<typeof IdInParamsSchema>;
     Body: Static<typeof GamePatchSchema>;
     Reply: GameType;
   }>({
     method: "PATCH",
-    url: "/games/:game_id",
+    url: "/games/:id",
     schema: {
-      params: GameParamsSchema,
+      params: IdInParamsSchema,
       body: GamePatchSchema,
       response: {
         200: GameSchema,
@@ -152,7 +145,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
     handler: async (request, reply) => {
       const game = await connection<GameType>("games")
-        .where("id", request.params.game_id)
+        .where("id", request.params.id)
         .first();
       if (game === undefined) {
         reply.code(404).send();
@@ -166,14 +159,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: Static<typeof GameParamsSchema>;
+    Params: Static<typeof IdInParamsSchema>;
     Body: Static<typeof CluePostSchema>;
     Reply: ClueType;
   }>({
     method: "POST",
-    url: "/games/:game_id/clues",
+    url: "/games/:id/clues",
     schema: {
-      params: GameParamsSchema,
+      params: IdInParamsSchema,
       body: CluePostSchema,
       response: {
         200: ClueSchema,
@@ -183,14 +176,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: Static<typeof ClueParamsSchema>;
+    Params: Static<typeof IdInParamsSchema>;
     Body: Static<typeof CluePatchSchema>;
     Reply: ClueType;
   }>({
     method: "PATCH",
-    url: "/games/:game_id/clues/:clue_id",
+    url: "/clues/:id",
     schema: {
-      params: ClueParamsSchema,
+      params: IdInParamsSchema,
       body: CluePatchSchema,
       response: {
         200: ClueSchema,
@@ -200,14 +193,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: Static<typeof GameParamsSchema>;
+    Params: Static<typeof IdInParamsSchema>;
     Body: Static<typeof ShotPostSchema>;
     Reply: ShotType;
   }>({
     method: "POST",
-    url: "/games/:game_id/shots",
+    url: "/games/:id/shots",
     schema: {
-      params: GameParamsSchema,
+      params: IdInParamsSchema,
       body: ShotPostSchema,
       response: {
         200: ShotSchema,
