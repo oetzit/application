@@ -172,7 +172,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         200: ClueSchema,
       },
     },
-    handler: async (request, reply) => {},
+    handler: async (request, reply) => {
+      const clues = await connection
+        .table("clues")
+        .insert(request.body)
+        .returning<ClueType[]>("*");
+
+      reply.code(200).send(clues[0]);
+    },
   });
 
   fastify.route<{
@@ -189,7 +196,19 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         200: ClueSchema,
       },
     },
-    handler: async (request, reply) => {},
+    handler: async (request, reply) => {
+      const clue = await connection<ClueType>("clues")
+        .where("id", request.params.id)
+        .first();
+      if (clue === undefined) {
+        reply.code(404).send();
+      } else {
+        const clues = await connection<ClueType>("clues")
+          .update(request.body)
+          .returning("*");
+        reply.code(200).send(clues[0]);
+      }
+    },
   });
 
   fastify.route<{
@@ -206,7 +225,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         200: ShotSchema,
       },
     },
-    handler: async (request, reply) => {},
+    handler: async (request, reply) => {
+      const shots = await connection
+        .table("shots")
+        .insert(request.body)
+        .returning<ShotType[]>("*");
+
+      reply.code(200).send(shots[0]);
+    },
   });
 
   next();
