@@ -48,6 +48,9 @@ server.get("/", function (request, reply) {
   reply.code(200).send("Hello, World!");
 });
 
+import apiRoutes from "./api";
+server.register(apiRoutes, { prefix: "api" });
+
 server.route({
   method: "POST",
   url: "/GetImage",
