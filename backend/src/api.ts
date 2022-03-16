@@ -1,46 +1,36 @@
 import { FastifyPluginCallback } from "fastify";
-import { FromSchema } from "json-schema-to-ts";
+import { Static, Type } from "@sinclair/typebox";
 
 import { connection } from "./db";
 
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
 
-const ParamsSchema = {
-  type: "object",
-  properties: {
-    id: {
-      type: "string",
-      format: "uuid",
-    },
-  },
-  required: ["id"],
-} as const;
+const ParamsSchema = Type.Object({
+  id: Type.String({ format: "uuid" }),
+});
 
-const GameSchema = {
-  type: "object",
-  properties: {
-    id: {
-      type: "string",
-      format: "uuid",
-    },
-  },
-  required: ["id"],
-} as const;
+type ParamsType = Static<typeof ParamsSchema>;
 
-const WordSchema = {
-  type: "object",
-  properties: {
-    id: { type: "string", format: "uuid" },
-    image: { type: "string" },
-    ocr_confidence: { type: "number", minimum: 0, maximum: 1 },
-    ocr_transcript: { type: "string" },
-  },
-  required: ["id"],
-} as const;
+const GameSchema = Type.Object({
+  id: Type.Readonly(Type.String({ format: "uuid" })),
+  began_at: Type.Optional(Type.String({ format: "date-time" })),
+  ended_at: Type.Optional(Type.String({ format: "date-time" })),
+});
+
+type GameType = Static<typeof GameSchema>;
+
+const WordSchema = Type.Object({
+  id: Type.String({ format: "uuid" }),
+  image: Type.String(),
+  ocr_confidence: Type.Number({ minimum: 0, maximum: 1 }),
+  ocr_transcript: Type.String(),
+});
+
+type WordType = Static<typeof WordSchema>;
 
 const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   fastify.route<{
-    Reply: FromSchema<typeof WordSchema>;
+    Reply: WordType;
   }>({
     method: "GET",
     url: "/word",
@@ -52,7 +42,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     },
     handler: async (request, reply) => {
       // TODO: scope this to game to avoid collisions
-      const word = await connection<FromSchema<typeof WordSchema>>("words")
+      const word = await connection<WordType>("words")
         .whereBetween("ocr_confidence", [0.4, 0.8]) // i.e. needs improvement but it's not trash
         .whereRaw(`"ocr_transcript" ~ '^[[:alpha:]]+$'`) // i.e. no numbers nor symbols
         .orderByRaw("RANDOM()")
@@ -71,8 +61,8 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: FromSchema<typeof ParamsSchema>;
-    Reply: FromSchema<typeof GameSchema>;
+    Params: ParamsType;
+    Reply: GameType;
   }>({
     method: "GET",
     url: "/games/:id",
@@ -84,15 +74,64 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
       },
     },
     handler: async (request, reply) => {
-      const game = await connection<FromSchema<typeof GameSchema>>("games")
+      const game = await connection<GameType>("games")
         .where("id", request.params.id)
         .first();
       if (game === undefined) {
         reply.code(404).send();
       } else {
-        reply.code(200).send({
-          id: game.id,
-        });
+        reply.code(200).send(game);
+      }
+    },
+  });
+
+  fastify.route<{
+    Reply: GameType;
+  }>({
+    method: "POST",
+    url: "/games",
+    schema: {
+      response: {
+        200: GameSchema,
+      },
+    },
+    handler: async (request, reply) => {
+      const games = await connection
+        .table("games")
+        .insert({})
+        .returning<GameType[]>("*");
+
+      reply.code(200).send(games[0]);
+    },
+  });
+
+  const GamePatchSchema = Type.Omit(GameSchema, ["id"]);
+
+  fastify.route<{
+    Params: ParamsType;
+    Body: Static<typeof GamePatchSchema>;
+    Reply: GameType;
+  }>({
+    method: "PATCH",
+    url: "/games/:id",
+    schema: {
+      params: ParamsSchema,
+      body: GamePatchSchema,
+      response: {
+        200: GameSchema,
+      },
+    },
+    handler: async (request, reply) => {
+      const game = await connection<GameType>("games")
+        .where("id", request.params.id)
+        .first();
+      if (game === undefined) {
+        reply.code(404).send();
+      } else {
+        const games = await connection<GameType>("games")
+          .update(request.body)
+          .returning("*");
+        reply.code(200).send(games[0]);
       }
     },
   });

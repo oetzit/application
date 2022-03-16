@@ -18,13 +18,13 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.23.4",
     "@types/sharp": "^0.29.5",
     "@xmldom/xmldom": "^0.8.1",
     "axios": "^0.26.0",
     "fastify": "^3.27.1",
     "fastify-cors": "^6.0.2",
     "fastify-swagger": "^5.0.0",
-    "json-schema-to-ts": "^1.6.5",
     "knex": "^1.0.3",
     "pg": "^8.7.3",
     "sharp": "^0.30.2"
