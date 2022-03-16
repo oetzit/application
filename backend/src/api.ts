@@ -5,11 +5,45 @@ import { connection } from "./db";
 
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
 
-const ParamsSchema = Type.Object({
+const GameParamsSchema = Type.Object({
   game_id: Type.String({ format: "uuid" }),
 });
 
-type ParamsType = Static<typeof ParamsSchema>;
+type GameParamsType = Static<typeof GameParamsSchema>;
+
+const ClueParamsSchema = Type.Object({
+  game_id: Type.String({ format: "uuid" }),
+  clue_id: Type.String({ format: "uuid" }),
+});
+
+type ClueParamsType = Static<typeof ClueParamsSchema>;
+
+const ClueSchema = Type.Object({
+  id: Type.Readonly(Type.String({ format: "uuid" })),
+  game_id: Type.Readonly(Type.String({ format: "uuid" })),
+  word_id: Type.Readonly(Type.String({ format: "uuid" })),
+  began_at: Type.Optional(Type.String({ format: "date-time" })),
+  ended_at: Type.Optional(Type.String({ format: "date-time" })),
+});
+
+const CluePostSchema = Type.Pick(ClueSchema, ["game_id", "word_id"]);
+const CluePatchSchema = Type.Pick(ClueSchema, ["began_at", "ended_at"]);
+
+type ClueType = Static<typeof ClueSchema>;
+
+const ShotSchema = Type.Object({
+  id: Type.Readonly(Type.String({ format: "uuid" })),
+  game_id: Type.Readonly(Type.String({ format: "uuid" })),
+  clue_id: Type.Optional(Type.Readonly(Type.String({ format: "uuid" }))),
+  began_at: Type.String({ format: "date-time" }),
+  ended_at: Type.String({ format: "date-time" }),
+  typed: Type.String(),
+  final: Type.String(),
+});
+
+const ShotPostSchema = Type.Omit(ShotSchema, ["id"]);
+
+type ShotType = Static<typeof ShotSchema>;
 
 const GameSchema = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
@@ -58,13 +92,13 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: ParamsType;
+    Params: GameParamsType;
     Reply: GameType;
   }>({
     method: "GET",
     url: "/games/:game_id",
     schema: {
-      params: ParamsSchema,
+      params: GameParamsSchema,
       response: {
         200: GameSchema,
         404: {}, // TODO: JSend error
@@ -103,14 +137,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
-    Params: ParamsType;
+    Params: GameParamsType;
     Body: Static<typeof GamePatchSchema>;
     Reply: GameType;
   }>({
     method: "PATCH",
     url: "/games/:game_id",
     schema: {
-      params: ParamsSchema,
+      params: GameParamsSchema,
       body: GamePatchSchema,
       response: {
         200: GameSchema,
@@ -129,6 +163,57 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         reply.code(200).send(games[0]);
       }
     },
+  });
+
+  fastify.route<{
+    Params: Static<typeof GameParamsSchema>;
+    Body: Static<typeof CluePostSchema>;
+    Reply: ClueType;
+  }>({
+    method: "POST",
+    url: "/games/:game_id/clues",
+    schema: {
+      params: GameParamsSchema,
+      body: CluePostSchema,
+      response: {
+        200: ClueSchema,
+      },
+    },
+    handler: async (request, reply) => {},
+  });
+
+  fastify.route<{
+    Params: Static<typeof ClueParamsSchema>;
+    Body: Static<typeof CluePatchSchema>;
+    Reply: ClueType;
+  }>({
+    method: "PATCH",
+    url: "/games/:game_id/clues/:clue_id",
+    schema: {
+      params: ClueParamsSchema,
+      body: CluePatchSchema,
+      response: {
+        200: ClueSchema,
+      },
+    },
+    handler: async (request, reply) => {},
+  });
+
+  fastify.route<{
+    Params: Static<typeof GameParamsSchema>;
+    Body: Static<typeof ShotPostSchema>;
+    Reply: ShotType;
+  }>({
+    method: "POST",
+    url: "/games/:game_id/shots",
+    schema: {
+      params: GameParamsSchema,
+      body: ShotPostSchema,
+      response: {
+        200: ShotSchema,
+      },
+    },
+    handler: async (request, reply) => {},
   });
 
   next();
