@@ -105,17 +105,11 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
       },
     },
     handler: async (request, reply) => {
-      const game = await connection<Types.Game>("games")
+      const games = await connection<Types.Game>("games")
         .where("id", request.params.id)
-        .first();
-      if (game === undefined) {
-        reply.code(404).send();
-      } else {
-        const games = await connection<Types.Game>("games")
-          .update(request.body)
-          .returning("*");
-        reply.code(200).send(games[0]);
-      }
+        .update(request.body)
+        .returning("*");
+      reply.code(200).send(games[0]);
     },
   });
 
@@ -136,7 +130,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     handler: async (request, reply) => {
       const clues = await connection
         .table("clues")
-        .insert(request.body)
+        .insert({ game_id: request.params.id, ...request.body })
         .returning<Types.Clue[]>("*");
 
       reply.code(200).send(clues[0]);
@@ -158,17 +152,11 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
       },
     },
     handler: async (request, reply) => {
-      const clue = await connection<Types.Clue>("clues")
+      const clues = await connection<Types.Clue>("clues")
         .where("id", request.params.id)
-        .first();
-      if (clue === undefined) {
-        reply.code(404).send();
-      } else {
-        const clues = await connection<Types.Clue>("clues")
-          .update(request.body)
-          .returning("*");
-        reply.code(200).send(clues[0]);
-      }
+        .update(request.body)
+        .returning("*");
+      reply.code(200).send(clues[0]);
     },
   });
 

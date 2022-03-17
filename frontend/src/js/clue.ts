@@ -1,23 +1,18 @@
 import "phaser";
 import FightScene from "./fight_scene";
 
-interface WordObject {
-  id: string;
-  image: string;
-  ocr_confidence: number;
-  ocr_transcript: string;
-}
+import * as Types from "../../../backend/src/types";
 
 class Clue extends Phaser.GameObjects.Sprite {
-  word: WordObject;
+  word: Types.Word;
   scene: FightScene;
 
-  constructor(scene: FightScene, word: WordObject) {
+  constructor(scene: FightScene, word: Types.Word) {
     // TODO: set positions
     super(scene, 400, 300, word.id);
+    scene.add.existing(this);
 
     this.setAlpha(0);
-    scene.add.existing(this);
 
     this.scene = scene;
     this.word = word;
@@ -26,6 +21,7 @@ class Clue extends Phaser.GameObjects.Sprite {
   }
 
   loadTexture() {
+    // this.scene.textures.remove()
     this.scene.textures.addBase64(this.word.id, this.word.image);
     this.scene.textures.once(
       "addtexture",
@@ -45,23 +41,35 @@ class Clue extends Phaser.GameObjects.Sprite {
       5 +
       this.width / 2;
     this.setPosition(x, 50);
+    this.fadeIn();
+  }
+
+  delete() {
+    this.fadeOut(() => {
+      this.scene.textures.remove(this.texture); // TODO
+      this.destroy.bind(this);
+    });
+  }
+
+  fadeIn(onComplete?: Phaser.Types.Tweens.TweenOnCompleteCallback) {
     this.scene.tweens.add({
       targets: this,
       alpha: 1,
       ease: "Linear",
       delay: 0,
       duration: 100,
+      onComplete: onComplete,
     });
   }
 
-  delete() {
+  fadeOut(onComplete?: Phaser.Types.Tweens.TweenOnCompleteCallback) {
     this.scene.tweens.add({
       targets: this,
       alpha: 0,
       ease: "Linear",
       delay: 0,
-      duration: 2000,
-      onComplete: this.destroy.bind(this),
+      duration: 100,
+      onComplete: onComplete,
     });
   }
 }

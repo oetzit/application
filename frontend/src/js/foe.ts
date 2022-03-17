@@ -20,9 +20,48 @@ class Foe {
 
   async initialize() {
     this.beWord = (await backend.getWord()).data;
+    // this.beClue = (
+    //   await backend.createClue(this.scene.beGame.id, {
+    //     word_id: this.beWord.id,
+    //   })
+    // ).data;
+    // this.beClue = (
+    //   await backend.updateClue(this.beClue.id, {
+    //     began_at: new Date().toISOString(),
+    //     ended_at: null,
+    //   })
+    // ).data;
+
     this.clue = new Clue(this.scene, this.beWord);
-    this.critter = new Critter(this.scene, this.clue);
+    this.critter = new Critter(this.scene);
     this.scene.foes.push(this);
+
+    const overlap = this.scene.physics.add.overlap(
+      this.scene.player,
+      this.critter,
+      () => {
+        this.scene.physics.world.removeCollider(overlap);
+        this.critter.escape();
+      },
+    );
+  }
+
+  async handleSuccess() {
+    // TODO: update clue
+    // TODO: post shot
+    // TODO: destroy foe
+    this.clue.delete();
+  }
+
+  async handleFailure() {
+    // TODO: post shot
+    // await backend.createShot(this.scene.beGame.id, {
+    //   clue_id: this.beClue.id,
+    //   began_at: "",
+    //   ended_at: new Date().toISOString(),
+    //   typed: "",
+    //   final: "",
+    // });
   }
 }
 

@@ -36,6 +36,6 @@ export const Shot = Type.Object({
 });
 
 export const GameUpdate = Type.Omit(Game, ["id"]);
-export const ClueCreate = Type.Pick(Clue, ["game_id", "word_id"]);
+export const ClueCreate = Type.Pick(Clue, ["word_id"]);
 export const ClueUpdate = Type.Pick(Clue, ["began_at", "ended_at"]);
-export const ShotCreate = Type.Omit(Shot, ["id"]);
+export const ShotCreate = Type.Omit(Shot, ["id", "game_id"]);

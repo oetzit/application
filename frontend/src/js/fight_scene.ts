@@ -165,11 +165,12 @@ export default class FightScene extends Phaser.Scene {
     initAndBindGuessPreview(this);
 
     this.beGame = (await backend.createGame()).data;
-    this.beGame.began_at = new Date().toISOString();
-    await backend.updateGame(this.beGame.id, {
-      began_at: this.beGame.began_at,
-      ended_at: null,
-    });
+    this.beGame = (
+      await backend.updateGame(this.beGame.id, {
+        began_at: new Date().toISOString(),
+        ended_at: null,
+      })
+    ).data;
 
     gameStart(this);
   }
@@ -202,20 +203,6 @@ export default class FightScene extends Phaser.Scene {
       message.anims.remove("hit");
       message.destroy();
     });
-  }
-
-  shootSpear(foe: Foe | null, hit: boolean) {
-    const scene = this;
-    if (foe === null || !hit) {
-      this.showMissMessage();
-      new Spear(this, this.player, undefined);
-    } else {
-      this.showHitMessage();
-      // TODO: ew.
-      foe.clue.delete();
-      // scene.foes.splice(scene.foes.indexOf(foe), 1); // FIXME
-      new Spear(this, this.player, foe.critter);
-    }
   }
 
   initCluesGroup() {
@@ -251,6 +238,23 @@ export default class FightScene extends Phaser.Scene {
     // match ??= scene.foes[0]; // TODO: remove this
     // console.log(similarity, match.beWord.ocr_transcript);
     return result;
+  }
+
+  submitTranscription(transcription: string) {
+    const { score, match } = this.findMatchingFoe(transcription);
+    // TODO: visual near misses based on score
+    if (match === null) {
+      // NOOP
+    } else if (score < 0.9) {
+      match.handleFailure();
+      this.showMissMessage();
+      new Spear(this, this.player, undefined);
+    } else {
+      this.foes.splice(this.foes.indexOf(match), 1);
+      match.handleSuccess();
+      this.showHitMessage();
+      new Spear(this, this.player, match.critter);
+    }
   }
 }
 
@@ -325,16 +329,11 @@ function initAndBindGuessPreview(scene: FightScene) {
         event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
         textEntry.text.length > 0
       ) {
-        submitTranscription(textEntry.text, scene);
+        scene.submitTranscription(textEntry.text);
         textEntry.text = textEntry.text.substr(0, 0);
       }
     },
   );
-}
-
-function submitTranscription(transcription: string, scene: FightScene) {
-  const { score, match } = scene.findMatchingFoe(transcription);
-  scene.shootSpear(match, score >= 0.9);
 }
 
 function gameStart(scene: any) {
@@ -342,13 +341,13 @@ function gameStart(scene: any) {
 }
 
 async function spawn(scene: any) {
-  await dispatchEnemy(scene);
+  await spawnFoe(scene);
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
   setTimeout(() => spawn(scene), Math.max(delay, 2000));
 }
 
-async function dispatchEnemy(scene: any) {
+async function spawnFoe(scene: any) {
   await new Foe(scene).initialize();
 }
