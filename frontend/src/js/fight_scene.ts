@@ -8,11 +8,14 @@ import backend from "./backend";
 import levenshtein from "damerau-levenshtein";
 import Clue from "./clue";
 
+import * as Types from "../../../backend/src/types";
+
 export default class FightScene extends Phaser.Scene {
   foes: Array<Critter>;
   ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
+  beGame: Types.Game;
 
   constructor() {
     super("fight");
@@ -75,7 +78,7 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
-  create() {
+  async create() {
     this.initCluesGroup();
     // Draw background forest
     ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
@@ -161,6 +164,14 @@ export default class FightScene extends Phaser.Scene {
     );
     this.scale.refresh();
     initAndBindGuessPreview(this);
+
+    this.beGame = (await backend.createGame()).data;
+    this.beGame.began_at = new Date().toISOString();
+    await backend.updateGame(this.beGame.id, {
+      began_at: this.beGame.began_at,
+      ended_at: null,
+    });
+
     gameStart(this);
   }
 
