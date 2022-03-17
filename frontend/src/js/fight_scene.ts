@@ -336,7 +336,7 @@ function spawn(scene: any) {
 }
 
 function dispatchEnemy(scene: any) {
-  backend.post("GetImage", {}).then(function (response) {
+  backend.getWord().then(function (response) {
     const clue = new Clue(scene, response.data);
     const critter = new Critter(scene, clue);
     // TODO: clue
