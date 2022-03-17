@@ -7,7 +7,14 @@ const WALK_VELOCITY = 100;
 const FLEE_VELOCITY = -200;
 const ESCAPE_VELOCITY = 300;
 
+enum CritterState {
+  Moving,
+  Escaping,
+  Fleeing,
+}
+
 class Critter extends Phaser.Physics.Arcade.Sprite {
+  state: CritterState;
   clue: Clue;
   scene: FightScene;
   species: string;
@@ -34,34 +41,52 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.add.collider(this, this.scene.ground);
 
     this.setScale(scale);
-    // this.setInteractive(true);
+
+    this.move();
+
+    this.scene.physics.add.overlap(this.scene.player, this, () => {
+      this.escape();
+      this.clue.delete();
+    });
+  }
+
+  preUpdate(time, delta) {
+    super.preUpdate(time, delta);
+    if (
+      (this.state === CritterState.Escaping && this.isOutsideRightBound()) ||
+      (this.state === CritterState.Fleeing && this.isOutsideLeftBound())
+    ) {
+      this.destroy();
+    }
+  }
+
+  isOutsideRightBound() {
+    return this.x - this.width * 0.5 > this.scene.cameras.main.width;
+  }
+
+  isOutsideLeftBound() {
+    return this.x + this.width * 0.5 < 0;
+  }
+
+  move() {
+    this.state = CritterState.Moving;
     this.flipX = true;
-
     this.play({ key: this.species + "_walk", repeat: -1 });
-    // TODO: bring animal below grass
-
     this.body.setVelocity(WALK_VELOCITY, 0);
-
-    // here to implement health
-    this.scene.physics.add.overlap(
-      this.scene.player,
-      this,
-      (_player, _enemy) => {
-        this.play(this.species + "_run");
-        this.body.setVelocity(ESCAPE_VELOCITY, 0);
-        this.clue.delete();
-        setTimeout(() => {
-          this.destroy();
-        }, 2000);
-      },
-    );
   }
 
   flee() {
-    this.play(this.species + "_run");
+    this.state = CritterState.Fleeing;
     this.flipX = false;
+    this.play(this.species + "_run");
     this.body.setVelocity(FLEE_VELOCITY, 0);
-    setTimeout(() => this.destroy(), 2000); // TODO: disappear offscreen
+  }
+
+  escape() {
+    this.state = CritterState.Escaping;
+    this.flipX = true;
+    this.play(this.species + "_run");
+    this.body.setVelocity(ESCAPE_VELOCITY, 0);
   }
 }
 
