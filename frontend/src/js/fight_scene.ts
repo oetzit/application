@@ -1,17 +1,16 @@
 import "phaser";
 
-import Critter from "./critter";
 import Spear from "./spear";
 import backend from "./backend";
 
 // TODO: write interfaces
 import levenshtein from "damerau-levenshtein";
-import Clue from "./clue";
 
 import * as Types from "../../../backend/src/types";
+import Foe from "./foe";
 
 export default class FightScene extends Phaser.Scene {
-  foes: Array<Critter>;
+  foes: Array<Foe>;
   ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
@@ -197,18 +196,18 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
-  shootSpear(enemy: Critter, hit: boolean) {
+  shootSpear(foe: Foe | null, hit: boolean) {
     const scene = this;
-    if (!hit) {
+    if (foe === null || !hit) {
       this.showMissMessage();
+      new Spear(this, this.player, undefined);
     } else {
       this.showHitMessage();
       // TODO: ew.
-      enemy.clue.delete();
-      scene.foes.splice(scene.foes.indexOf(enemy), 1); // FIXME
+      foe.clue.delete();
+      // scene.foes.splice(scene.foes.indexOf(foe), 1); // FIXME
+      new Spear(this, this.player, foe.critter);
     }
-
-    new Spear(this, this.player, hit ? enemy : undefined);
   }
 
   initCluesGroup() {
@@ -225,6 +224,25 @@ export default class FightScene extends Phaser.Scene {
       dragY: 180,
     });
     this.physics.add.collider(this.cluesGroup, this.cluesGroup);
+  }
+
+  findMatchingFoe(transcription: string) {
+    let result: { score: number; match: Foe | null } = {
+      score: -1,
+      match: null,
+    };
+    if (this.foes.length < 1) return result;
+    this.foes.forEach((foe) => {
+      const similarity = levenshtein(
+        transcription.toLowerCase(),
+        foe.beWord.ocr_transcript.toLowerCase(),
+      ).similarity;
+      if (similarity < result.score) return;
+      result = { score: similarity, match: foe };
+    });
+    // match ??= scene.foes[0]; // TODO: remove this
+    // console.log(similarity, match.beWord.ocr_transcript);
+    return result;
   }
 }
 
@@ -307,50 +325,22 @@ function initAndBindGuessPreview(scene: FightScene) {
 }
 
 function submitTranscription(transcription: string, scene: FightScene) {
-  if (scene.foes.length < 1) return;
-
-  let similarity = 0;
-  let match = null;
-
-  scene.foes.forEach((critter) => {
-    const s = levenshtein(
-      transcription.toLowerCase(),
-      critter.clue.word.ocr_transcript.toLowerCase(),
-    ).similarity;
-    if (s < similarity) return;
-    similarity = s;
-    match = critter;
-  });
-
-  match ??= scene.foes[0]; // TODO: remove this
-
-  console.log(similarity, match.clue.word.ocr_transcript);
-
-  // TODO: we can have near misses depending on similarity!
-  const hit = similarity >= 0.9;
-  const enemy = match;
-
-  scene.shootSpear(enemy, hit);
+  const { score, match } = scene.findMatchingFoe(transcription);
+  scene.shootSpear(match, score >= 0.9);
 }
 
 function gameStart(scene: any) {
   spawn(scene);
-  // dispatchEnemy(scene);
 }
 
-function spawn(scene: any) {
-  dispatchEnemy(scene);
+async function spawn(scene: any) {
+  await dispatchEnemy(scene);
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
   setTimeout(() => spawn(scene), Math.max(delay, 2000));
 }
 
-function dispatchEnemy(scene: any) {
-  backend.getWord().then(function (response) {
-    const clue = new Clue(scene, response.data);
-    const critter = new Critter(scene, clue);
-    // TODO: clue
-    scene.foes.push(critter);
-  });
+async function dispatchEnemy(scene: any) {
+  await new Foe(scene).initialize();
 }
