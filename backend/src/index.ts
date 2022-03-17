@@ -1,7 +1,5 @@
 import fastify from "fastify";
 import fastifyCors from "fastify-cors";
-import { connection } from "./db";
-import { FromSchema } from "json-schema-to-ts";
 import fastifySwagger from "fastify-swagger";
 
 const server = fastify({

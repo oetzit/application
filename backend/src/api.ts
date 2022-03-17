@@ -1,8 +1,14 @@
 import { FastifyPluginCallback } from "fastify";
-import { Static, Type } from "@sinclair/typebox";
+
+import { Static, Type, TSchema, TUnion, TNull } from "@sinclair/typebox";
+
+function Nullable<T extends TSchema>(schema: T): TUnion<[T, TNull]> {
+  return { ...schema, nullable: true } as any;
+}
 
 import { connection } from "./db";
 
+// NOTE: refer to https://cloud.google.com/apis/design/
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
 
 const IdInParamsSchema = Type.Object({
@@ -25,7 +31,7 @@ type ClueType = Static<typeof ClueSchema>;
 const ShotSchema = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
   game_id: Type.Readonly(Type.String({ format: "uuid" })),
-  clue_id: Type.Optional(Type.Readonly(Type.String({ format: "uuid" }))),
+  clue_id: Nullable(Type.String({ format: "uuid" })),
   began_at: Type.String({ format: "date-time" }),
   ended_at: Type.String({ format: "date-time" }),
   typed: Type.String(),
