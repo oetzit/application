@@ -18,11 +18,11 @@ export default {
   getWord: () => backend.get<Types.Word>("/api/word"),
   createGame: () => backend.post<Types.Game>("/api/games"),
   updateGame: (gameId: string, data: Types.GameUpdate) =>
-    backend.post<Types.Game>(`/api/games/${gameId}`, data),
+    backend.patch<Types.Game>(`/api/games/${gameId}`, data),
   createClue: (gameId: string, data: Types.ClueCreate) =>
     backend.post<Types.Clue>(`/api/games/${gameId}/clues`, data),
   updateClue: (clueId: string, data: Types.ClueUpdate) =>
-    backend.post<Types.Clue>(`/api/clues/${clueId}`, data),
+    backend.patch<Types.Clue>(`/api/clues/${clueId}`, data),
   createShot: (gameId: string, data: Types.ShotCreate) =>
     backend.post<Types.Shot>(`/api/games/${gameId}/shots`, data),
 };
