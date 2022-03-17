@@ -13,16 +13,16 @@ export const Word = Type.Object({
 
 export const Game = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
-  began_at: Type.Optional(Type.String({ format: "date-time" })),
-  ended_at: Type.Optional(Type.String({ format: "date-time" })),
+  began_at: Nullable(Type.String({ format: "date-time" })),
+  ended_at: Nullable(Type.String({ format: "date-time" })),
 });
 
 export const Clue = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
   game_id: Type.Readonly(Type.String({ format: "uuid" })),
   word_id: Type.Readonly(Type.String({ format: "uuid" })),
-  began_at: Type.Optional(Type.String({ format: "date-time" })),
-  ended_at: Type.Optional(Type.String({ format: "date-time" })),
+  began_at: Nullable(Type.String({ format: "date-time" })),
+  ended_at: Nullable(Type.String({ format: "date-time" })),
 });
 
 export const Shot = Type.Object({
