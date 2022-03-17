@@ -9,12 +9,20 @@ import levenshtein from "damerau-levenshtein";
 import * as Types from "../../../backend/src/types";
 import Foe from "./foe";
 
+interface InputStatus {
+  began_at: string | null;
+  ended_at: string | null;
+  typed: string;
+  final: string;
+}
+
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
   ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
   beGame: Types.Game;
+  inputStatus: InputStatus;
 
   constructor() {
     super("fight");
@@ -78,6 +86,10 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create() {
+    this.inputStatus = {
+      typed: "",
+      final: "",
+    };
     this.initCluesGroup();
     // Draw background forest
     ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
@@ -162,7 +174,7 @@ export default class FightScene extends Phaser.Scene {
       this.cameras.main.width / this.cameras.main.height,
     );
     this.scale.refresh();
-    initAndBindGuessPreview(this);
+    this.initAndBindGuessPreview();
 
     this.beGame = (await backend.createGame()).data;
     this.beGame = (
@@ -240,8 +252,8 @@ export default class FightScene extends Phaser.Scene {
     return result;
   }
 
-  submitTranscription(transcription: string) {
-    const { score, match } = this.findMatchingFoe(transcription);
+  submitTranscription(inputStatus: InputStatus) {
+    const { score, match } = this.findMatchingFoe(inputStatus.final);
     // TODO: visual near misses based on score
     if (match === null) {
       // NOOP
@@ -255,6 +267,50 @@ export default class FightScene extends Phaser.Scene {
       this.showHitMessage();
       new Spear(this, this.player, match.critter);
     }
+  }
+
+  initAndBindGuessPreview() {
+    const textEntry = this.add.text(100, this.cameras.main.height / 2, "", {
+      font: "bold 64px Courier",
+      color: "#ffffff",
+    });
+    this.input.keyboard.on(
+      Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
+      (event: any) => {
+        if (this.inputStatus.final === "") {
+          this.inputStatus.began_at = new Date().toISOString();
+        }
+        if (LETTERS_KEYCODES.has(event.keyCode)) {
+          this.inputStatus.typed += event.key;
+          this.inputStatus.final += event.key;
+          textEntry.text = this.inputStatus.final;
+        } else if (
+          event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE &&
+          this.inputStatus.final.length > 0
+        ) {
+          this.inputStatus.typed += "\b";
+          this.inputStatus.final = this.inputStatus.final.substr(
+            0,
+            this.inputStatus.final.length - 1,
+          );
+          textEntry.text = this.inputStatus.final;
+        } else if (
+          event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
+          this.inputStatus.final.length > 0
+        ) {
+          this.inputStatus.typed += "\n";
+          this.inputStatus.ended_at = new Date().toISOString();
+          this.submitTranscription(this.inputStatus);
+          this.inputStatus = {
+            began_at: null,
+            ended_at: null,
+            typed: "",
+            final: "",
+          };
+          textEntry.text = this.inputStatus.final;
+        }
+      },
+    );
   }
 }
 
@@ -308,33 +364,6 @@ const LETTERS_KEYCODES = new Set([
   192, // ö
   222, // ä
 ]);
-
-function initAndBindGuessPreview(scene: FightScene) {
-  const textEntry = scene.add.text(100, scene.cameras.main.height / 2, "", {
-    font: "bold 64px Courier",
-    color: "#ffffff",
-  });
-  scene.input.keyboard.on(
-    Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
-    function (event: any) {
-      // TODO: what's the correct type?
-      if (LETTERS_KEYCODES.has(event.keyCode)) {
-        textEntry.text += event.key;
-      } else if (
-        event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE &&
-        textEntry.text.length > 0
-      ) {
-        textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1);
-      } else if (
-        event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
-        textEntry.text.length > 0
-      ) {
-        scene.submitTranscription(textEntry.text);
-        textEntry.text = textEntry.text.substr(0, 0);
-      }
-    },
-  );
-}
 
 function gameStart(scene: any) {
   spawn(scene);
