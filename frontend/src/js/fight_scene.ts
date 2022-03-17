@@ -176,7 +176,11 @@ export default class FightScene extends Phaser.Scene {
 
   showMissMessage() {
     const message = this.add
-      .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, "miss")
+      .sprite(
+        this.cameras.main.width / 2,
+        (3 * this.cameras.main.height) / 4,
+        "miss",
+      )
       .setScale(1);
     message.play({ key: "missing", repeat: 1 });
     message.on("animationcomplete", () => {
@@ -187,7 +191,11 @@ export default class FightScene extends Phaser.Scene {
 
   showHitMessage() {
     const message = this.add
-      .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, "hit")
+      .sprite(
+        this.cameras.main.width / 2,
+        (3 * this.cameras.main.height) / 4,
+        "hit",
+      )
       .setScale(1);
     message.play({ key: "hit", repeat: 1 });
     message.on("animationcomplete", () => {
