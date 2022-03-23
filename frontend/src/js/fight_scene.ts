@@ -318,7 +318,6 @@ function gameStart(scene: any) {
 
 async function spawn(scene: any) {
   await spawnFoe(scene);
-  return;
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
