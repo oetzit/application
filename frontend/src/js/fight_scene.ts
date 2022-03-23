@@ -8,6 +8,7 @@ import levenshtein from "damerau-levenshtein";
 
 import * as Types from "../../../backend/src/types";
 import Foe from "./foe";
+import Typewriter from "./typewriter";
 
 interface InputStatus {
   began_at: string | null;
@@ -23,6 +24,7 @@ export default class FightScene extends Phaser.Scene {
   cluesGroup: Phaser.Physics.Arcade.Group;
   beGame: Types.Game;
   inputStatus: InputStatus;
+  typewriter: Typewriter;
 
   constructor() {
     super("fight");
@@ -274,43 +276,22 @@ export default class FightScene extends Phaser.Scene {
       font: "bold 64px Courier",
       color: "#ffffff",
     });
-    this.input.keyboard.on(
-      Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
-      (event: any) => {
-        if (this.inputStatus.final === "") {
-          this.inputStatus.began_at = new Date().toISOString();
-        }
-        if (LETTERS_KEYCODES.has(event.keyCode)) {
-          this.inputStatus.typed += event.key;
-          this.inputStatus.final += event.key;
-          textEntry.text = this.inputStatus.final;
-        } else if (
-          event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE &&
-          this.inputStatus.final.length > 0
-        ) {
-          this.inputStatus.typed += "\b";
-          this.inputStatus.final = this.inputStatus.final.substr(
-            0,
-            this.inputStatus.final.length - 1,
-          );
-          textEntry.text = this.inputStatus.final;
-        } else if (
-          event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER &&
-          this.inputStatus.final.length > 0
-        ) {
-          this.inputStatus.typed += "\n";
-          this.inputStatus.ended_at = new Date().toISOString();
-          this.submitTranscription(this.inputStatus);
-          this.inputStatus = {
-            began_at: null,
-            ended_at: null,
-            typed: "",
-            final: "",
-          };
-          textEntry.text = this.inputStatus.final;
-        }
-      },
-    );
+    this.typewriter = new Typewriter();
+    this.typewriter.onSubmit = (inputStatus) => {
+      if (inputStatus.began_at === null) return;
+      if (inputStatus.ended_at === null) return;
+      if (inputStatus.final === "") return;
+      this.submitTranscription({
+        began_at: inputStatus.began_at.toISOString(),
+        ended_at: inputStatus.ended_at.toISOString(),
+        typed: inputStatus.typed,
+        final: inputStatus.final,
+      });
+      textEntry.text = "";
+    };
+    this.typewriter.onChange = (inputStatus) => {
+      textEntry.text = inputStatus.final;
+    };
   }
 }
 
@@ -331,46 +312,13 @@ function createAnim(scene: any, key: any, refKey: any, from: any, to: any) {
   });
 }
 
-const LETTERS_KEYCODES = new Set([
-  Phaser.Input.Keyboard.KeyCodes.SPACE,
-  Phaser.Input.Keyboard.KeyCodes.A,
-  Phaser.Input.Keyboard.KeyCodes.B,
-  Phaser.Input.Keyboard.KeyCodes.C,
-  Phaser.Input.Keyboard.KeyCodes.D,
-  Phaser.Input.Keyboard.KeyCodes.E,
-  Phaser.Input.Keyboard.KeyCodes.F,
-  Phaser.Input.Keyboard.KeyCodes.G,
-  Phaser.Input.Keyboard.KeyCodes.H,
-  Phaser.Input.Keyboard.KeyCodes.I,
-  Phaser.Input.Keyboard.KeyCodes.J,
-  Phaser.Input.Keyboard.KeyCodes.K,
-  Phaser.Input.Keyboard.KeyCodes.L,
-  Phaser.Input.Keyboard.KeyCodes.M,
-  Phaser.Input.Keyboard.KeyCodes.N,
-  Phaser.Input.Keyboard.KeyCodes.O,
-  Phaser.Input.Keyboard.KeyCodes.P,
-  Phaser.Input.Keyboard.KeyCodes.Q,
-  Phaser.Input.Keyboard.KeyCodes.R,
-  Phaser.Input.Keyboard.KeyCodes.S,
-  Phaser.Input.Keyboard.KeyCodes.T,
-  Phaser.Input.Keyboard.KeyCodes.U,
-  Phaser.Input.Keyboard.KeyCodes.V,
-  Phaser.Input.Keyboard.KeyCodes.W,
-  Phaser.Input.Keyboard.KeyCodes.X,
-  Phaser.Input.Keyboard.KeyCodes.Y,
-  Phaser.Input.Keyboard.KeyCodes.Z,
-  219, // ß
-  186, // ü
-  192, // ö
-  222, // ä
-]);
-
 function gameStart(scene: any) {
   spawn(scene);
 }
 
 async function spawn(scene: any) {
   await spawnFoe(scene);
+  return;
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
