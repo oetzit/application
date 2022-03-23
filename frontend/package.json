@@ -20,7 +20,8 @@
     "axios": "^0.26.0",
     "damerau-levenshtein": "^1.0.8",
     "newton-raphson-method": "^1.0.2",
-    "phaser": "^3.55.2"
+    "phaser": "^3.55.2",
+    "simple-keyboard": "^3.4.68"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
@@ -35,6 +36,7 @@
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "prettier": "^2.5.1",
+    "sass": "^1.49.9",
     "ts-jest": "^27.0.7",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.2"

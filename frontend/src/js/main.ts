@@ -22,3 +22,27 @@ const config = {
 };
 
 new Phaser.Game(config);
+
+import Keyboard from "simple-keyboard";
+
+document.addEventListener("DOMContentLoaded", () => {
+  new Keyboard({
+    theme: "hg-theme-default hg-theme-oetzi",
+    physicalKeyboardHighlight: true,
+    debug: true,
+    layout: {
+      default: [
+        "q w e r t z u i o p \u00FC {bksp}",
+        "a s d f g h j k l \u00F6 \u00E4",
+        "{space} y x c v b n m \u00DF {enter}",
+      ],
+    },
+    display: {
+      "{bksp}": "⟵", // "⌫⟵",
+      "{enter}": "↵", // "⏎↩↵⏎",
+      "{space}": "␣", // "␣",
+    },
+    // onChange: console.log,
+    // onKeyPress: console.log,
+  });
+});

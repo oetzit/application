@@ -1,0 +1,109 @@
+$kbd-gutter: 3px;
+$key-width: 8vw;
+
+.hg-theme-default {
+  width: 100%;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  touch-action: manipulation;
+  // font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "Courier New", Courier, monospace;
+
+  // background-color: #ececec;
+  background-color: #aaaa;
+  // padding: 5px;
+  padding: $kbd-gutter;
+  // border-radius: 5px;
+
+  font-weight: bold;
+  // font-size: 20px;
+
+  .hg-button span {
+    pointer-events: none;
+  }
+
+  button.hg-button {
+    border-width: 0;
+    outline: 0;
+    font-size: inherit;
+  }
+
+  .hg-button {
+    display: inline-block;
+    flex-grow: 1;
+    cursor: pointer;
+  }
+
+  .hg-row {
+    display: flex;
+
+    &:not(:last-child) {
+      // margin-bottom: 5px;
+      margin-bottom: $kbd-gutter;
+    }
+
+    .hg-button:not(:last-child) {
+      // margin-right: 5px;
+      margin-right: $kbd-gutter;
+    }
+
+    .hg-button-container {
+      // margin-right: 5px;
+      margin-right: $kbd-gutter;
+      display: flex;
+    }
+
+    > div:last-child {
+      margin-right: 0;
+    }
+
+    &:nth-child(2) {
+      margin-left: 0.5 * $key-width;
+    }
+  }
+
+  .hg-button {
+    // box-shadow: 0px 0px 3px -1px rgba(0, 0, 0, 0.3);
+    height: 40px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    // padding: 5px;
+    background: white;
+    // border-bottom: 1px solid #b5b5b5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    &.hg-standardBtn {
+      // width: 20px;
+      // width: $key-width;
+      max-width: 8vw; // 100/12 ~ 8.3
+    }
+
+    &.hg-activeButton {
+      background: #ff0;
+    }
+  }
+
+  // .hg-button {
+  //   &.hg-functionBtn {
+  //     &[data-skbtn="{bksp}"] {
+  //       background-color: lightcoral;
+  //     }
+  //     &[data-skbtn="{space}"] {
+  //       background-color: lightblue;
+  //     }
+  //     &[data-skbtn="{enter}"] {
+  //       background-color: lightgreen;
+  //     }
+  //   }
+  // }
+}
+
+.simple-keyboard {
+  position: absolute;
+  bottom: 0;
+}
