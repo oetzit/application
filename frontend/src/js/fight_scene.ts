@@ -32,22 +32,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preload() {
-    // TODO: re.enable
-    // this.scale.scaleMode = Phaser.ScaleModes.LINEAR;
-    this.load.image("b0", "assets/background_layers/Layer_0011_0.png");
-    this.load.image("b1", "assets/background_layers/Layer_0010_1.png");
-    this.load.image("b2", "assets/background_layers/Layer_0009_2.png");
-    this.load.image("b3", "assets/background_layers/Layer_0008_3.png");
-    this.load.image("b4", "assets/background_layers/Layer_0007_Lights.png");
-    this.load.image("b5", "assets/background_layers/Layer_0006_4.png");
-    this.load.image("b6", "assets/background_layers/Layer_0005_5.png");
-    this.load.image("b7", "assets/background_layers/Layer_0004_Lights.png");
-    this.load.image("b8", "assets/background_layers/Layer_0003_6.png");
-    this.load.image("b9", "assets/background_layers/Layer_0002_7.png");
-    this.load.image("b10", "assets/background_layers/Layer_0001_8.png");
-    this.load.image("b11", "assets/background_layers/Layer_0000_9.png");
-    this.load.image("logo", "assets/background_layers/Logo.png");
-    this.load.image("ground", "assets/background_layers/ground.png");
+    this.preloadBackground();
 
     this.load.spritesheet("oezi", "assets/sprites/player/oezi.png", {
       frameWidth: 27,
@@ -93,33 +78,7 @@ export default class FightScene extends Phaser.Scene {
       final: "",
     };
     this.initCluesGroup();
-    // Draw background forest
-    ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
-      (textureKey) => {
-        this.add
-          .tileSprite(
-            0,
-            0,
-            this.cameras.main.width,
-            this.cameras.main.height,
-            textureKey,
-          )
-          .setOrigin(0, 0.2)
-          .setScale(1.3);
-      },
-    );
-
-    // Draw foreground grass
-    this.add
-      .tileSprite(
-        0,
-        0,
-        this.cameras.main.width,
-        this.cameras.main.height,
-        "b11",
-      )
-      .setAlpha(0.6)
-      .setOrigin(0, -0.03);
+    this.createBackground();
 
     createAnim(this, "player_idle", "oezi", 1, 5);
     createAnim(this, "player_run", "oezi", 6, 13);
@@ -186,7 +145,7 @@ export default class FightScene extends Phaser.Scene {
       })
     ).data;
 
-    gameStart(this);
+    // gameStart(this);
   }
 
   showMissMessage() {
@@ -293,6 +252,43 @@ export default class FightScene extends Phaser.Scene {
       textEntry.text = inputStatus.final;
     };
   }
+
+  preloadBackground() {
+    this.load.image("b0", "assets/background_layers/Layer_0011_0.png");
+    this.load.image("b1", "assets/background_layers/Layer_0010_1.png");
+    this.load.image("b2", "assets/background_layers/Layer_0009_2.png");
+    this.load.image("b3", "assets/background_layers/Layer_0008_3.png");
+    this.load.image("b4", "assets/background_layers/Layer_0007_Lights.png");
+    this.load.image("b5", "assets/background_layers/Layer_0006_4.png");
+    this.load.image("b6", "assets/background_layers/Layer_0005_5.png");
+    this.load.image("b7", "assets/background_layers/Layer_0004_Lights.png");
+    this.load.image("b8", "assets/background_layers/Layer_0003_6.png");
+    this.load.image("b9", "assets/background_layers/Layer_0002_7.png");
+    this.load.image("b10", "assets/background_layers/Layer_0001_8.png");
+    this.load.image("b11", "assets/background_layers/Layer_0000_9.png");
+    this.load.image("logo", "assets/background_layers/Logo.png");
+    this.load.image("ground", "assets/background_layers/ground.png");
+  }
+
+  createBackground() {
+    ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].forEach(
+      (textureKey) => {
+        const scale =
+          this.cameras.main.height /
+          this.textures.get(textureKey).getSourceImage().height;
+        this.add
+          .tileSprite(
+            0,
+            0,
+            this.cameras.main.width / scale,
+            this.cameras.main.height / scale,
+            textureKey,
+          )
+          .setOrigin(0)
+          .setScale(scale);
+      },
+    );
+  }
 }
 
 // TODO: remove any
@@ -321,7 +317,8 @@ async function spawn(scene: any) {
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  setTimeout(() => spawn(scene), Math.max(delay, 2000));
+  // setTimeout(() => spawn(scene), Math.max(delay, 2000));
+  setTimeout(() => spawn(scene), 10000);
 }
 
 async function spawnFoe(scene: any) {

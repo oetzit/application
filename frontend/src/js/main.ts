@@ -6,8 +6,8 @@ export const GRAVITY_Y = 200;
 
 const config = {
   type: Phaser.AUTO,
-  width: 1200,
-  height: 800,
+  width: window.innerWidth, // 1200,
+  height: window.innerHeight, // 800,
   pixelArt: true,
   autoCenter: Phaser.Scale.CENTER_BOTH,
   scaleMode: Phaser.Scale.FIT,
