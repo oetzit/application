@@ -145,7 +145,7 @@ export default class FightScene extends Phaser.Scene {
       })
     ).data;
 
-    // gameStart(this);
+    gameStart(this);
   }
 
   showMissMessage() {
@@ -318,8 +318,7 @@ async function spawn(scene: any) {
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  // setTimeout(() => spawn(scene), Math.max(delay, 2000));
-  setTimeout(() => spawn(scene), 10000);
+  setTimeout(() => spawn(scene), Math.max(delay, 2000));
 }
 
 async function spawnFoe(scene: any) {
