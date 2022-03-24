@@ -78,8 +78,8 @@ class Typewriter {
       },
       display: {
         [Key.Backspace]: "⟵", // "⌫⟵",
-        [Key.Enter]: "↵", // "⏎↩↵⏎",
-        [Key.Space]: "␣", // "␣",
+        [Key.Enter]: "↩", // "⏎↩↵⏎",
+        [Key.Space]: " ", // "␣",
       },
       onChange: this.keyboardOnChangeHandler.bind(this),
     } as KeyboardOptions);
