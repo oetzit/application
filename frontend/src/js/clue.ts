@@ -3,6 +3,12 @@ import FightScene from "./fight_scene";
 
 import * as Types from "../../../backend/src/types";
 
+const BASE_HEIGHT = 25;
+
+// const HYPERASCENDERS = /[ÄÖÜ]/;
+const ASCENDERS = /[ABCDEFGHIJKLMNOPQRSTUVWXYZbdfhijklstäöüß]/;
+const DESCENDERS = /[AFHJPQYZÄfghjpqsyzß]/;
+
 class Clue extends Phaser.GameObjects.Sprite {
   word: Types.Word;
   scene: FightScene;
@@ -30,8 +36,24 @@ class Clue extends Phaser.GameObjects.Sprite {
     );
   }
 
-  showTexture() {
+  estimateWordHeight() {
+    let height = 1.0;
+    // if (this.word.ocr_transcript.match(HYPERASCENDERS)) height += 0.2;
+    if (this.word.ocr_transcript.match(ASCENDERS)) height += 0.2;
+    if (this.word.ocr_transcript.match(DESCENDERS)) height += 0.2;
+    return height;
+  }
+
+  applyTexture() {
     this.setTexture(this.word.id);
+    const scale =
+      (this.estimateWordHeight() * BASE_HEIGHT) /
+      this.texture.getSourceImage().height;
+    this.setScale(scale);
+  }
+
+  showTexture() {
+    this.applyTexture();
     this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
     this.scene.physics.world.add(this.body);
     this.scene.cluesGroup.add(this);
