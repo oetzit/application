@@ -1,16 +1,17 @@
 import * as Phaser from "phaser";
 
+import BackgroundScene from "./background_scene";
+import WelcomeScene from "./welcome_scene";
 import FightScene from "./fight_scene";
 
 export const GRAVITY_Y = 200;
 
 const config = {
   type: Phaser.AUTO,
-  width: window.innerWidth, // 1200,
-  height: window.innerHeight, // 800,
+  // TODO: bound height, with responsive aspect ratio
   pixelArt: true,
   autoCenter: Phaser.Scale.CENTER_BOTH,
-  scaleMode: Phaser.Scale.FIT,
+  scaleMode: Phaser.Scale.RESIZE,
   physics: {
     default: "arcade",
     arcade: {
@@ -18,7 +19,7 @@ const config = {
       // debug: true,
     },
   },
-  scene: FightScene,
+  scene: [BackgroundScene, WelcomeScene, FightScene],
 };
 
 new Phaser.Game(config);
