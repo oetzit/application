@@ -12,10 +12,11 @@ const DESCENDERS = /[AFHJPQYZÄfghjpqsyzß]/;
 class Clue extends Phaser.GameObjects.Sprite {
   word: Types.Word;
   scene: FightScene;
+  textureKey: string;
 
   constructor(scene: FightScene, word: Types.Word) {
     // TODO: set positions
-    super(scene, 400, 300, word.id);
+    super(scene, 400, 300, "__MISSING");
     scene.add.existing(this);
 
     this.setAlpha(0);
@@ -23,12 +24,14 @@ class Clue extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.word = word;
 
+    // TODO: we could be smarter and fully leverage caching, but meh.
+    this.textureKey = `${word.id}-${Date.now()}`;
     this.loadTexture();
   }
 
   loadTexture() {
     // this.scene.textures.remove()
-    this.scene.textures.addBase64(this.word.id, this.word.image);
+    this.scene.textures.addBase64(this.textureKey, this.word.image);
     this.scene.textures.once(
       "addtexture",
       this.showTexture.bind(this),
@@ -45,7 +48,7 @@ class Clue extends Phaser.GameObjects.Sprite {
   }
 
   applyTexture() {
-    this.setTexture(this.word.id);
+    this.setTexture(this.textureKey);
     const scale =
       (this.estimateWordHeight() * BASE_HEIGHT) /
       this.texture.getSourceImage().height;
@@ -68,8 +71,8 @@ class Clue extends Phaser.GameObjects.Sprite {
 
   delete() {
     this.fadeOut(() => {
-      this.scene.textures.remove(this.texture); // TODO
-      this.destroy.bind(this);
+      this.texture.destroy();
+      this.destroy();
     });
   }
 
