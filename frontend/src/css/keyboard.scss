@@ -56,7 +56,10 @@ $key-width: 8vw; // 100/12 ~ 8.3
     color: white;
     font-weight: bold;
     text-shadow: 0 0 8px black;
-    font-size: max(4vw, 20px);
+    font-size: max(0.4 * $key-width, 20px);
+    span {
+      line-height: 0;
+    }
 
     border-radius: 0.125 * $key-width;
     background: #fff4;
