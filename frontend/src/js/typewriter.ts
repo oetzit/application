@@ -138,6 +138,10 @@ class Typewriter {
       final: "",
     };
   }
+
+  setHidden(hidden: boolean) {
+    this.keyboard.keyboardDOM.hidden = hidden;
+  }
 }
 
 export default Typewriter;

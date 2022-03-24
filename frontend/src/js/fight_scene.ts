@@ -236,6 +236,7 @@ export default class FightScene extends Phaser.Scene {
       color: "#ffffff",
     });
     this.typewriter = new Typewriter();
+    this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
       if (inputStatus.began_at === null) return;
       if (inputStatus.ended_at === null) return;
