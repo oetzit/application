@@ -213,6 +213,10 @@ export default class FightScene extends Phaser.Scene {
     return result;
   }
 
+  popFoe(foe) {
+    this.foes.splice(this.foes.indexOf(foe), 1);
+  }
+
   submitTranscription(inputStatus: InputStatus) {
     const { score, match } = this.findMatchingFoe(inputStatus.final);
     // TODO: visual near misses based on score
@@ -223,7 +227,7 @@ export default class FightScene extends Phaser.Scene {
       this.showMissMessage();
       new Spear(this, this.player, undefined);
     } else {
-      this.foes.splice(this.foes.indexOf(match), 1);
+      this.popFoe(match);
       match.handleSuccess();
       this.showHitMessage();
       new Spear(this, this.player, match.critter);

@@ -41,6 +41,8 @@ class Foe {
       this.critter,
       () => {
         this.scene.physics.world.removeCollider(overlap);
+        this.scene.popFoe(this);
+        this.clue.delete();
         this.critter.escape();
       },
     );
