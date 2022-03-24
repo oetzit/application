@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2022-03-24
+
+### Added
+
+- `FE` Let clues fall w/ gravity to improve overlap situation.
+- `FE` Make word size more uniform by guesstimating ascenders/descenders presence.
+- `FE` Track input timing and keystrokes.
+- `FE` Add virtual keyboard for mobile (which becomes input handler for desktop too).
+- `BE` Swagger for API.
+
+### Changed
+
+- `FE` Move success/failure messages to improve readability.
+- `FE` Rework background scaling.
+- `FE` Circumvent texture key hashing to avoid collisions.
+- `BE` Completely rework API (shallow RESTlike w/ Typebox).
+
+### Fixed
+
+- `FE` Immediately remove clue on failure.
+- `FE` Solve difficulties in typing "öäüß" (w/ hidden virtual keyboard).
+
 ## [0.2.0] - 2022-03-15
 
 ### Added
@@ -42,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...development
-[0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.2.0
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...development
+[0.3.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.3.0
+[0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.0.1...0.1.0
 [0.0.1]: https://gitlab.inf.unibz.it/commul/oetzi/tree/v0.0.1
