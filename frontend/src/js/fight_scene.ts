@@ -198,7 +198,8 @@ export default class FightScene extends Phaser.Scene {
 
   checkAlive() {
     if (this.health > 0) return;
-    // TODO: GAME OVER
+    // TODO: destroy scene more gracefully, as some stuff breaks
+    this.scene.start("game_over");
   }
 
   showSubmitFeedback(color: string) {
@@ -338,9 +339,9 @@ function gameStart(scene: any) {
 async function spawn(scene: any) {
   await spawnFoe(scene);
   scene.time.now;
-  const delay = 2000;
-  // const delay =
-  //   (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
+  // const delay = 2000;
+  const delay =
+    (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
   setTimeout(() => spawn(scene), Math.max(delay, 2000));
 }
 

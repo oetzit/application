@@ -1,8 +1,8 @@
 import "phaser";
 
-export default class WelcomeScene extends Phaser.Scene {
+export default class GameOverScene extends Phaser.Scene {
   constructor() {
-    super("welcome");
+    super("game_over");
   }
 
   create() {
@@ -12,10 +12,10 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   drawTitle() {
-    const text = "ÖTZI\nGAME";
+    const text = "ÖTZI\nDIED";
     const title = this.add.text(0, 0, text, {
       font: "bold 64px Courier",
-      color: "#ffffff",
+      color: "#ff0000",
     });
     title.setOrigin(0.5, 0.5);
     title.setPosition(
@@ -25,7 +25,7 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   drawCTA() {
-    const text = "press to start";
+    const text = "press to continue";
     const cta = this.add.text(0, 0, text, {
       font: "bold 32px Courier",
       color: "#ffffff",
@@ -43,6 +43,6 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   startFight() {
-    this.scene.start("fight");
+    this.scene.start("welcome");
   }
 }
