@@ -20,6 +20,7 @@ class Foe {
 
   async initialize() {
     this.beWord = (await backend.getWord()).data;
+    if (!this.scene.scene.isActive()) return;
     // this.beClue = (
     //   await backend.createClue(this.scene.beGame.id, {
     //     word_id: this.beWord.id,
@@ -65,6 +66,11 @@ class Foe {
     //   typed: "",
     //   final: "",
     // });
+  }
+
+  destroy() {
+    this.clue.destroy();
+    this.critter.destroy();
   }
 }
 

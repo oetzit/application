@@ -37,12 +37,14 @@ export default class FightScene extends Phaser.Scene {
   constructor() {
     super("fight");
     this.foes = [];
-    this.score = 0;
-    this.health = 100;
     this.hud = {};
   }
 
   preload() {
+    this.preloadSprites();
+  }
+
+  preloadSprites() {
     this.load.spritesheet("oezi", "assets/sprites/player/oezi.png", {
       frameWidth: 27,
       frameHeight: 35,
@@ -73,29 +75,21 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
+  init() {
+    this.score = 0;
+    this.health = 100;
+  }
+
   async create() {
     this.inputStatus = {
       typed: "",
       final: "",
+      began_at: null,
+      ended_at: null,
     };
     this.initCluesGroup();
 
-    createAnim(this, "player_idle", "oezi", 1, 5);
-    createAnim(this, "player_run", "oezi", 6, 13);
-    createAnim(this, "deer_run", "deer", 0, 5);
-    createAnim(this, "deer_idle", "deer", 6, 15);
-    createAnim(this, "deer_walk", "deer", 16, 23);
-    createAnim(this, "boar_run", "boar", 0, 5);
-    createAnim(this, "boar_idle", "boar", 6, 13);
-    createAnim(this, "boar_walk", "boar", 14, 22);
-    createAnim(this, "wolf_run", "wolf", 0, 5);
-    createAnim(this, "wolf_idle", "wolf", 6, 15);
-    createAnim(this, "wolf_walk", "wolf", 16, 23);
-    createAnim(this, "bear_run", "bear", 12, 16);
-    createAnim(this, "bear_idle", "bear", 0, 11);
-    createAnim(this, "bear_walk", "bear", 17, 24);
-    createAnim(this, "spearAni", "spear", 0, 3);
-    createAnim(this, "spearHitAni", "spearhit", 0, 8);
+    this.createAnimations();
 
     this.physics.world.setBounds(
       0,
@@ -121,38 +115,16 @@ export default class FightScene extends Phaser.Scene {
       },
     );
 
-    this.player = this.physics.add
-      .sprite(
-        this.cameras.main.width + 300,
-        this.cameras.main.height - 100,
-        "oezi",
-      )
-      .setScale(3)
-      .setInteractive();
-
-    this.player.flipX = true;
-
-    this.player.play({ key: "player_run" });
-
-    this.player.setCollideWorldBounds(true);
-
-    this.tweens.add({
-      targets: this.player,
-      x: this.cameras.main.width - 80,
-      ease: "Power2",
-      duration: 2000,
-      onComplete: () => {
-        setAnimation(this.player, "player_run");
-      },
-    });
+    this.createPlayer();
 
     // this.scale.displaySize.setAspectRatio(
     //   this.cameras.main.width / this.cameras.main.height,
     // );
     // this.scale.refresh();
-    this.initAndBindGuessPreview();
 
-    this.initHUD();
+    this.createHUD();
+
+    this.initAndBindGuessPreview();
 
     this.beGame = (await backend.createGame()).data;
     this.beGame = (
@@ -165,7 +137,72 @@ export default class FightScene extends Phaser.Scene {
     gameStart(this);
   }
 
-  initHUD() {
+  createAnimations() {
+    this.createAnimation("player_idle", "oezi", 1, 5);
+    this.createAnimation("player_run", "oezi", 6, 13);
+    this.createAnimation("deer_run", "deer", 0, 5);
+    this.createAnimation("deer_idle", "deer", 6, 15);
+    this.createAnimation("deer_walk", "deer", 16, 23);
+    this.createAnimation("boar_run", "boar", 0, 5);
+    this.createAnimation("boar_idle", "boar", 6, 13);
+    this.createAnimation("boar_walk", "boar", 14, 22);
+    this.createAnimation("wolf_run", "wolf", 0, 5);
+    this.createAnimation("wolf_idle", "wolf", 6, 15);
+    this.createAnimation("wolf_walk", "wolf", 16, 23);
+    this.createAnimation("bear_run", "bear", 12, 16);
+    this.createAnimation("bear_idle", "bear", 0, 11);
+    this.createAnimation("bear_walk", "bear", 17, 24);
+    this.createAnimation("spearAni", "spear", 0, 3);
+    this.createAnimation("spearHitAni", "spearhit", 0, 8);
+  }
+
+  createAnimation(key: string, refKey: string, from: number, to: number) {
+    this.anims.create({
+      key: key,
+      frames: this.anims.generateFrameNumbers(refKey, {
+        start: from,
+        end: to,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+  }
+
+  createPlayer() {
+    this.player = this.physics.add
+      .sprite(
+        this.cameras.main.width + 300,
+        this.cameras.main.height - 100,
+        "oezi",
+      )
+      .setScale(3)
+      .setInteractive();
+    this.player.flipX = true;
+    this.player.play({ key: "player_run" });
+    this.player.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: this.player,
+      x: this.cameras.main.width - 80,
+      ease: "Power2",
+      duration: 2000,
+      onComplete: () => {
+        this.player.play({ key: "player_run", repeat: -1 });
+      },
+    });
+  }
+
+  createHUD() {
+    this.hud.input = this.add.text(
+      this.cameras.main.width / 2,
+      this.cameras.main.height / 2,
+      "",
+      {
+        font: "bold 64px Courier",
+        color: "#ffffff",
+      },
+    );
+    this.hud.input.setOrigin(0.5, 0.5);
+
     this.hud.score = this.add.text(10, 10, "", {
       font: "bold 48px Courier",
       color: "lightgreen",
@@ -181,12 +218,12 @@ export default class FightScene extends Phaser.Scene {
     this.updateHealth(0);
   }
 
-  updateScore(delta) {
+  updateScore(delta: number) {
     this.score += delta;
     this.hud.score.text = "✪ " + this.score.toString();
   }
 
-  updateHealth(delta) {
+  updateHealth(delta: number) {
     this.health += delta;
     this.health = Math.max(this.health, 0);
     this.hud.health.text = this.health.toString() + " ❤";
@@ -195,7 +232,11 @@ export default class FightScene extends Phaser.Scene {
 
   checkAlive() {
     if (this.health > 0) return;
-    // TODO: destroy scene more gracefully, as some stuff breaks
+    this.foes.forEach((foe) => foe.destroy());
+    // this.scene.transition({
+    //   target: "game_over",
+    // });
+    // // this.scene.stop();
     this.scene.start("game_over");
   }
 
@@ -282,16 +323,6 @@ export default class FightScene extends Phaser.Scene {
   }
 
   initAndBindGuessPreview() {
-    this.hud.input = this.add.text(
-      this.cameras.main.width / 2,
-      this.cameras.main.height / 2,
-      "",
-      {
-        font: "bold 64px Courier",
-        color: "#ffffff",
-      },
-    );
-    this.hud.input.setOrigin(0.5, 0.5);
     this.typewriter = new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
@@ -312,36 +343,19 @@ export default class FightScene extends Phaser.Scene {
   }
 }
 
-// TODO: remove any
-function setAnimation(obj: any, idleKey: any) {
-  obj.play({ key: idleKey, repeat: -1 });
-}
-
-function createAnim(scene: any, key: any, refKey: any, from: any, to: any) {
-  scene.anims.create({
-    key: key,
-    frames: scene.anims.generateFrameNumbers(refKey, {
-      start: from,
-      end: to,
-    }),
-    frameRate: 10,
-    repeat: -1,
-  });
-}
-
 function gameStart(scene: any) {
   spawn(scene);
 }
 
 async function spawn(scene: any) {
+  if (!scene.scene.isActive()) return;
   await spawnFoe(scene);
   scene.time.now;
-  // const delay = 2000;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  setTimeout(() => spawn(scene), Math.max(delay, 2000));
+  setTimeout(() => spawn(scene), 200);
 }
 
-async function spawnFoe(scene: any) {
+async function spawnFoe(scene: FightScene) {
   await new Foe(scene).initialize();
 }

@@ -56,6 +56,7 @@ class Clue extends Phaser.GameObjects.Sprite {
   }
 
   showTexture() {
+    if (!this.scene.scene.isActive()) return;
     this.applyTexture();
     this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
     this.scene.physics.world.add(this.body);
