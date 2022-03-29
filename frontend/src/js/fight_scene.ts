@@ -323,7 +323,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   initAndBindGuessPreview() {
-    this.typewriter = new Typewriter();
+    this.typewriter ??= new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
       if (inputStatus.began_at === null) return;
@@ -353,7 +353,7 @@ async function spawn(scene: any) {
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  setTimeout(() => spawn(scene), 200);
+  setTimeout(() => spawn(scene), Math.min(200, delay));
 }
 
 async function spawnFoe(scene: FightScene) {
