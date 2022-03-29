@@ -44,6 +44,7 @@ class Foe {
         this.scene.popFoe(this);
         this.clue.delete();
         this.critter.escape();
+        this.scene.updateHealth(-10);
       },
     );
   }

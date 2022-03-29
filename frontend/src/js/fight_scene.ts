@@ -17,6 +17,12 @@ interface InputStatus {
   final: string;
 }
 
+interface HUD {
+  score: Phaser.GameObjects.Text;
+  input: Phaser.GameObjects.Text;
+  health: Phaser.GameObjects.Text;
+}
+
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -24,11 +30,16 @@ export default class FightScene extends Phaser.Scene {
   beGame: Types.Game;
   inputStatus: InputStatus;
   typewriter: Typewriter;
-  preview: Phaser.GameObjects.Text;
+  score: number;
+  health: number;
+  hud: HUD;
 
   constructor() {
     super("fight");
     this.foes = [];
+    this.score = 0;
+    this.health = 100;
+    this.hud = {};
   }
 
   preload() {
@@ -141,6 +152,8 @@ export default class FightScene extends Phaser.Scene {
     // this.scale.refresh();
     this.initAndBindGuessPreview();
 
+    this.initHUD();
+
     this.beGame = (await backend.createGame()).data;
     this.beGame = (
       await backend.updateGame(this.beGame.id, {
@@ -152,11 +165,47 @@ export default class FightScene extends Phaser.Scene {
     gameStart(this);
   }
 
+  initHUD() {
+    this.hud.score = this.add.text(10, 10, this.score.toString(), {
+      font: "bold 32px Courier",
+      color: "lightgreen",
+    });
+    this.hud.score.setOrigin(0, 0);
+
+    this.hud.health = this.add.text(
+      this.cameras.main.width - 10,
+      10,
+      this.health.toString(),
+      {
+        font: "bold 32px Courier",
+        color: "orange",
+      },
+    );
+    this.hud.health.setOrigin(1, 0);
+  }
+
+  updateScore(delta) {
+    this.score += delta;
+    this.hud.score.text = this.score.toString();
+  }
+
+  updateHealth(delta) {
+    this.health += delta;
+    this.health = Math.max(this.health, 0);
+    this.hud.health.text = this.health.toString();
+    this.checkAlive();
+  }
+
+  checkAlive() {
+    if (this.health > 0) return;
+    // TODO: GAME OVER
+  }
+
   showSubmitFeedback(color: string) {
     const text = this.add.text(
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
-      this.preview.text,
+      this.hud.input.text,
       {
         font: "bold 64px Courier",
         color: color,
@@ -220,19 +269,22 @@ export default class FightScene extends Phaser.Scene {
       // NOOP
       this.showSubmitFeedback("#FFFFFF");
     } else if (score < 0.9) {
+      this.updateScore(-1);
       match.handleFailure();
       this.showSubmitFeedback("#FF0000");
       new Spear(this, this.player, undefined);
     } else {
+      this.updateScore(+10);
       this.popFoe(match);
       match.handleSuccess();
       this.showSubmitFeedback("#00FF00");
       new Spear(this, this.player, match.critter);
+      // TODO: increase score
     }
   }
 
   initAndBindGuessPreview() {
-    this.preview = this.add.text(
+    this.hud.input = this.add.text(
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
       "",
@@ -241,7 +293,7 @@ export default class FightScene extends Phaser.Scene {
         color: "#ffffff",
       },
     );
-    this.preview.setOrigin(0.5, 0.5);
+    this.hud.input.setOrigin(0.5, 0.5);
     this.typewriter = new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
@@ -254,10 +306,10 @@ export default class FightScene extends Phaser.Scene {
         typed: inputStatus.typed,
         final: inputStatus.final,
       });
-      this.preview.text = "";
+      this.hud.input.text = "";
     };
     this.typewriter.onChange = (inputStatus) => {
-      this.preview.text = inputStatus.final;
+      this.hud.input.text = inputStatus.final;
     };
   }
 }
@@ -286,8 +338,9 @@ function gameStart(scene: any) {
 async function spawn(scene: any) {
   await spawnFoe(scene);
   scene.time.now;
-  const delay =
-    (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
+  const delay = 2000;
+  // const delay =
+  //   (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
   setTimeout(() => spawn(scene), Math.max(delay, 2000));
 }
 
