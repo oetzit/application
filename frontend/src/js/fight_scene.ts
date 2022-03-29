@@ -224,11 +224,17 @@ export default class FightScene extends Phaser.Scene {
 
   checkAlive() {
     if (this.health > 0) return;
+    this.endGame();
+  }
+
+  async endGame() {
+    this.beGame = (
+      await backend.updateGame(this.beGame.id, {
+        began_at: this.beGame.began_at, // TODO: make this optional in the type
+        ended_at: new Date().toISOString(),
+      })
+    ).data;
     this.foes.forEach((foe) => foe.destroy());
-    // this.scene.transition({
-    //   target: "game_over",
-    // });
-    // // this.scene.stop();
     this.scene.start("game_over");
   }
 
