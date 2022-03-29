@@ -126,7 +126,7 @@ export default class FightScene extends Phaser.Scene {
       })
     ).data;
 
-    gameStart(this);
+    spawnFoes();
   }
 
   createAnimations() {
@@ -333,21 +333,17 @@ export default class FightScene extends Phaser.Scene {
       this.hud.input.text = inputStatus.final;
     };
   }
-}
 
-function gameStart(scene: any) {
-  spawn(scene);
-}
+  async spawnFoes() {
+    if (!this.scene.isActive()) return;
+    await this.spawnFoe();
+    const delay =
+      (8 * 1000 * (60 * 1000 - this.time.now)) / 60 / 1000 + 2 * 1000;
+    // TODO: think of a progression which makes sense
+    setTimeout(this.spawnFoes.bind(this), Math.max(2000, delay));
+  }
 
-async function spawn(scene: any) {
-  if (!scene.scene.isActive()) return;
-  await spawnFoe(scene);
-  scene.time.now;
-  const delay =
-    (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  setTimeout(() => spawn(scene), Math.max(2000, delay));
-}
-
-async function spawnFoe(scene: FightScene) {
-  await new Foe(scene).initialize();
+  async spawnFoe() {
+    await new Foe(this).initialize();
+  }
 }
