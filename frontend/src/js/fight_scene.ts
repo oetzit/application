@@ -166,33 +166,30 @@ export default class FightScene extends Phaser.Scene {
   }
 
   initHUD() {
-    this.hud.score = this.add.text(10, 10, this.score.toString(), {
-      font: "bold 32px Courier",
+    this.hud.score = this.add.text(10, 10, "", {
+      font: "bold 48px Courier",
       color: "lightgreen",
     });
     this.hud.score.setOrigin(0, 0);
+    this.updateScore(0);
 
-    this.hud.health = this.add.text(
-      this.cameras.main.width - 10,
-      10,
-      this.health.toString(),
-      {
-        font: "bold 32px Courier",
-        color: "orange",
-      },
-    );
+    this.hud.health = this.add.text(this.cameras.main.width - 10, 10, "", {
+      font: "bold 48px Courier",
+      color: "orange",
+    });
     this.hud.health.setOrigin(1, 0);
+    this.updateHealth(0);
   }
 
   updateScore(delta) {
     this.score += delta;
-    this.hud.score.text = this.score.toString();
+    this.hud.score.text = "✪ " + this.score.toString();
   }
 
   updateHealth(delta) {
     this.health += delta;
     this.health = Math.max(this.health, 0);
-    this.hud.health.text = this.health.toString();
+    this.hud.health.text = this.health.toString() + " ❤";
     this.checkAlive();
   }
 
