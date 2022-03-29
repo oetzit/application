@@ -126,7 +126,7 @@ export default class FightScene extends Phaser.Scene {
       })
     ).data;
 
-    spawnFoes();
+    this.spawnFoes();
   }
 
   createAnimations() {
