@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `FE` input is centered on screen.
+- `FE` submit feedback is now always given and way snappier.
+
 ### Fixed
 
 - `FE` player doesn't fall through ground on big screens.

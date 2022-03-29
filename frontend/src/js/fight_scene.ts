@@ -24,6 +24,7 @@ export default class FightScene extends Phaser.Scene {
   beGame: Types.Game;
   inputStatus: InputStatus;
   typewriter: Typewriter;
+  preview: Phaser.GameObjects.Text;
 
   constructor() {
     super("fight");
@@ -59,14 +60,6 @@ export default class FightScene extends Phaser.Scene {
       frameWidth: 14,
       frameHeight: 33,
     });
-    this.load.spritesheet("hit", "assets/sprites/player/hit-sheet.png", {
-      frameWidth: 469,
-      frameHeight: 79,
-    });
-    this.load.spritesheet("miss", "assets/sprites/player/misssing-sheet.png", {
-      frameWidth: 466,
-      frameHeight: 76,
-    });
   }
 
   async create() {
@@ -92,8 +85,6 @@ export default class FightScene extends Phaser.Scene {
     createAnim(this, "bear_walk", "bear", 17, 24);
     createAnim(this, "spearAni", "spear", 0, 3);
     createAnim(this, "spearHitAni", "spearhit", 0, 8);
-    createAnim(this, "hit", "hit", 0, 9);
-    createAnim(this, "missing", "miss", 0, 6);
 
     this.physics.world.setBounds(
       0,
@@ -161,33 +152,25 @@ export default class FightScene extends Phaser.Scene {
     gameStart(this);
   }
 
-  showMissMessage() {
-    const message = this.add
-      .sprite(
-        this.cameras.main.width / 2,
-        (3 * this.cameras.main.height) / 4,
-        "miss",
-      )
-      .setScale(1);
-    message.play({ key: "missing", repeat: 1 });
-    message.on("animationcomplete", () => {
-      message.anims.remove("miss");
-      message.destroy();
-    });
-  }
-
-  showHitMessage() {
-    const message = this.add
-      .sprite(
-        this.cameras.main.width / 2,
-        (3 * this.cameras.main.height) / 4,
-        "hit",
-      )
-      .setScale(1);
-    message.play({ key: "hit", repeat: 1 });
-    message.on("animationcomplete", () => {
-      message.anims.remove("hit");
-      message.destroy();
+  showSubmitFeedback(color: string) {
+    const text = this.add.text(
+      this.cameras.main.width / 2,
+      this.cameras.main.height / 2,
+      this.preview.text,
+      {
+        font: "bold 64px Courier",
+        color: color,
+      },
+    );
+    text.setOrigin(0.5, 0.5);
+    this.tweens.add({
+      targets: text,
+      scaleX: 5,
+      scaleY: 5,
+      alpha: 0,
+      ease: "Power2",
+      duration: 500,
+      onComplete: (_tween, [target]) => target.destroy(),
     });
   }
 
@@ -235,23 +218,30 @@ export default class FightScene extends Phaser.Scene {
     // TODO: visual near misses based on score
     if (match === null) {
       // NOOP
+      this.showSubmitFeedback("#FFFFFF");
     } else if (score < 0.9) {
       match.handleFailure();
-      this.showMissMessage();
+      this.showSubmitFeedback("#FF0000");
       new Spear(this, this.player, undefined);
     } else {
       this.popFoe(match);
       match.handleSuccess();
-      this.showHitMessage();
+      this.showSubmitFeedback("#00FF00");
       new Spear(this, this.player, match.critter);
     }
   }
 
   initAndBindGuessPreview() {
-    const textEntry = this.add.text(100, this.cameras.main.height / 2, "", {
-      font: "bold 64px Courier",
-      color: "#ffffff",
-    });
+    this.preview = this.add.text(
+      this.cameras.main.width / 2,
+      this.cameras.main.height / 2,
+      "",
+      {
+        font: "bold 64px Courier",
+        color: "#ffffff",
+      },
+    );
+    this.preview.setOrigin(0.5, 0.5);
     this.typewriter = new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
@@ -264,10 +254,10 @@ export default class FightScene extends Phaser.Scene {
         typed: inputStatus.typed,
         final: inputStatus.final,
       });
-      textEntry.text = "";
+      this.preview.text = "";
     };
     this.typewriter.onChange = (inputStatus) => {
-      textEntry.text = inputStatus.final;
+      this.preview.text = inputStatus.final;
     };
   }
 }
