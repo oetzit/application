@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2022-03-29
+
+### Added
+
+- `FE` Nice parallax background.
+- `FE` Rudimentary score/health system.
+- `FE` Game over and splash screens.
+
 ### Changed
 
 - `FE` input is centered on screen.
@@ -74,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.4.0...development
+[0.4.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...0.4.0
 [0.3.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.3.0
 [0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.0.1...0.1.0
