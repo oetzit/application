@@ -11,8 +11,8 @@ import Foe from "./foe";
 import Typewriter from "./typewriter";
 
 interface InputStatus {
-  began_at: string | null;
-  ended_at: string | null;
+  began_at: string;
+  ended_at: string;
   typed: string;
   final: string;
 }
@@ -28,7 +28,6 @@ export default class FightScene extends Phaser.Scene {
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
   beGame: Types.Game;
-  inputStatus: InputStatus;
   typewriter: Typewriter;
   score: number;
   health: number;
@@ -81,12 +80,6 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create() {
-    this.inputStatus = {
-      typed: "",
-      final: "",
-      began_at: null,
-      ended_at: null,
-    };
     this.initCluesGroup();
 
     this.createAnimations();
@@ -123,8 +116,7 @@ export default class FightScene extends Phaser.Scene {
     // this.scale.refresh();
 
     this.createHUD();
-
-    this.initAndBindGuessPreview();
+    this.createAndBindTypewriter();
 
     this.beGame = (await backend.createGame()).data;
     this.beGame = (
@@ -322,7 +314,7 @@ export default class FightScene extends Phaser.Scene {
     }
   }
 
-  initAndBindGuessPreview() {
+  createAndBindTypewriter() {
     this.typewriter ??= new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
     this.typewriter.onSubmit = (inputStatus) => {
