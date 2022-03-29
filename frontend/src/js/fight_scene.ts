@@ -19,7 +19,6 @@ interface InputStatus {
 
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
-  ground: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
   beGame: Types.Game;
@@ -32,7 +31,6 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("ground", "assets/background_layers/ground.png");
     this.load.spritesheet("oezi", "assets/sprites/player/oezi.png", {
       frameWidth: 27,
       frameHeight: 35,
@@ -97,12 +95,29 @@ export default class FightScene extends Phaser.Scene {
     createAnim(this, "hit", "hit", 0, 9);
     createAnim(this, "missing", "miss", 0, 6);
 
-    this.ground = this.physics.add
-      .staticImage(0, this.cameras.main.height - 25, "ground")
-      .refreshBody()
-      .setImmovable(true);
-    // TODO: re-enable
-    //this.ground.body.allowGravity = false;
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.cameras.main.width,
+      this.cameras.main.height - 30,
+      false,
+      false,
+      false,
+      true,
+    );
+
+    this.physics.world.on(
+      "worldbounds",
+      function (
+        body: Phaser.Physics.Arcade.Body,
+        up: boolean,
+        down: boolean,
+        left: boolean,
+        right: boolean,
+      ) {
+        body.gameObject.emit("hitWorldBounds", { up, down, left, right });
+      },
+    );
 
     this.player = this.physics.add
       .sprite(
@@ -117,7 +132,7 @@ export default class FightScene extends Phaser.Scene {
 
     this.player.play({ key: "player_run" });
 
-    this.physics.add.collider(this.player, this.ground);
+    this.player.setCollideWorldBounds(true);
 
     this.tweens.add({
       targets: this.player,
@@ -125,7 +140,7 @@ export default class FightScene extends Phaser.Scene {
       ease: "Power2",
       duration: 2000,
       onComplete: () => {
-        setAnimation(this.player, "player_idle");
+        setAnimation(this.player, "player_run");
       },
     });
 

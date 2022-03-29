@@ -35,7 +35,7 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
 
     this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
     this.scene.physics.world.add(this.body);
-    this.scene.physics.add.collider(this, this.scene.ground);
+    this.setCollideWorldBounds(true);
 
     this.setScale(scale);
 

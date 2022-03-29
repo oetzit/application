@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `FE` player doesn't fall through ground on big screens.
+- `FE` animals don't fall through ground on big screens.
+
 ## [0.3.0] - 2022-03-24
 
 ### Added

@@ -28,7 +28,9 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
     //scene.physics.world.enableBody(this, Phaser.Physics.Arcade.DYNAMIC_BODY);
     this.body = new Phaser.Physics.Arcade.Body(scene.physics.world, this);
     scene.physics.world.add(this.body);
-    scene.physics.add.collider(this, scene.ground, this.hitGround.bind(this));
+    this.setCollideWorldBounds(true, 0, 0.2);
+    this.body.onWorldBounds = true;
+    this.on("hitWorldBounds", this.hitGround.bind(this));
     this.body.setBounce(0, 0.2); // TODO: bounce only at small angles
 
     if (this.target) {
