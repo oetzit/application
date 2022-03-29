@@ -345,7 +345,7 @@ async function spawn(scene: any) {
   scene.time.now;
   const delay =
     (8 * 1000 * (60 * 1000 - scene.time.now)) / 60 / 1000 + 2 * 1000;
-  setTimeout(() => spawn(scene), Math.min(200, delay));
+  setTimeout(() => spawn(scene), Math.max(2000, delay));
 }
 
 async function spawnFoe(scene: FightScene) {
