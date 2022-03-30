@@ -65,14 +65,26 @@ server.get("/", async (request, reply) => {
     )
     .groupByRaw("DATE(began_at), ended");
 
+  const shotsByDuration = await connection
+    .table("shots")
+    .select(
+      connection.raw(
+        "width_bucket(extract(epoch from ended_at - began_at)*1000, 0, 60*1000, 60*10)*100 as bucket, count(*)",
+      ),
+    )
+    .groupBy("bucket")
+    .orderBy("bucket");
+
   reply.view("/templates/dashboard.ejs", {
-    gamesByDate: gamesByDate,
+    gamesByDate,
+    shotsByDuration,
   });
 });
 
 // TODO: this is an horrible kludge
 import fastifyStatic from "fastify-static";
 import path from "path";
+import { connect } from "http2";
 server.register(fastifyStatic, {
   root: path.join(__dirname, "../public"),
   prefix: "/public/",

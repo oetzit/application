@@ -31,10 +31,13 @@
 
     <div class="container-fluid">
         <div class="row">
-            <main class="col-lg-12 ms-sm-auto p-md-4">
-                <h1>Games by date</h1>
+            <main class="col-lg-8 col-md-10 mx-auto p-md-4">
+                <h1>Game count by date</h1>
                 <script id="gamesByDateData" type="application/json"><%- JSON.stringify(gamesByDate) %></script>
                 <canvas id="gamesByDateChart"></canvas>
+                <h1>Shot count by duration [ms]</h1>
+                <script id="shotsByDurationData" type="application/json"><%- JSON.stringify(shotsByDuration) %></script>
+                <canvas id="shotsByDurationChart"></canvas>
             </main>
         </div>
     </div>
