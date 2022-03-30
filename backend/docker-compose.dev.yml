@@ -8,6 +8,8 @@ services:
       target: base
     volumes:
       - ./src:/app/src
+      - ./templates:/app/templates
+      - ./public:/app/public
       - ./nodemon.json:/app/nodemon.json
     ports:
       - "8080:8080"
@@ -25,6 +27,8 @@ services:
       target: base
     volumes:
       - ./src:/app/src
+      - ./templates:/app/templates
+      - ./public:/app/public
       - ./seeds:/app/seeds
       - ./migrations:/app/migrations
     environment:

@@ -22,14 +22,18 @@
     "@types/sharp": "^0.29.5",
     "@xmldom/xmldom": "^0.8.1",
     "axios": "^0.26.0",
+    "ejs": "^3.1.6",
     "fastify": "^3.27.1",
     "fastify-cors": "^6.0.2",
+    "fastify-static": "^4.6.1",
     "fastify-swagger": "^5.0.0",
     "knex": "^1.0.3",
     "pg": "^8.7.3",
+    "point-of-view": "^5.2.0",
     "sharp": "^0.30.2"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.11",
     "@typescript-eslint/eslint-plugin": "^5.5.0",

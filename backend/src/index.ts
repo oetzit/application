@@ -45,8 +45,37 @@ server.register(fastifySwagger, {
 import apiRoutes from "./api";
 server.register(apiRoutes, { prefix: "api" });
 
-server.get("/", function (request, reply) {
-  reply.code(200).send("Hello, World!");
+import pointOfView from "point-of-view";
+import * as ejs from "ejs";
+server.register(pointOfView, {
+  engine: { ejs: ejs },
+  defaultContext: {
+    env: "TODO", // TODO: env and tag/sha
+  },
+});
+
+import { connection } from "./db";
+
+server.get("/", async (request, reply) => {
+  // reply.code(200).send("Hello, World!");
+  const gamesByDate = await connection
+    .table("games")
+    .select(
+      connection.raw("COUNT(*), DATE(began_at), ended_at IS NOT NULL as ended"),
+    )
+    .groupByRaw("DATE(began_at), ended");
+
+  reply.view("/templates/dashboard.ejs", {
+    gamesByDate: gamesByDate,
+  });
+});
+
+// TODO: this is an horrible kludge
+import fastifyStatic from "fastify-static";
+import path from "path";
+server.register(fastifyStatic, {
+  root: path.join(__dirname, "../public"),
+  prefix: "/public/",
 });
 
 server.listen(process.env.PORT as string, "0.0.0.0");
