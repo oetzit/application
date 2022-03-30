@@ -35,7 +35,16 @@ export const Shot = Type.Object({
   final: Type.String(),
 });
 
-export const GameUpdate = Type.Omit(Game, ["id"]);
-export const ClueCreate = Type.Pick(Clue, ["word_id"]);
-export const ClueUpdate = Type.Pick(Clue, ["began_at", "ended_at"]);
+export const GameUpdate = Type.Partial(
+  Type.Pick(Game, ["began_at", "ended_at"]),
+);
+
+export const ClueUpdate = Type.Partial(
+  Type.Pick(Clue, ["began_at", "ended_at"]),
+);
+export const ClueCreate = Type.Intersect([
+  Type.Pick(Clue, ["word_id"]),
+  ClueUpdate,
+]);
+
 export const ShotCreate = Type.Omit(Shot, ["id", "game_id"]);

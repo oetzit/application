@@ -21,17 +21,12 @@ class Foe {
   async initialize() {
     this.beWord = (await backend.getWord()).data;
     if (!this.scene.scene.isActive()) return;
-    // this.beClue = (
-    //   await backend.createClue(this.scene.beGame.id, {
-    //     word_id: this.beWord.id,
-    //   })
-    // ).data;
-    // this.beClue = (
-    //   await backend.updateClue(this.beClue.id, {
-    //     began_at: new Date().toISOString(),
-    //     ended_at: null,
-    //   })
-    // ).data;
+    this.beClue = (
+      await backend.createClue(this.scene.beGame.id, {
+        word_id: this.beWord.id,
+        began_at: new Date().toISOString(),
+      })
+    ).data;
 
     this.clue = new Clue(this.scene, this.beWord);
     this.critter = new Critter(this.scene);

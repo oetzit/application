@@ -122,7 +122,6 @@ export default class FightScene extends Phaser.Scene {
     this.beGame = (
       await backend.updateGame(this.beGame.id, {
         began_at: new Date().toISOString(),
-        ended_at: null,
       })
     ).data;
 
@@ -230,7 +229,6 @@ export default class FightScene extends Phaser.Scene {
   async endGame() {
     this.beGame = (
       await backend.updateGame(this.beGame.id, {
-        began_at: this.beGame.began_at, // TODO: make this optional in the type
         ended_at: new Date().toISOString(),
       })
     ).data;
@@ -238,11 +236,11 @@ export default class FightScene extends Phaser.Scene {
     this.scene.start("game_over");
   }
 
-  showSubmitFeedback(color: string) {
+  showSubmitFeedback(color: string, input: string) {
     const text = this.add.text(
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
-      this.hud.input.text,
+      input,
       {
         font: "bold 64px Courier",
         color: color,
@@ -300,21 +298,29 @@ export default class FightScene extends Phaser.Scene {
   }
 
   submitTranscription(inputStatus: InputStatus) {
+    // NOTE: this ain't async to avoid any UX delay
     const { score, match } = this.findMatchingFoe(inputStatus.final);
-    // TODO: visual near misses based on score
+    backend.createShot(this.beGame.id, {
+      clue_id: match?.beClue?.id || null,
+      ...inputStatus,
+    });
     if (match === null) {
       // NOOP
-      this.showSubmitFeedback("#FFFFFF");
+      this.showSubmitFeedback("#FFFFFF", inputStatus.final);
     } else if (score < 0.9) {
+      // TODO: visual near misses based on score
       this.updateScore(-1);
       match.handleFailure();
-      this.showSubmitFeedback("#FF0000");
+      this.showSubmitFeedback("#FF0000", inputStatus.final);
       new Spear(this, this.player, undefined);
     } else {
+      backend.updateClue(match.beClue.id, {
+        ended_at: new Date().toISOString(),
+      });
       this.updateScore(+10);
       this.popFoe(match);
       match.handleSuccess();
-      this.showSubmitFeedback("#00FF00");
+      this.showSubmitFeedback("#00FF00", inputStatus.final);
       new Spear(this, this.player, match.critter);
       // TODO: increase score
     }
@@ -323,17 +329,17 @@ export default class FightScene extends Phaser.Scene {
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter();
     this.typewriter.setHidden(this.game.device.os.desktop);
-    this.typewriter.onSubmit = (inputStatus) => {
+    this.typewriter.onSubmit = async (inputStatus) => {
       if (inputStatus.began_at === null) return;
       if (inputStatus.ended_at === null) return;
       if (inputStatus.final === "") return;
+      this.hud.input.text = "";
       this.submitTranscription({
         began_at: inputStatus.began_at.toISOString(),
         ended_at: inputStatus.ended_at.toISOString(),
         typed: inputStatus.typed,
         final: inputStatus.final,
       });
-      this.hud.input.text = "";
     };
     this.typewriter.onChange = (inputStatus) => {
       this.hud.input.text = inputStatus.final;

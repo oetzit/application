@@ -177,7 +177,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     handler: async (request, reply) => {
       const shots = await connection
         .table("shots")
-        .insert(request.body)
+        .insert({ game_id: request.params.id, ...request.body })
         .returning<Types.Shot[]>("*");
 
       reply.code(200).send(shots[0]);
