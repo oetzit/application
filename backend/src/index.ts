@@ -58,6 +58,11 @@ import { connection } from "./db";
 
 server.get("/", async (request, reply) => {
   // reply.code(200).send("Hello, World!");
+
+  const gamesCount = (await connection.table("games").count())[0].count;
+  const cluesCount = (await connection.table("clues").count())[0].count;
+  const shotsCount = (await connection.table("shots").count())[0].count;
+
   const gamesByDate = await connection
     .table("games")
     .select(
@@ -76,6 +81,9 @@ server.get("/", async (request, reply) => {
     .orderBy("bucket");
 
   reply.view("/templates/dashboard.ejs", {
+    gamesCount,
+    cluesCount,
+    shotsCount,
     gamesByDate,
     shotsByDuration,
   });
