@@ -134,7 +134,7 @@ stg-build-fe-node-job:
   stage: build
   variables:
     NODE_ENV: staging
-    APP_VERSION: ${CI_COMMIT_REF_NAME}
+    APP_VERSION: ${CI_COMMIT_SHORT_SHA}
   script:
     - npm run build -- --out-dir dist/stg
   artifacts:
