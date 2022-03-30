@@ -81,6 +81,7 @@ server.get("/", async (request, reply) => {
     .orderBy("bucket");
 
   reply.view("/templates/dashboard.ejs", {
+    appVersion: process.env.APP_VERSION || "unknown",
     gamesCount,
     cluesCount,
     shotsCount,

@@ -119,6 +119,7 @@ prd-build-fe-node-job:
   stage: build
   variables:
     NODE_ENV: production
+    APP_VERSION: ${CI_COMMIT_TAG}
   script:
     - npm run build -- --out-dir dist/prd
   artifacts:
@@ -133,6 +134,7 @@ stg-build-fe-node-job:
   stage: build
   variables:
     NODE_ENV: staging
+    APP_VERSION: ${CI_COMMIT_REF_NAME}
   script:
     - npm run build -- --out-dir dist/stg
   artifacts:
@@ -164,6 +166,7 @@ build-be-job:
       --tag=$IMAGE_NAME:${CI_COMMIT_SHA}
       --tag=$IMAGE_NAME:${CI_COMMIT_REF_NAME}
       --tag=$IMAGE_NAME:${CI_COMMIT_TAG:-latest}
+      --build-arg APP_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
       backend
     - docker image push --all-tags $IMAGE_NAME
   only:

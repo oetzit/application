@@ -8,6 +8,7 @@ export default class WelcomeScene extends Phaser.Scene {
   create() {
     this.drawTitle();
     this.drawCTA();
+    this.drawVersion();
     this.bindEvents();
   }
 
@@ -34,6 +35,19 @@ export default class WelcomeScene extends Phaser.Scene {
     cta.setPosition(
       this.cameras.main.width * 0.5,
       this.cameras.main.height * 0.7,
+    );
+  }
+
+  drawVersion() {
+    const text = process.env.APP_VERSION || "unknown";
+    const cta = this.add.text(0, 0, text.toUpperCase(), {
+      font: "bold 16px Courier",
+      color: "#888888",
+    });
+    cta.setOrigin(0.5, 1);
+    cta.setPosition(
+      this.cameras.main.width * 0.5,
+      this.cameras.main.height - 8,
     );
   }
 

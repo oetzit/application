@@ -9,6 +9,8 @@ RUN npm install
 COPY . .
 
 FROM base as production
+ARG APP_VERSION
+ENV APP_VERSION=${APP_VERSION}
 ENV NODE_PATH=./build
 RUN npm run build
 #CMD ["npm", "run", "start"]
