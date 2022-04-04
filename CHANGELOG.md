@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-04-04
+
+### Added
+
+- `FE`/`BE` complete tracking of essential game events.
+- `BE` sketch dashboard with some data.
+- `FE`/`BE` display release tag/sha.
+- `FE` shift key for virtual and physical keyboards.
+- `FE` pause/resume on focus loss/gain.
+- `FE` conceal/reveal clues on focus loss/gain.
+- `FE` enemy spawn based on internal timer (to account for pauses).
+- `FE` critter speed is parametric.
+- `FE` foe duration is parametric (and adjusted to screen width).
+
+### Changed
+
+- `FE` match making is now case sensitive.
+
 ## [0.4.0] - 2022-03-29
 
 ### Added
@@ -82,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.4.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.5.0...development
+[0.5.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.4.0...0.5.0
 [0.4.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...0.4.0
 [0.3.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.3.0
 [0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.1.0...0.2.0
