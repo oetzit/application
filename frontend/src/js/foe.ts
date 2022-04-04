@@ -14,8 +14,11 @@ class Foe {
   critter: Critter;
   clue: Clue;
 
-  constructor(scene: FightScene) {
+  duration: number;
+
+  constructor(scene: FightScene, duration = 15) {
     this.scene = scene;
+    this.duration = duration;
   }
 
   async initialize() {
@@ -29,7 +32,9 @@ class Foe {
     ).data;
 
     this.clue = new Clue(this.scene, this.beWord);
-    this.critter = new Critter(this.scene);
+    // TODO: this is the time to reach a collision w/player, but maybe we should just use the transversal of the full screen.
+    const critterSpeed = this.scene.player.getBounds().left / this.duration;
+    this.critter = new Critter(this.scene, critterSpeed);
     this.scene.foes.push(this);
 
     const overlap = this.scene.physics.add.overlap(
