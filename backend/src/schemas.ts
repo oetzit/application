@@ -11,8 +11,13 @@ export const Word = Type.Object({
   ocr_transcript: Type.String(),
 });
 
+export const Device = Type.Object({
+  id: Type.Readonly(Type.String({ format: "uuid" })),
+});
+
 export const Game = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
+  device_id: Type.Readonly(Type.String({ format: "uuid" })),
   began_at: Nullable(Type.String({ format: "date-time" })),
   ended_at: Nullable(Type.String({ format: "date-time" })),
 });
@@ -38,6 +43,7 @@ export const Shot = Type.Object({
 export const GameUpdate = Type.Partial(
   Type.Pick(Game, ["began_at", "ended_at"]),
 );
+export const GameCreate = GameUpdate;
 
 export const ClueUpdate = Type.Partial(
   Type.Pick(Clue, ["began_at", "ended_at"]),

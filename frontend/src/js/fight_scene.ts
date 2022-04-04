@@ -10,6 +10,8 @@ import * as Types from "../../../backend/src/types";
 import Foe from "./foe";
 import Typewriter from "./typewriter";
 
+const DEVICE_KEY = "OETZI/DEVICE_ID";
+
 interface InputStatus {
   began_at: string;
   ended_at: string;
@@ -27,6 +29,7 @@ export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cluesGroup: Phaser.Physics.Arcade.Group;
+  beDevice: Types.Device;
   beGame: Types.Game;
   typewriter: Typewriter;
   score: number;
@@ -120,14 +123,28 @@ export default class FightScene extends Phaser.Scene {
     this.createHUD();
     this.createAndBindTypewriter();
 
-    this.beGame = (await backend.createGame()).data;
+    await this.initBeDevice();
+    await this.initBeGame();
+
+    this.spawnFoes();
+  }
+
+  async initBeDevice() {
+    const deviceId = sessionStorage.getItem(DEVICE_KEY);
+    if (deviceId === null) {
+      this.beDevice = (await backend.createDevice()).data;
+    } else {
+      this.beDevice = (await backend.getDevice(deviceId)).data;
+    }
+    sessionStorage.setItem(DEVICE_KEY, this.beDevice.id);
+  }
+
+  async initBeGame() {
     this.beGame = (
-      await backend.updateGame(this.beGame.id, {
+      await backend.createGame(this.beDevice.id, {
         began_at: new Date().toISOString(),
       })
     ).data;
-
-    this.spawnFoes();
   }
 
   createAnimations() {

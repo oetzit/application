@@ -15,8 +15,12 @@ const backend = axios.create({
 });
 
 export default {
+  createDevice: () => backend.post<Types.Device>("/api/devices"),
+  getDevice: (deviceId: string) =>
+    backend.get<Types.Device>(`/api/devices/${deviceId}`),
   getWord: () => backend.get<Types.Word>("/api/word"),
-  createGame: () => backend.post<Types.Game>("/api/games"),
+  createGame: (deviceId: string, data: Types.GameCreate) =>
+    backend.post<Types.Game>(`/api/devices/${deviceId}/games`, data),
   updateGame: (gameId: string, data: Types.GameUpdate) =>
     backend.patch<Types.Game>(`/api/games/${gameId}`, data),
   createClue: (gameId: string, data: Types.ClueCreate) =>

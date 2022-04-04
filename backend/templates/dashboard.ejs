@@ -38,7 +38,17 @@
 
                 <h1>Quick facts</h1>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
+                        <div class="card text-dark bg-light m-2">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= devicesCount %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Devices used</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
@@ -48,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
@@ -58,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
@@ -70,8 +80,9 @@
                     </div>
                 </div>
 
-                <h1>Game count by date</h1>
+                <h1>Game/device count by date</h1>
                 <script id="gamesByDateData" type="application/json"><%- JSON.stringify(gamesByDate) %></script>
+                <script id="devicesByDateData" type="application/json"><%- JSON.stringify(devicesByDate) %></script>
                 <canvas id="gamesByDateChart"></canvas>
 
                 <h1>Shot count by duration [ms]</h1>

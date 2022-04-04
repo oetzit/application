@@ -59,9 +59,16 @@ import { connection } from "./db";
 server.get("/", async (request, reply) => {
   // reply.code(200).send("Hello, World!");
 
+  const devicesCount = (await connection.table("devices").count())[0].count;
   const gamesCount = (await connection.table("games").count())[0].count;
   const cluesCount = (await connection.table("clues").count())[0].count;
   const shotsCount = (await connection.table("shots").count())[0].count;
+
+  const devicesByDate = await connection
+    .table("games")
+    .select(connection.raw("COUNT(DISTINCT device_id), DATE(began_at)"))
+    .whereNotNull("device_id")
+    .groupByRaw("DATE(began_at)");
 
   const gamesByDate = await connection
     .table("games")
@@ -82,9 +89,11 @@ server.get("/", async (request, reply) => {
 
   reply.view("/templates/dashboard.ejs", {
     appVersion: process.env.APP_VERSION || "unknown",
+    devicesCount,
     gamesCount,
     cluesCount,
     shotsCount,
+    devicesByDate,
     gamesByDate,
     shotsByDuration,
   });

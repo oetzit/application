@@ -4,19 +4,38 @@ const gamesByDateData = JSON.parse(
   document.getElementById("gamesByDateData").textContent,
 ).filter((item) => item.date != null);
 
+const devicesByDateData = JSON.parse(
+  document.getElementById("devicesByDateData").textContent,
+).filter((item) => item.date != null);
+
 const gamesByDateConfig = {
   type: "bar",
   data: {
     datasets: [
       {
         data: gamesByDateData.filter((item) => !item.ended),
-        label: "Interrupted",
+        label: "Interrupted games",
         backgroundColor: "red",
+        yAxisID: "y",
+        order: 1,
       },
       {
         data: gamesByDateData.filter((item) => item.ended),
-        label: "Ended",
+        label: "Finished games",
         backgroundColor: "green",
+        yAxisID: "y",
+        order: 1,
+      },
+      {
+        data: devicesByDateData
+          .filter((item) => !item.ended)
+          .sort((a, b) => (a.date > b.date ? -1 : 1)),
+        label: "Unique devices",
+        borderColor: "blue",
+        backgroundColor: "blue",
+        type: "line",
+        yAxisID: "y2",
+        order: 0,
       },
     ],
   },
@@ -31,6 +50,11 @@ const gamesByDateConfig = {
       },
       y: {
         stacked: true,
+      },
+      y2: {
+        type: "linear",
+        position: "right",
+        grid: { drawOnChartArea: false },
       },
     },
     parsing: {

@@ -47,6 +47,51 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
 
   fastify.route<{
     Params: IdInParamsType;
+    Reply: Types.Device;
+  }>({
+    method: "GET",
+    url: "/devices/:id",
+    schema: {
+      params: IdInParamsSchema,
+      response: {
+        200: Schemas.Device,
+        404: {}, // TODO: JSend error
+      },
+    },
+    handler: async (request, reply) => {
+      const device = await connection<Types.Device>("devices")
+        .where("id", request.params.id)
+        .first();
+      if (device === undefined) {
+        reply.code(404).send();
+      } else {
+        reply.code(200).send(device);
+      }
+    },
+  });
+
+  fastify.route<{
+    Reply: Types.Device;
+  }>({
+    method: "POST",
+    url: "/devices",
+    schema: {
+      response: {
+        200: Schemas.Device,
+      },
+    },
+    handler: async (request, reply) => {
+      const devices = await connection
+        .table("devices")
+        .insert({})
+        .returning<Types.Device[]>("*");
+
+      reply.code(200).send(devices[0]);
+    },
+  });
+
+  fastify.route<{
+    Params: IdInParamsType;
     Reply: Types.Game;
   }>({
     method: "GET",
@@ -71,11 +116,15 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
+    Params: IdInParamsType;
+    Body: Types.GameCreate;
     Reply: Types.Game;
   }>({
     method: "POST",
-    url: "/games",
+    url: "/devices/:id/games",
     schema: {
+      params: IdInParamsSchema,
+      body: Schemas.GameCreate,
       response: {
         200: Schemas.Game,
       },
@@ -83,7 +132,7 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
     handler: async (request, reply) => {
       const games = await connection
         .table("games")
-        .insert({})
+        .insert({ device_id: request.params.id, ...request.body })
         .returning<Types.Game[]>("*");
 
       reply.code(200).send(games[0]);
