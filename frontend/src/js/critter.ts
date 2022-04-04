@@ -38,6 +38,12 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
 
     this.setScale(scale);
 
+    // NOTE: just outside the bound and above the ground
+    this.setPosition(
+      -0.5 * this.displayWidth,
+      scene.cameras.main.height - 30 - 0.5 * this.displayHeight,
+    );
+
     this.walk();
   }
 
@@ -52,11 +58,11 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
   }
 
   isOutsideRightBound() {
-    return this.x - this.width * 0.5 > this.scene.cameras.main.width;
+    return this.getBounds().left > this.scene.cameras.main.width;
   }
 
   isOutsideLeftBound() {
-    return this.x + this.width * 0.5 < 0;
+    return this.getBounds().right < 0;
   }
 
   walk() {
