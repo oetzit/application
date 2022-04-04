@@ -42,7 +42,38 @@ enum Key {
   Ö = "ö",
   Ü = "ü",
   ß = "ß",
+
+// NOTE: this is a hack to get onKeyReleased to work with physical keyboards, stealing from the following points
+// https://github.com/hodgef/simple-keyboard/blob/ed2c5ce81d7149b07cb3b11f4b629a63034be8ce/src/lib/services/PhysicalKeyboard.ts#L27-L64
+// https://github.com/hodgef/simple-keyboard/blob/ed2c5ce81d7149b07cb3b11f4b629a63034be8ce/src/lib/components/Keyboard.ts#L1757-L1812
+const hackPhysicalKeyboardKeyUp = function (event: KeyboardEvent) {
+  const buttonPressed = this.getSimpleKeyboardLayoutKey(event);
+
+  this.dispatch((instance: any) => {
+    const standardButtonPressed = instance.getButtonElement(buttonPressed);
+    const functionButtonPressed = instance.getButtonElement(
+      `{${buttonPressed}}`,
+    );
+    let buttonDOM;
+    let buttonName;
+
+    if (standardButtonPressed) {
+      buttonDOM = standardButtonPressed;
+      buttonName = buttonPressed;
+    } else if (functionButtonPressed) {
+      buttonDOM = functionButtonPressed;
+      buttonName = `{${buttonPressed}}`;
+    } else {
+      return;
+    }
+
+    if (buttonDOM && buttonDOM.removeAttribute) {
+      buttonDOM.removeAttribute("style");
+
+      instance.handleButtonMouseUp(buttonName, event);
 }
+  });
+};
 
 class Typewriter {
   inputStatus: InputStatus;
@@ -83,6 +114,9 @@ class Typewriter {
       },
       onChange: this.keyboardOnChangeHandler.bind(this),
     } as KeyboardOptions);
+
+    this.keyboard.physicalKeyboard.handleHighlightKeyUp =
+      hackPhysicalKeyboardKeyUp;
   }
 
   extractKeyfromEvent(
