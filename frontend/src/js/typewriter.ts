@@ -12,36 +12,69 @@ enum Key {
   Space = "{space}",
   Enter = "{enter}",
   Backspace = "{backspace}",
-  A = "a",
-  B = "b",
-  C = "c",
-  D = "d",
-  E = "e",
-  F = "f",
-  G = "g",
-  H = "h",
-  I = "i",
-  J = "j",
-  K = "k",
-  L = "l",
-  M = "m",
-  N = "n",
-  O = "o",
-  P = "p",
-  Q = "q",
-  R = "r",
-  S = "s",
-  T = "t",
-  U = "u",
-  V = "v",
-  W = "w",
-  X = "x",
-  Y = "y",
-  Z = "z",
-  Ä = "ä",
-  Ö = "ö",
-  Ü = "ü",
+  ShiftLeft = "{shiftleft}",
+  ShiftRight = "{shiftright}",
+  a = "a",
+  b = "b",
+  c = "c",
+  d = "d",
+  e = "e",
+  f = "f",
+  g = "g",
+  h = "h",
+  i = "i",
+  j = "j",
+  k = "k",
+  l = "l",
+  m = "m",
+  n = "n",
+  o = "o",
+  p = "p",
+  q = "q",
+  r = "r",
+  s = "s",
+  t = "t",
+  u = "u",
+  v = "v",
+  w = "w",
+  x = "x",
+  y = "y",
+  z = "z",
+  ä = "ä",
+  ö = "ö",
+  ü = "ü",
   ß = "ß",
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+  E = "E",
+  F = "F",
+  G = "G",
+  H = "H",
+  I = "I",
+  J = "J",
+  K = "K",
+  L = "L",
+  M = "M",
+  N = "N",
+  O = "O",
+  P = "P",
+  Q = "Q",
+  R = "R",
+  S = "S",
+  T = "T",
+  U = "U",
+  V = "V",
+  W = "W",
+  X = "X",
+  Y = "Y",
+  Z = "Z",
+  Ä = "Ä",
+  Ö = "Ö",
+  Ü = "Ü",
+  ẞ = "ẞ", // TODO: is this even typeable on a physical keyboard?
+}
 
 // NOTE: this is a hack to get onKeyReleased to work with physical keyboards, stealing from the following points
 // https://github.com/hodgef/simple-keyboard/blob/ed2c5ce81d7149b07cb3b11f4b629a63034be8ce/src/lib/services/PhysicalKeyboard.ts#L27-L64
@@ -71,7 +104,7 @@ const hackPhysicalKeyboardKeyUp = function (event: KeyboardEvent) {
       buttonDOM.removeAttribute("style");
 
       instance.handleButtonMouseUp(buttonName, event);
-}
+    }
   });
 };
 
@@ -103,14 +136,21 @@ class Typewriter {
       layout: {
         default: [
           `q w e r t z u i o p ü ${Key.Backspace}`,
-          `a s d f g h j k l ö ä`,
+          `${Key.ShiftLeft} a s d f g h j k l ö ä ${Key.ShiftRight}`,
           `${Key.Space} y x c v b n m ß ${Key.Enter}`,
+        ],
+        shifted: [
+          `Q W E R T Z U I O P Ü ${Key.Backspace}`,
+          `${Key.ShiftLeft} A S D F G H J K L Ö Ä ${Key.ShiftRight}`,
+          `${Key.Space} Y X C V B N M ẞ ${Key.Enter}`,
         ],
       },
       display: {
         [Key.Backspace]: "⟵", // "⌫⟵",
         [Key.Enter]: "↩", // "⏎↩↵⏎",
         [Key.Space]: " ", // "␣",
+        [Key.ShiftLeft]: "⇧",
+        [Key.ShiftRight]: "⇧",
       },
       onChange: this.keyboardOnChangeHandler.bind(this),
     } as KeyboardOptions);
@@ -175,6 +215,36 @@ class Typewriter {
 
   setHidden(hidden: boolean) {
     this.keyboard.keyboardDOM.hidden = hidden;
+  }
+
+  setShiftModeHoldable() {
+    this.keyboard.setOptions({
+      onKeyPress: (key: string) => {
+        if (Key.ShiftLeft == key || Key.ShiftRight == key) {
+          this.keyboard.setOptions({ layoutName: "shifted" });
+        }
+      },
+      onKeyReleased: (key: string) => {
+        if (Key.ShiftLeft == key || Key.ShiftRight == key) {
+          this.keyboard.setOptions({ layoutName: "default" });
+        }
+      },
+    });
+  }
+
+  setShiftModeOneShot() {
+    this.keyboard.setOptions({
+      onKeyPress: undefined,
+      onKeyReleased: (key: string) => {
+        if (this.keyboard.options.layoutName == "shifted") {
+          this.keyboard.setOptions({ layoutName: "default" });
+        } else if (Key.ShiftLeft == key || Key.ShiftRight == key) {
+          this.keyboard.setOptions({
+            layoutName: "shifted",
+          });
+        }
+      },
+    });
   }
 }
 

@@ -31,14 +31,13 @@ $key-width: 8vw; // 100/12 ~ 8.3
     grid-auto-flow: column;
     // grid-column-gap: $kbd-gutter;
     &:nth-child(1) {
-      grid-auto-columns: 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 1fr;
+      grid-template-columns: repeat(11, $key-width) 1fr;
     }
     &:nth-child(2) {
-      padding-left: 0.5 * $key-width;
-      grid-auto-columns: 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw;
+      grid-template-columns: 0.666 * $key-width repeat(11, $key-width) 1fr;
     }
     &:nth-child(3) {
-      grid-auto-columns: 1fr 8vw 8vw 8vw 8vw 8vw 8vw 8vw 8vw 1fr;
+      grid-template-columns: 2.333 * $key-width repeat(8, $key-width) 1fr;
     }
   }
 

@@ -329,7 +329,13 @@ export default class FightScene extends Phaser.Scene {
 
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter();
-    this.typewriter.setHidden(this.game.device.os.desktop);
+    if (this.game.device.os.desktop) {
+      this.typewriter.setHidden(true);
+      this.typewriter.setShiftModeHoldable();
+    } else {
+      this.typewriter.setHidden(false);
+      this.typewriter.setShiftModeOneShot();
+    }
     this.typewriter.onSubmit = async (inputStatus) => {
       if (inputStatus.began_at === null) return;
       if (inputStatus.ended_at === null) return;
