@@ -281,9 +281,10 @@ export default class FightScene extends Phaser.Scene {
     };
     if (this.foes.length < 1) return result;
     this.foes.forEach((foe) => {
+      // TODO: accept case insensitive match w/ penalty?
       const similarity = levenshtein(
-        transcription.toLowerCase(),
-        foe.beWord.ocr_transcript.toLowerCase(),
+        transcription,
+        foe.beWord.ocr_transcript,
       ).similarity;
       if (similarity < result.score) return;
       result = { score: similarity, match: foe };
