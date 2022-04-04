@@ -2,9 +2,6 @@ import "phaser";
 import FightScene from "./fight_scene";
 
 const SPECIES = ["bear", "wolf", "deer", "boar"];
-const WALK_VELOCITY = 100;
-const FLEE_VELOCITY = -200;
-const ESCAPE_VELOCITY = 300;
 
 enum CritterState {
   Moving,
@@ -13,18 +10,20 @@ enum CritterState {
 }
 
 class Critter extends Phaser.Physics.Arcade.Sprite {
+  baseVelocity: number;
   state: CritterState;
   scene: FightScene;
   species: string;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(scene: FightScene) {
+  constructor(scene: FightScene, baseVelocity = 100) {
     const species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
-    super(scene, -100, scene.cameras.main.height - 100, species);
+    super(scene, 0, 0, species);
     scene.add.existing(this);
 
     this.scene = scene;
     this.species = species;
+    this.baseVelocity = baseVelocity;
 
     let scale = 2;
     if (this.species === "deer") {
@@ -64,21 +63,21 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.state = CritterState.Moving;
     this.flipX = true;
     this.play({ key: this.species + "_walk", repeat: -1 });
-    this.body.setVelocity(WALK_VELOCITY, 0);
+    this.body.setVelocity(this.baseVelocity, 0);
   }
 
   flee() {
     this.state = CritterState.Fleeing;
     this.flipX = false;
     this.play({ key: this.species + "_run", repeat: -1 });
-    this.body.setVelocity(FLEE_VELOCITY, 0);
+    this.body.setVelocity(-2 * this.baseVelocity, 0);
   }
 
   escape() {
     this.state = CritterState.Escaping;
     this.flipX = true;
     this.play({ key: this.species + "_run", repeat: -1 });
-    this.body.setVelocity(ESCAPE_VELOCITY, 0);
+    this.body.setVelocity(3 * this.baseVelocity, 0);
   }
 }
 
