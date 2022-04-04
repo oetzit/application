@@ -163,21 +163,22 @@ export default class FightScene extends Phaser.Scene {
 
   createPlayer() {
     this.player = this.physics.add
-      .sprite(
-        this.cameras.main.width + 300,
-        this.cameras.main.height - 100,
-        "oezi",
-      )
+      .sprite(0, 0, "oezi")
       .setScale(3)
       .setInteractive();
+    this.player.setPosition(
+      // NOTE: just outside the bound and above the ground
+      this.cameras.main.width + 0.5 * this.player.displayWidth,
+      this.cameras.main.height - 30 - 0.5 * this.player.displayHeight,
+    );
     this.player.flipX = true;
     this.player.play({ key: "player_run" });
     this.player.setCollideWorldBounds(true);
     this.tweens.add({
       targets: this.player,
-      x: this.cameras.main.width - 80,
+      x: this.cameras.main.width - this.player.displayWidth * 0.5,
       ease: "Power2",
-      duration: 2000,
+      duration: 1000,
       onComplete: () => {
         this.player.play({ key: "player_run", repeat: -1 });
       },
