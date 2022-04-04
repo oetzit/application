@@ -77,6 +77,8 @@ export default class FightScene extends Phaser.Scene {
   init() {
     this.score = 0;
     this.health = 100;
+    this.events.on("pause", this.concealClues.bind(this));
+    this.events.on("resume", this.uncoverClues.bind(this));
   }
 
   async create() {
@@ -364,5 +366,13 @@ export default class FightScene extends Phaser.Scene {
 
   async spawnFoe() {
     await new Foe(this).initialize();
+  }
+
+  concealClues() {
+    this.foes.forEach((foe) => foe.clue.conceal());
+  }
+
+  uncoverClues() {
+    this.foes.forEach((foe) => foe.clue.uncover());
   }
 }

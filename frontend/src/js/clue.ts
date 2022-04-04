@@ -9,6 +9,8 @@ const BASE_HEIGHT = 25;
 const ASCENDERS = /[ABCDEFGHIJKLMNOPQRSTUVWXYZbdfhijklstäöüß]/;
 const DESCENDERS = /[AFHJPQYZÄfghjpqsyzß]/;
 
+const CONCEAL_TINT = 0xaaaaaa;
+
 class Clue extends Phaser.GameObjects.Sprite {
   word: Types.Word;
   scene: FightScene;
@@ -97,6 +99,14 @@ class Clue extends Phaser.GameObjects.Sprite {
       duration: 100,
       onComplete: onComplete,
     });
+  }
+
+  uncover() {
+    this.clearTint();
+  }
+
+  conceal() {
+    this.setTintFill(CONCEAL_TINT);
   }
 }
 
