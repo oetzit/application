@@ -4,7 +4,7 @@ import FightScene from "./fight_scene";
 import { GRAVITY_Y } from "./main";
 import newtonRaphson from "newton-raphson-method"; // TODO: TS signatures
 
-const SPEED = 450;
+const SPEED = 550;
 
 class Spear extends Phaser.Physics.Arcade.Sprite {
   source: Phaser.GameObjects.Sprite;
