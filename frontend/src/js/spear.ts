@@ -1,7 +1,7 @@
 import "phaser";
 import FightScene from "./fight_scene";
 
-import { GRAVITY_Y } from "./main";
+import { GRAVITY_Y } from "./game";
 import newtonRaphson from "newton-raphson-method"; // TODO: TS signatures
 
 const SPEED = 550;
