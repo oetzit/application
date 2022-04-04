@@ -356,12 +356,13 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async spawnFoes() {
-    if (!this.scene.isActive()) return;
     await this.spawnFoe();
-    const delay =
-      (8 * 1000 * (60 * 1000 - this.time.now)) / 60 / 1000 + 2 * 1000;
     // TODO: think of a progression which makes sense
-    setTimeout(this.spawnFoes.bind(this), Math.max(2000, delay));
+    const delay = Math.max(
+      2000,
+      (8 * 1000 * (60 * 1000 - this.time.now)) / 60 / 1000 + 2 * 1000,
+    );
+    this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
   async spawnFoe() {
