@@ -23,4 +23,24 @@ const config = {
   scene: [BackgroundScene, WelcomeScene, FightScene, GameOverScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+const pauseGame = function (this: Phaser.Game) {
+  this.scene
+    .getScenes(true)
+    .filter((scene) => !scene.scene.isPaused())
+    .forEach((scene) => scene.scene.pause());
+};
+
+game.events.on(Phaser.Core.Events.BLUR, pauseGame, game);
+game.events.on(Phaser.Core.Events.HIDDEN, pauseGame, game);
+
+const resumeGame = function (this: Phaser.Game) {
+  this.scene
+    .getScenes(false)
+    .filter((scene) => scene.scene.isPaused())
+    .forEach((scene) => scene.scene.resume());
+};
+
+game.events.on(Phaser.Core.Events.FOCUS, resumeGame, game);
+game.events.on(Phaser.Core.Events.VISIBLE, resumeGame, game);
