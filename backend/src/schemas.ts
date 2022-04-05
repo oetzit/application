@@ -20,6 +20,8 @@ export const Game = Type.Object({
   device_id: Type.Readonly(Type.String({ format: "uuid" })),
   began_at: Nullable(Type.String({ format: "date-time" })),
   ended_at: Nullable(Type.String({ format: "date-time" })),
+  began_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
+  ended_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
 });
 
 export const Clue = Type.Object({
@@ -28,6 +30,8 @@ export const Clue = Type.Object({
   word_id: Type.Readonly(Type.String({ format: "uuid" })),
   began_at: Nullable(Type.String({ format: "date-time" })),
   ended_at: Nullable(Type.String({ format: "date-time" })),
+  began_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
+  ended_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
 });
 
 export const Shot = Type.Object({
@@ -36,17 +40,19 @@ export const Shot = Type.Object({
   clue_id: Nullable(Type.String({ format: "uuid" })),
   began_at: Type.String({ format: "date-time" }),
   ended_at: Type.String({ format: "date-time" }),
+  began_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
+  ended_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
   typed: Type.String(),
   final: Type.String(),
 });
 
 export const GameUpdate = Type.Partial(
-  Type.Pick(Game, ["began_at", "ended_at"]),
+  Type.Pick(Game, ["began_at", "ended_at", "began_at_gmtm", "ended_at_gmtm"]),
 );
 export const GameCreate = GameUpdate;
 
 export const ClueUpdate = Type.Partial(
-  Type.Pick(Clue, ["began_at", "ended_at"]),
+  Type.Pick(Clue, ["began_at", "ended_at", "began_at_gmtm", "ended_at_gmtm"]),
 );
 export const ClueCreate = Type.Intersect([
   Type.Pick(Clue, ["word_id"]),
