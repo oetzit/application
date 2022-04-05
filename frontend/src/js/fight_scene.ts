@@ -77,6 +77,7 @@ export default class FightScene extends Phaser.Scene {
     this.hud = new HUD(this);
     this.hud.setHealth(this.health);
     this.hud.setScore(this.score);
+    this.hud.setClock(0);
     this.events.on("pause", this.concealClues.bind(this));
     this.events.on("resume", this.uncoverClues.bind(this));
   }
@@ -208,6 +209,14 @@ export default class FightScene extends Phaser.Scene {
     this.health = Math.max(this.health, 0);
     this.hud.setHealth(this.health);
     this.checkAlive();
+  }
+
+  update(time: number, delta: number): void {
+    // TODO: please do not parse a date every few milliseconds
+    if (this.beGame?.began_at)
+      this.hud.setClock(
+        new Date().getTime() - Date.parse(this.beGame.began_at),
+      );
   }
 
   checkAlive() {
