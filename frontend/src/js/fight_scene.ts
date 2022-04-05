@@ -106,6 +106,9 @@ export default class FightScene extends Phaser.Scene {
       true,
     );
 
+    // NOTE: this helps w/ clue sprite overlap
+    this.physics.world.setFPS(2 * this.game.loop.targetFps);
+
     this.physics.world.on(
       "worldbounds",
       function (
