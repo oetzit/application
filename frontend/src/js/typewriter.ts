@@ -6,6 +6,8 @@ interface InputStatus {
   ended_at: Date | null;
   typed: string;
   final: string;
+  began_at_gmtm: number | null;
+  ended_at_gmtm: number | null;
 }
 
 enum Key {
@@ -114,6 +116,7 @@ class Typewriter {
 
   onChange: (inputStatus: InputStatus) => unknown;
   onSubmit: (inputStatus: InputStatus) => unknown;
+  getGameTime: () => number; // NOTE: sigh.
 
   constructor() {
     this.onChange = () => {};
@@ -124,6 +127,8 @@ class Typewriter {
       ended_at: null,
       typed: "",
       final: "",
+      began_at_gmtm: null,
+      ended_at_gmtm: null,
     };
 
     this.keyboard = new Keyboard({
@@ -181,11 +186,15 @@ class Typewriter {
     event: KeyboardEvent | PointerEvent | MouseEvent | TouchEvent,
   ) {
     const key = this.extractKeyfromEvent(event);
-    if (!this.inputStatus.began_at) this.inputStatus.began_at = new Date();
+    if (this.inputStatus.began_at === null)
+      this.inputStatus.began_at = new Date();
+    if (this.inputStatus.began_at_gmtm === null)
+      this.inputStatus.began_at_gmtm = this.getGameTime();
     if (key === Key.Enter) {
       this.keyboard.clearInput();
       this.inputStatus.typed += "\n";
       this.inputStatus.ended_at = new Date();
+      this.inputStatus.ended_at_gmtm = this.getGameTime();
       this.onSubmit(this.inputStatus);
       this.resetInputStatus();
     } else if (key === Key.Backspace) {
@@ -210,6 +219,8 @@ class Typewriter {
       ended_at: null,
       typed: "",
       final: "",
+      began_at_gmtm: null,
+      ended_at_gmtm: null,
     };
   }
 

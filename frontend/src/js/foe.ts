@@ -28,6 +28,7 @@ class Foe {
       await backend.createClue(this.scene.beGame.id, {
         word_id: this.beWord.id,
         began_at: new Date().toISOString(),
+        began_at_gmtm: this.scene.getGameTime(),
       })
     ).data;
 

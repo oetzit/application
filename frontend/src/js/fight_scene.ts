@@ -18,6 +18,8 @@ interface InputStatus {
   ended_at: string;
   typed: string;
   final: string;
+  began_at_gmtm: number;
+  ended_at_gmtm: number;
 }
 
 export default class FightScene extends Phaser.Scene {
@@ -30,6 +32,7 @@ export default class FightScene extends Phaser.Scene {
   score: number;
   health: number;
   hud: HUD;
+  gameTime: Phaser.Time.TimerEvent;
 
   constructor() {
     super("fight");
@@ -83,6 +86,11 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create() {
+    this.gameTime = this.time.addEvent({
+      delay: Number.MAX_SAFE_INTEGER,
+      paused: true,
+    });
+
     this.initCluesGroup();
 
     this.createAnimations();
@@ -123,6 +131,7 @@ export default class FightScene extends Phaser.Scene {
     await this.initBeDevice();
     await this.initBeGame();
 
+    this.gameTime.paused = false;
     this.spawnFoes();
   }
 
@@ -140,6 +149,7 @@ export default class FightScene extends Phaser.Scene {
     this.beGame = (
       await backend.createGame(this.beDevice.id, {
         began_at: new Date().toISOString(),
+        began_at_gmtm: this.getGameTime(),
       })
     ).data;
   }
@@ -212,11 +222,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    // TODO: please do not parse a date every few milliseconds
-    if (this.beGame?.began_at)
-      this.hud.setClock(
-        new Date().getTime() - Date.parse(this.beGame.began_at),
-      );
+    this.hud.setClock(this.getGameTime());
   }
 
   checkAlive() {
@@ -228,6 +234,7 @@ export default class FightScene extends Phaser.Scene {
     this.beGame = (
       await backend.updateGame(this.beGame.id, {
         ended_at: new Date().toISOString(),
+        ended_at_gmtm: this.getGameTime(),
       })
     ).data;
     this.foes.forEach((foe) => foe.destroy());
@@ -315,6 +322,7 @@ export default class FightScene extends Phaser.Scene {
     } else {
       backend.updateClue(match.beClue.id, {
         ended_at: new Date().toISOString(),
+        ended_at_gmtm: this.getGameTime(),
       });
       this.updateScore(+10);
       this.popFoe(match);
@@ -334,9 +342,12 @@ export default class FightScene extends Phaser.Scene {
       this.typewriter.setHidden(false);
       this.typewriter.setShiftModeOneShot();
     }
+    this.typewriter.getGameTime = this.getGameTime.bind(this);
     this.typewriter.onSubmit = async (inputStatus) => {
       if (inputStatus.began_at === null) return;
       if (inputStatus.ended_at === null) return;
+      if (inputStatus.began_at_gmtm === null) return;
+      if (inputStatus.ended_at_gmtm === null) return;
       if (inputStatus.final === "") return;
       this.hud.setInput("");
       this.submitTranscription({
@@ -344,6 +355,8 @@ export default class FightScene extends Phaser.Scene {
         ended_at: inputStatus.ended_at.toISOString(),
         typed: inputStatus.typed,
         final: inputStatus.final,
+        began_at_gmtm: inputStatus.began_at_gmtm,
+        ended_at_gmtm: inputStatus.ended_at_gmtm,
       });
     };
     this.typewriter.onChange = (inputStatus) => {
@@ -356,8 +369,9 @@ export default class FightScene extends Phaser.Scene {
     // TODO: think of a progression which makes sense
     const delay = Math.max(
       2000,
-      (8 * 1000 * (60 * 1000 - this.time.now)) / 60 / 1000 + 2 * 1000,
+      (8 * 1000 * (60 * 1000 - this.getGameTime())) / 60 / 1000 + 2 * 1000,
     );
+    // TODO: it should be ok calling this on time instead of gameTime, but... is it?
     this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
@@ -371,5 +385,11 @@ export default class FightScene extends Phaser.Scene {
 
   uncoverClues() {
     this.foes.forEach((foe) => foe.clue.uncover());
+  }
+
+  getGameTime() {
+    // NOTE: we don't need sub-ms precision.
+    // NOTE: pretty please, don't access the timer directly.
+    return Math.round(this.gameTime.getElapsed());
   }
 }
