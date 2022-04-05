@@ -9,6 +9,7 @@ import levenshtein from "damerau-levenshtein";
 import * as Types from "../../../backend/src/types";
 import Foe from "./foe";
 import Typewriter from "./typewriter";
+import HUD from "./hud";
 
 const DEVICE_KEY = "OETZI/DEVICE_ID";
 
@@ -17,12 +18,6 @@ interface InputStatus {
   ended_at: string;
   typed: string;
   final: string;
-}
-
-interface HUD {
-  score: Phaser.GameObjects.Text;
-  input: Phaser.GameObjects.Text;
-  health: Phaser.GameObjects.Text;
 }
 
 export default class FightScene extends Phaser.Scene {
@@ -39,7 +34,6 @@ export default class FightScene extends Phaser.Scene {
   constructor() {
     super("fight");
     this.foes = [];
-    this.hud = {};
   }
 
   preload() {
@@ -80,6 +74,9 @@ export default class FightScene extends Phaser.Scene {
   init() {
     this.score = 0;
     this.health = 100;
+    this.hud = new HUD(this);
+    this.hud.setHealth(this.health);
+    this.hud.setScore(this.score);
     this.events.on("pause", this.concealClues.bind(this));
     this.events.on("resume", this.uncoverClues.bind(this));
   }
@@ -120,7 +117,6 @@ export default class FightScene extends Phaser.Scene {
     // );
     // this.scale.refresh();
 
-    this.createHUD();
     this.createAndBindTypewriter();
 
     await this.initBeDevice();
@@ -202,42 +198,15 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
-  createHUD() {
-    this.hud.input = this.add.text(
-      this.cameras.main.width / 2,
-      this.cameras.main.height / 2,
-      "",
-      {
-        font: "bold 64px Courier",
-        color: "#ffffff",
-      },
-    );
-    this.hud.input.setOrigin(0.5, 0.5);
-
-    this.hud.score = this.add.text(10, 10, "", {
-      font: "bold 48px Courier",
-      color: "lightgreen",
-    });
-    this.hud.score.setOrigin(0, 0);
-    this.updateScore(0);
-
-    this.hud.health = this.add.text(this.cameras.main.width - 10, 10, "", {
-      font: "bold 48px Courier",
-      color: "orange",
-    });
-    this.hud.health.setOrigin(1, 0);
-    this.updateHealth(0);
-  }
-
   updateScore(delta: number) {
     this.score += delta;
-    this.hud.score.text = "✪ " + this.score.toString();
+    this.hud.setScore(this.score);
   }
 
   updateHealth(delta: number) {
     this.health += delta;
     this.health = Math.max(this.health, 0);
-    this.hud.health.text = this.health.toString() + " ❤";
+    this.hud.setHealth(this.health);
     this.checkAlive();
   }
 
@@ -360,7 +329,7 @@ export default class FightScene extends Phaser.Scene {
       if (inputStatus.began_at === null) return;
       if (inputStatus.ended_at === null) return;
       if (inputStatus.final === "") return;
-      this.hud.input.text = "";
+      this.hud.setInput("");
       this.submitTranscription({
         began_at: inputStatus.began_at.toISOString(),
         ended_at: inputStatus.ended_at.toISOString(),
@@ -369,7 +338,7 @@ export default class FightScene extends Phaser.Scene {
       });
     };
     this.typewriter.onChange = (inputStatus) => {
-      this.hud.input.text = inputStatus.final;
+      this.hud.setInput(inputStatus.final);
     };
   }
 
