@@ -102,7 +102,8 @@ class Clue extends Phaser.GameObjects.Sprite {
         let intersect = true;
         intersect &&= clueBounds.left - pad < x;
         intersect &&= x < clueBounds.right + pad;
-        xs[i] += intersect;
+        const pileHeight = bounds.bottom - clueBounds.bottom;
+        xs[i] += (intersect ? 1 : 0) * pileHeight;
       });
     });
 
