@@ -241,28 +241,6 @@ export default class FightScene extends Phaser.Scene {
     this.scene.start("game_over");
   }
 
-  showSubmitFeedback(color: string, input: string) {
-    const text = this.add.text(
-      this.cameras.main.width / 2,
-      this.cameras.main.height / 2,
-      input,
-      {
-        font: "bold 64px Courier",
-        color: color,
-      },
-    );
-    text.setOrigin(0.5, 0.5);
-    this.tweens.add({
-      targets: text,
-      scaleX: 5,
-      scaleY: 5,
-      alpha: 0,
-      ease: "Power2",
-      duration: 500,
-      onComplete: (_tween, [target]) => target.destroy(),
-    });
-  }
-
   initCluesGroup() {
     const bounds = new Phaser.Geom.Rectangle(
       4,
@@ -312,12 +290,12 @@ export default class FightScene extends Phaser.Scene {
     });
     if (match === null) {
       // NOOP
-      this.showSubmitFeedback("#FFFFFF", inputStatus.final);
+      this.hud.showSubmitFeedback("#FFFFFF", inputStatus.final);
     } else if (score < 0.9) {
       // TODO: visual near misses based on score
       this.updateScore(-1);
       match.handleFailure();
-      this.showSubmitFeedback("#FF0000", inputStatus.final);
+      this.hud.showSubmitFeedback("#FF0000", inputStatus.final);
       new Spear(this, this.player, undefined);
     } else {
       backend.updateClue(match.beClue.id, {
@@ -327,7 +305,7 @@ export default class FightScene extends Phaser.Scene {
       this.updateScore(+10);
       this.popFoe(match);
       match.handleSuccess();
-      this.showSubmitFeedback("#00FF00", inputStatus.final);
+      this.hud.showSubmitFeedback("#00FF00", inputStatus.final);
       new Spear(this, this.player, match.critter);
       // TODO: increase score
     }

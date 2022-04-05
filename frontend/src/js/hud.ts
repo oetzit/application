@@ -80,4 +80,27 @@ export default class HUD {
     const formatted = `${minutes}:${seconds}.${hundredths}`;
     this.clock.text = `${formatted} ${ICONS.CLOCK}`;
   }
+
+  showSubmitFeedback(color: string, input: string) {
+    const text = this.scene.add
+      .text(
+        this.scene.cameras.main.width / 2,
+        this.scene.cameras.main.height / 2,
+        input,
+        {
+          font: "bold 64px Courier",
+          color: color,
+        },
+      )
+      .setOrigin(0.5, 0.5);
+    this.scene.tweens.add({
+      targets: text,
+      scaleX: 5,
+      scaleY: 5,
+      alpha: 0,
+      ease: "Power2",
+      duration: 500,
+      onComplete: (_tween, [target]) => target.destroy(),
+    });
+  }
 }
