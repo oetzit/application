@@ -81,7 +81,7 @@ server.get("/", async (request, reply) => {
     .table("shots")
     .select(
       connection.raw(
-        "width_bucket(extract(epoch from ended_at - began_at)*1000, 0, 60*1000, 60*10)*100 as bucket, count(*)",
+        "width_bucket(ended_at_gmtm - began_at_gmtm, 0, 60*1000, 60*10)*100 as bucket, count(*)",
       ),
     )
     .groupBy("bucket")
