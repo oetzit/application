@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-  knex.schema
+  return knex.schema
     .alterTable("words", (table) => table.timestamps())
     .alterTable("games", (table) => table.timestamps())
     .alterTable("clues", (table) => table.timestamps())
@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  knex.schema
+  return knex.schema
     .alterTable("words", (table) => table.dropTimestamps())
     .alterTable("games", (table) => table.dropTimestamps())
     .alterTable("clues", (table) => table.dropTimestamps())
