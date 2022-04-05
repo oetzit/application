@@ -70,7 +70,7 @@ new Chart(document.getElementById("gamesByDateChart"), gamesByDateConfig);
 
 const shotsByDurationData = JSON.parse(
   document.getElementById("shotsByDurationData").textContent,
-);
+).filter((item) => item.bucket != null);
 
 const shotsByDurationConfig = {
   type: "bar",
