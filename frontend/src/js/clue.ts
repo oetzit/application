@@ -15,10 +15,11 @@ class Clue extends Phaser.GameObjects.Sprite {
   word: Types.Word;
   scene: FightScene;
   textureKey: string;
+  body: Phaser.Physics.Arcade.Body;
 
   constructor(scene: FightScene, word: Types.Word) {
     // TODO: set positions
-    super(scene, 400, 300, "__MISSING");
+    super(scene, 0, 0, "__MISSING");
     scene.add.existing(this);
 
     this.setAlpha(0);
@@ -63,13 +64,18 @@ class Clue extends Phaser.GameObjects.Sprite {
     this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
     this.scene.physics.world.add(this.body);
     this.scene.cluesGroup.add(this);
-
-    const x =
-      (this.scene.cameras.main.width - this.width - 10) * Math.random() +
-      5 +
-      this.width / 2;
-    this.setPosition(x, 50);
+    this.setPositionForDrop();
     this.fadeIn();
+  }
+
+  setPositionForDrop() {
+    const bounds = this.body.customBoundsRectangle;
+    const x =
+      bounds.left +
+      this.displayWidth * 0.5 +
+      Math.random() * (bounds.width - this.displayWidth);
+    const y = bounds.top + this.displayHeight * 0.5;
+    this.setPosition(x, y);
   }
 
   delete() {

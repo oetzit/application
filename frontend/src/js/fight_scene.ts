@@ -265,9 +265,9 @@ export default class FightScene extends Phaser.Scene {
 
   initCluesGroup() {
     const bounds = new Phaser.Geom.Rectangle(
-      0,
-      0,
-      this.cameras.main.width,
+      4,
+      4,
+      this.cameras.main.width - 8,
       this.cameras.main.height / 2,
     );
     this.cluesGroup = this.physics.add.group({
