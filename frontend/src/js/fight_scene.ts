@@ -189,10 +189,11 @@ export default class FightScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = this.physics.add
-      .sprite(0, 0, "oezi")
-      .setScale(3)
-      .setInteractive();
+    this.player = this.physics.add.sprite(0, 0, "oezi").setInteractive();
+    this.player.setScale(
+      // NOTE: this is a magic number related to critter height
+      (this.cameras.main.width * 0.15) / this.player.displayHeight,
+    );
     this.player.setPosition(
       // NOTE: just outside the bound and above the ground
       this.cameras.main.width + 0.5 * this.player.displayWidth,
