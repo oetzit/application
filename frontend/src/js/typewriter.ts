@@ -224,6 +224,17 @@ class Typewriter {
     };
   }
 
+  setActive(active: boolean) {
+    // disables physical kbd on desktop
+    this.keyboard.setOptions({
+      physicalKeyboardHighlight: active,
+      physicalKeyboardHighlightPress: active,
+    } as KeyboardOptions);
+    // hides virtual kbd on mobile
+    this.setHidden(!active);
+    // NOTE: this is not really disabled at event level, but events can't be triggered
+  }
+
   setHidden(hidden: boolean) {
     this.keyboard.keyboardDOM.hidden = hidden;
   }
