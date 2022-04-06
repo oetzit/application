@@ -3,8 +3,6 @@ import FightScene from "./fight_scene";
 
 import * as Types from "../../../backend/src/types";
 
-const BASE_HEIGHT = 25;
-
 // const HYPERASCENDERS = /[ÄÖÜ]/;
 const ASCENDERS = /[ABCDEFGHIJKLMNOPQRSTUVWXYZbdfhijklstäöüß]/;
 const DESCENDERS = /[AFHJPQYZÄfghjpqsyzß]/;
@@ -16,6 +14,7 @@ class Clue extends Phaser.GameObjects.Sprite {
   scene: FightScene;
   textureKey: string;
   body: Phaser.Physics.Arcade.Body;
+  baseHeight: number;
 
   constructor(scene: FightScene, word: Types.Word) {
     // TODO: set positions
@@ -26,6 +25,8 @@ class Clue extends Phaser.GameObjects.Sprite {
 
     this.scene = scene;
     this.word = word;
+
+    this.baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 25); // max(3.5vw,25px)
 
     // TODO: we could be smarter and fully leverage caching, but meh.
     this.textureKey = `${word.id}-${Date.now()}`;
@@ -53,7 +54,7 @@ class Clue extends Phaser.GameObjects.Sprite {
   applyTexture() {
     this.setTexture(this.textureKey);
     const scale =
-      (this.estimateWordHeight() * BASE_HEIGHT) /
+      (this.estimateWordHeight() * this.baseHeight) /
       this.texture.getSourceImage().height;
     this.setScale(scale);
   }
