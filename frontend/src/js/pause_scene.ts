@@ -39,7 +39,9 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   drawCTA() {
-    const text = "TAKE A BREATH";
+    const text = this.game.device.os.desktop
+      ? "  TAKE A BREATH\nESC key to resume"
+      : "TAKE A BREATH\ntap to resume";
     const title = this.add.text(0, 0, text, {
       font: "bold 24px Courier",
       color: "#ffffff",
@@ -47,7 +49,7 @@ export default class PauseScene extends Phaser.Scene {
     title.setOrigin(0.5, 0.5);
     title.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.5,
+      this.cameras.main.height * 0.6,
     );
   }
 
