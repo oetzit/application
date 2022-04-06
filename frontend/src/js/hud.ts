@@ -4,35 +4,45 @@ const ICONS = {
   HEALTH: "❤️️",
 };
 
-const STATS_TEXT_STYLE = {
+const STATS_BASE_TEXT_STYLE = {
   fontFamily: "Courier",
   fontStyle: "bold",
-  fontSize: "max(3vw,20px)", // never smaller than 20px
   color: "white",
   testString: `${ICONS.CLOCK}${ICONS.HEALTH}${ICONS.SCORE}1234567890:.`,
   stroke: "black",
   strokeThickness: 4,
 } as Phaser.Types.GameObjects.Text.TextStyle;
 
-const INPUT_TEXT_STYLE = {
+const INPUT_BASE_TEXT_STYLE = {
   fontFamily: "Courier",
   fontStyle: "bold",
-  fontSize: "min(12vw,60px)", // always fit ~12 chars comfortably in width
   color: "white",
   testString: `ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖẞabcdefghijklmnopqrstuvwxyzäüöß `,
 } as Phaser.Types.GameObjects.Text.TextStyle;
 
+interface HudOptions {
+  statsPadding: number;
+  statsFontSize: string;
+  inputPosition: number;
+  inputFontSize: string;
+}
+
 export default class HUD {
   scene: Phaser.Scene;
+  options: HudOptions;
   input: Phaser.GameObjects.Text;
   score: Phaser.GameObjects.Text;
   clock: Phaser.GameObjects.Text;
   health: Phaser.GameObjects.Text;
-  pad: number;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, options?: HudOptions) {
     this.scene = scene;
-    this.pad = Math.min(this.scene.cameras.main.width * 0.01, 10); // min(1vw,10px)
+    this.options = options || {
+      statsPadding: Math.min(this.scene.cameras.main.width * 0.01, 10), // min(1vw,10px)
+      statsFontSize: "max(3vw,20px)", // never smaller than 20px
+      inputPosition: 0.5,
+      inputFontSize: "min(12vw,60px)", // always fit ~12 chars comfortably in width
+    };
     this.input = this.initInput(scene);
     this.score = this.initScore(scene);
     this.health = this.initHealth(scene);
@@ -43,22 +53,42 @@ export default class HUD {
     return scene.add
       .text(
         scene.cameras.main.width / 2,
-        scene.cameras.main.height / 2,
+        scene.cameras.main.height * this.options.inputPosition,
         "",
-        INPUT_TEXT_STYLE,
+        {
+          ...INPUT_BASE_TEXT_STYLE,
+          fontSize: this.options.inputFontSize,
+        },
       )
       .setOrigin(0.5, 0.5);
   }
 
+  statsTextStyle() {
+    return {
+      ...STATS_BASE_TEXT_STYLE,
+      fontSize: this.options.statsFontSize,
+    };
+  }
+
   initScore(scene: Phaser.Scene) {
     return scene.add
-      .text(this.pad, this.pad, "", STATS_TEXT_STYLE)
+      .text(
+        this.options.statsPadding,
+        this.options.statsPadding,
+        "",
+        this.statsTextStyle(),
+      )
       .setOrigin(0, 0);
   }
 
   initHealth(scene: Phaser.Scene) {
     return scene.add
-      .text(scene.cameras.main.width - this.pad, this.pad, "", STATS_TEXT_STYLE)
+      .text(
+        scene.cameras.main.width - this.options.statsPadding,
+        this.options.statsPadding,
+        "",
+        this.statsTextStyle(),
+      )
       .setOrigin(1, 0);
   }
 
@@ -66,9 +96,9 @@ export default class HUD {
     return scene.add
       .text(
         scene.cameras.main.width * 0.5,
-        this.pad,
+        this.options.statsPadding,
         `${ICONS.CLOCK}1:23.32`,
-        STATS_TEXT_STYLE,
+        this.statsTextStyle(),
       )
       .setOrigin(0.5, 0);
   }
@@ -105,7 +135,8 @@ export default class HUD {
         this.scene.cameras.main.height / 2,
         input,
         {
-          ...INPUT_TEXT_STYLE,
+          ...INPUT_BASE_TEXT_STYLE,
+          fontSize: this.options.inputFontSize,
           color: color,
         },
       )
