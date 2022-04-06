@@ -15,13 +15,18 @@ export default class WelcomeScene extends Phaser.Scene {
   drawTitle() {
     const text = "ÖTZI\nGAME";
     const title = this.add.text(0, 0, text, {
-      font: "bold 64px Courier",
-      color: "#ffffff",
+      fontFamily: "Courier",
+      fontSize: "64px",
+      fontStyle: "bold",
+      color: "white",
+      stroke: "black",
+      strokeThickness: 4,
+      testString: text,
     });
-    title.setOrigin(0.5, 0.5);
+    title.setOrigin(0.5, 1);
     title.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.4,
+      this.cameras.main.height * 0.475,
     );
   }
 
@@ -30,13 +35,18 @@ export default class WelcomeScene extends Phaser.Scene {
       ? "any key to begin\nESC key to pause\n TYPE ALL WORDS"
       : " tap to begin\n tap to pause\nTYPE ALL WORDS";
     const cta = this.add.text(0, 0, text, {
-      font: "bold 32px Courier",
-      color: "#ffffff",
+      fontFamily: "Courier",
+      fontSize: "32px",
+      fontStyle: "bold",
+      color: "white",
+      stroke: "black",
+      strokeThickness: 4,
+      testString: text,
     });
-    cta.setOrigin(0.5, 0.5);
+    cta.setOrigin(0.5, 0);
     cta.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.7,
+      this.cameras.main.height * 0.525,
     );
   }
 

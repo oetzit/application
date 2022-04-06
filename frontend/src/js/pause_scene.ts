@@ -26,15 +26,20 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   drawTitle() {
-    const text = "PAUSE";
+    const text = "PAUSED";
     const title = this.add.text(0, 0, text, {
-      font: "bold 64px Courier",
-      color: "#ffffff",
+      fontFamily: "Courier",
+      fontSize: "64px",
+      fontStyle: "bold",
+      color: "white",
+      stroke: "black",
+      strokeThickness: 4,
+      testString: text,
     });
-    title.setOrigin(0.5, 0.5);
+    title.setOrigin(0.5, 1);
     title.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.4,
+      this.cameras.main.height * 0.475,
     );
   }
 
@@ -43,13 +48,18 @@ export default class PauseScene extends Phaser.Scene {
       ? "  TAKE A BREATH\nESC key to resume"
       : "TAKE A BREATH\ntap to resume";
     const title = this.add.text(0, 0, text, {
-      font: "bold 24px Courier",
-      color: "#ffffff",
+      fontFamily: "Courier",
+      fontSize: "32px",
+      fontStyle: "bold",
+      color: "white",
+      stroke: "black",
+      strokeThickness: 4,
+      testString: text,
     });
-    title.setOrigin(0.5, 0.5);
+    title.setOrigin(0.5, 0);
     title.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.6,
+      this.cameras.main.height * 0.525,
     );
   }
 
