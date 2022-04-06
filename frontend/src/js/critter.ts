@@ -25,18 +25,15 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.species = species;
     this.baseVelocity = baseVelocity;
 
-    let scale = 2;
-    if (this.species === "deer") {
-      scale = 2.5;
-    } else if (this.species === "bear") {
-      scale = 3;
-    }
-
     this.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this);
     this.scene.physics.world.add(this.body);
     this.setCollideWorldBounds(true);
 
-    this.setScale(scale);
+    // NOTE: our sprites widths are in the 52-72 range; average: 62.
+    // NOTE: the idea is to fit 5 critters onscreen, tail to tail
+    const averageWidth = 62;
+    const targetAverageWidth = this.scene.cameras.main.width * 0.2;
+    this.setScale(targetAverageWidth / averageWidth);
 
     // NOTE: just outside the bound and above the ground
     this.setPosition(
