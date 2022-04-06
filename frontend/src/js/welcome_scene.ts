@@ -52,8 +52,8 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   bindEvents() {
-    this.input.keyboard.once("keydown", this.startFight.bind(this));
-    this.input.once("pointerdown", this.startFight.bind(this));
+    this.input.keyboard.once("keyup", this.startFight.bind(this));
+    this.input.once("pointerup", this.startFight.bind(this));
   }
 
   startFight() {
