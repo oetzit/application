@@ -63,32 +63,24 @@ export default class HUD {
       .setOrigin(0.5, 0.5);
   }
 
-  statsTextStyle() {
+  statsTextStyle(): Phaser.Types.GameObjects.Text.TextStyle {
     return {
       ...STATS_BASE_TEXT_STYLE,
       fontSize: this.options.statsFontSize,
+      padding: {
+        x: this.options.statsPadding,
+        y: this.options.statsPadding,
+      },
     };
   }
 
   initScore(scene: Phaser.Scene) {
-    return scene.add
-      .text(
-        this.options.statsPadding,
-        this.options.statsPadding,
-        "",
-        this.statsTextStyle(),
-      )
-      .setOrigin(0, 0);
+    return scene.add.text(0, 0, "", this.statsTextStyle()).setOrigin(0, 0);
   }
 
   initHealth(scene: Phaser.Scene) {
     return scene.add
-      .text(
-        scene.cameras.main.width - this.options.statsPadding,
-        this.options.statsPadding,
-        "",
-        this.statsTextStyle(),
-      )
+      .text(scene.cameras.main.width, 0, "", this.statsTextStyle())
       .setOrigin(1, 0);
   }
 
@@ -96,7 +88,7 @@ export default class HUD {
     return scene.add
       .text(
         scene.cameras.main.width * 0.5,
-        this.options.statsPadding,
+        0,
         `${ICONS.CLOCK}1:23.32`,
         this.statsTextStyle(),
       )
@@ -132,7 +124,7 @@ export default class HUD {
     const text = this.scene.add
       .text(
         this.scene.cameras.main.width / 2,
-        this.scene.cameras.main.height / 2,
+        this.scene.cameras.main.height * this.options.inputPosition,
         input,
         {
           ...INPUT_BASE_TEXT_STYLE,
