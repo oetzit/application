@@ -103,8 +103,20 @@ export default class FightScene extends Phaser.Scene {
     this.hud.setScore(this.score);
     this.hud.setClock(0);
 
-    this.events.on("pause", this.concealClues.bind(this));
-    this.events.on("resume", this.uncoverClues.bind(this));
+    this.events.on("pause", this.onPause.bind(this));
+    this.events.on("resume", this.onResume.bind(this));
+  }
+
+  onPause() {
+    this.concealClues();
+    this.typewriter.setActive(false);
+    this.scene.launch("pause");
+  }
+
+  onResume() {
+    this.uncoverClues();
+    this.typewriter.setActive(true);
+    this.scene.stop("pause");
   }
 
   initUiDimensions(): UIDimensions {
@@ -145,6 +157,11 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create() {
+    const escBinding = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.ESC,
+    );
+    escBinding.onDown = () => this.scene.pause();
+
     this.gameTime = this.time.addEvent({
       delay: Number.MAX_SAFE_INTEGER,
       paused: true,
