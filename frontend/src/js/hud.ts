@@ -23,8 +23,9 @@ const INPUT_BASE_TEXT_STYLE = {
 interface HudOptions {
   statsPadding: number;
   statsFontSize: string;
-  inputPosition: number;
+  inputPadding: number;
   inputFontSize: string;
+  inputPosition: number;
 }
 
 export default class HUD {
@@ -38,10 +39,11 @@ export default class HUD {
   constructor(scene: Phaser.Scene, options?: HudOptions) {
     this.scene = scene;
     this.options = options || {
-      statsPadding: Math.min(this.scene.cameras.main.width * 0.01, 10), // min(1vw,10px)
-      statsFontSize: "max(3vw,20px)", // never smaller than 20px
+      statsPadding: 10,
+      statsFontSize: "22px",
+      inputPadding: 4,
+      inputFontSize: "60px",
       inputPosition: 0.5,
-      inputFontSize: "min(12vw,60px)", // always fit ~12 chars comfortably in width
     };
     this.input = this.initInput(scene);
     this.score = this.initScore(scene);
@@ -55,12 +57,20 @@ export default class HUD {
         scene.cameras.main.width / 2,
         scene.cameras.main.height * this.options.inputPosition,
         "",
-        {
-          ...INPUT_BASE_TEXT_STYLE,
-          fontSize: this.options.inputFontSize,
-        },
+        this.inputTextStyle(),
       )
       .setOrigin(0.5, 0.5);
+  }
+
+  inputTextStyle(): Phaser.Types.GameObjects.Text.TextStyle {
+    return {
+      ...INPUT_BASE_TEXT_STYLE,
+      fontSize: this.options.inputFontSize,
+      padding: {
+        x: this.options.inputPadding,
+        y: this.options.inputPadding,
+      },
+    };
   }
 
   statsTextStyle(): Phaser.Types.GameObjects.Text.TextStyle {
@@ -127,8 +137,7 @@ export default class HUD {
         this.scene.cameras.main.height * this.options.inputPosition,
         input,
         {
-          ...INPUT_BASE_TEXT_STYLE,
-          fontSize: this.options.inputFontSize,
+          ...this.inputTextStyle(),
           color: color,
         },
       )
