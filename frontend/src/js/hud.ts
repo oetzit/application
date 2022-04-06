@@ -4,12 +4,22 @@ const ICONS = {
   HEALTH: "❤️️",
 };
 
-const DEFAULT_TEXT_STYLE = {
-  font: "bold 24px Courier",
+const STATS_TEXT_STYLE = {
+  fontFamily: "Courier",
+  fontStyle: "bold",
+  fontSize: "max(3vw,20px)", // never smaller than 20px
   color: "white",
   testString: `${ICONS.CLOCK}${ICONS.HEALTH}${ICONS.SCORE}1234567890:.`,
   stroke: "black",
   strokeThickness: 4,
+} as Phaser.Types.GameObjects.Text.TextStyle;
+
+const INPUT_TEXT_STYLE = {
+  fontFamily: "Courier",
+  fontStyle: "bold",
+  fontSize: "min(12vw,60px)", // always fit ~12 chars comfortably in width
+  color: "white",
+  testString: `ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖẞabcdefghijklmnopqrstuvwxyzäüöß `,
 } as Phaser.Types.GameObjects.Text.TextStyle;
 
 export default class HUD {
@@ -18,9 +28,11 @@ export default class HUD {
   score: Phaser.GameObjects.Text;
   clock: Phaser.GameObjects.Text;
   health: Phaser.GameObjects.Text;
+  pad: number;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
+    this.pad = Math.min(this.scene.cameras.main.width * 0.01, 10); // min(1vw,10px)
     this.input = this.initInput(scene);
     this.score = this.initScore(scene);
     this.health = this.initHealth(scene);
@@ -29,20 +41,24 @@ export default class HUD {
 
   initInput(scene: Phaser.Scene) {
     return scene.add
-      .text(scene.cameras.main.width / 2, scene.cameras.main.height / 2, "", {
-        font: "bold 64px Courier",
-        color: "#ffffff",
-      })
+      .text(
+        scene.cameras.main.width / 2,
+        scene.cameras.main.height / 2,
+        "",
+        INPUT_TEXT_STYLE,
+      )
       .setOrigin(0.5, 0.5);
   }
 
   initScore(scene: Phaser.Scene) {
-    return scene.add.text(10, 10, "", DEFAULT_TEXT_STYLE).setOrigin(0, 0);
+    return scene.add
+      .text(this.pad, this.pad, "", STATS_TEXT_STYLE)
+      .setOrigin(0, 0);
   }
 
   initHealth(scene: Phaser.Scene) {
     return scene.add
-      .text(scene.cameras.main.width - 10, 10, "", DEFAULT_TEXT_STYLE)
+      .text(scene.cameras.main.width - this.pad, this.pad, "", STATS_TEXT_STYLE)
       .setOrigin(1, 0);
   }
 
@@ -50,9 +66,9 @@ export default class HUD {
     return scene.add
       .text(
         scene.cameras.main.width * 0.5,
-        10,
+        this.pad,
         `${ICONS.CLOCK}1:23.32`,
-        DEFAULT_TEXT_STYLE,
+        STATS_TEXT_STYLE,
       )
       .setOrigin(0.5, 0);
   }
@@ -62,11 +78,11 @@ export default class HUD {
   }
 
   setScore(score: number) {
-    this.score.text = `${ICONS.SCORE} ${score}`;
+    this.score.text = `${ICONS.SCORE}\u2009${score}`;
   }
 
   setHealth(health: number) {
-    this.health.text = `${health} ${ICONS.HEALTH}`;
+    this.health.text = `${health}\u2009${ICONS.HEALTH}`;
   }
 
   setClock(milliseconds: number) {
@@ -78,7 +94,8 @@ export default class HUD {
       .toString()
       .padStart(2, "0");
     const formatted = `${minutes}:${seconds}.${hundredths}`;
-    this.clock.text = `${formatted} ${ICONS.CLOCK}`;
+    // TODO: we can probably do away with the clock icon
+    this.clock.text = `${formatted}\u2009${ICONS.CLOCK}`;
   }
 
   showSubmitFeedback(color: string, input: string) {
@@ -88,7 +105,7 @@ export default class HUD {
         this.scene.cameras.main.height / 2,
         input,
         {
-          font: "bold 64px Courier",
+          ...INPUT_TEXT_STYLE,
           color: color,
         },
       )
