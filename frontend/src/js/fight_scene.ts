@@ -293,12 +293,12 @@ export default class FightScene extends Phaser.Scene {
     });
     if (match === null) {
       // NOOP
-      this.hud.showSubmitFeedback("#FFFFFF", inputStatus.final);
+      this.hud.showSubmitFeedback("white", inputStatus.final);
     } else if (score < 0.9) {
       // TODO: visual near misses based on score
       this.updateScore(-1);
       match.handleFailure();
-      this.hud.showSubmitFeedback("#FF0000", inputStatus.final);
+      this.hud.showSubmitFeedback("red", inputStatus.final);
       new Spear(this, this.player, undefined);
     } else {
       backend.updateClue(match.beClue.id, {
@@ -308,7 +308,7 @@ export default class FightScene extends Phaser.Scene {
       this.updateScore(+10);
       this.popFoe(match);
       match.handleSuccess();
-      this.hud.showSubmitFeedback("#00FF00", inputStatus.final);
+      this.hud.showSubmitFeedback("green", inputStatus.final);
       new Spear(this, this.player, match.critter);
       // TODO: increase score
     }
