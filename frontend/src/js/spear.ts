@@ -20,7 +20,8 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
     this.play({ key: "spearAni", repeat: -1 });
     scene.add.existing(this);
 
-    this.setScale(3);
+    // NOTE: a spear reaching shoulder height makes sense
+    this.setScale((scene.player.displayHeight * 0.8) / this.displayWidth);
 
     this.source = source;
     this.target = target;
