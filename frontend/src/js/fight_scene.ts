@@ -157,10 +157,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create() {
-    const escBinding = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ESC,
-    );
-    escBinding.onDown = () => this.scene.pause();
+    this.bindPauseShortcut();
 
     this.gameTime = this.time.addEvent({
       delay: Number.MAX_SAFE_INTEGER,
@@ -443,5 +440,22 @@ export default class FightScene extends Phaser.Scene {
     // NOTE: we don't need sub-ms precision.
     // NOTE: pretty please, don't access the timer directly.
     return Math.round(this.gameTime.getElapsed());
+  }
+
+  bindPauseShortcut() {
+    if (this.game.device.os.desktop) {
+      const escBinding = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.ESC,
+      );
+      escBinding.onDown = () => this.scene.pause();
+    } else {
+      const onPointerUp = (pointer: Phaser.Input.Pointer) => {
+        const tapped =
+          pointer.downY <
+          this.cameras.main.height - this.uiDimensions.kbdHeight;
+        if (tapped) this.scene.pause();
+      };
+      this.input.on("pointerup", onPointerUp);
+    }
   }
 }

@@ -9,7 +9,7 @@ export default class PauseScene extends Phaser.Scene {
     this.drawShade();
     this.drawTitle();
     this.drawCTA();
-    this.bindEvents();
+    this.bindResumeShortcut();
   }
 
   drawShade() {
@@ -51,10 +51,14 @@ export default class PauseScene extends Phaser.Scene {
     );
   }
 
-  bindEvents() {
-    const escBinding = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ESC,
-    );
-    escBinding.onDown = () => this.scene.resume("fight");
+  bindResumeShortcut() {
+    if (this.game.device.os.desktop) {
+      const escBinding = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.ESC,
+      );
+      escBinding.onDown = () => this.scene.resume("fight");
+    } else {
+      this.input.on("pointerup", () => this.scene.resume("fight"));
+    }
   }
 }
