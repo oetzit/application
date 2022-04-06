@@ -22,6 +22,18 @@ interface InputStatus {
   ended_at_gmtm: number;
 }
 
+interface UIDimensions {
+  kbdHeight: number;
+  statsPadding: number;
+  statsFontSize: string;
+  statsHeight: number;
+  inputPadding: number;
+  inputFontSize: string;
+  inputHeight: number;
+  inputPosition: number;
+  cluesBounds: Phaser.Geom.Rectangle;
+}
+
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -33,6 +45,7 @@ export default class FightScene extends Phaser.Scene {
   health: number;
   hud: HUD;
   gameTime: Phaser.Time.TimerEvent;
+  uiDimensions: UIDimensions;
 
   constructor() {
     super("fight");
@@ -77,12 +90,58 @@ export default class FightScene extends Phaser.Scene {
   init() {
     this.score = 0;
     this.health = 100;
-    this.hud = new HUD(this);
+
+    this.uiDimensions = this.initUiDimensions();
+    this.hud = new HUD(this, {
+      statsPadding: this.uiDimensions.statsPadding,
+      statsFontSize: this.uiDimensions.statsFontSize,
+      inputPadding: this.uiDimensions.inputPadding,
+      inputFontSize: this.uiDimensions.inputFontSize,
+      inputPosition: this.uiDimensions.inputPosition,
+    });
     this.hud.setHealth(this.health);
     this.hud.setScore(this.score);
     this.hud.setClock(0);
+
     this.events.on("pause", this.concealClues.bind(this));
     this.events.on("resume", this.uncoverClues.bind(this));
+  }
+
+  initUiDimensions(): UIDimensions {
+    const ch = this.cameras.main.height;
+    const cw = this.cameras.main.width;
+    const vh = ch * 0.01;
+    const vw = cw * 0.01;
+
+    const kbdHeight = Math.min(40 * vh, 48 * vw); // see max-height of .hg-theme-default
+
+    const statsPadding = Math.min(1 * vw, 10);
+    const statsFontSize = "max(3vw,20px)"; // never smaller than 20px for readability
+    const statsHeight = Math.max(3 * vw, 20) * 1.4 + 2 * statsPadding;
+
+    const inputPadding = Math.min(0.5 * vw, 5);
+    const inputFontSize = "min(12vw,60px)"; // always fit ~12 chars comfortably in width
+    const inputHeight = Math.min(12 * vw, 60) * 1.4 + 2 * inputPadding;
+    const inputPosition = (ch - kbdHeight - 0.5 * inputHeight) / ch;
+
+    const cluesBounds = new Phaser.Geom.Rectangle(
+      5,
+      statsHeight,
+      cw - 2 * 15,
+      ch - statsHeight - kbdHeight - inputHeight,
+    );
+
+    return {
+      kbdHeight,
+      statsPadding,
+      statsFontSize,
+      statsHeight,
+      inputPadding,
+      inputFontSize,
+      inputHeight,
+      inputPosition,
+      cluesBounds,
+    };
   }
 
   async create() {
@@ -246,16 +305,9 @@ export default class FightScene extends Phaser.Scene {
   }
 
   initCluesGroup() {
-    const pad = 4;
-    const bounds = new Phaser.Geom.Rectangle(
-      pad,
-      pad,
-      this.cameras.main.width - 2 * pad,
-      this.cameras.main.height / 2,
-    );
     this.cluesGroup = this.physics.add.group({
       collideWorldBounds: true,
-      customBoundsRectangle: bounds,
+      customBoundsRectangle: this.uiDimensions.cluesBounds,
       bounceY: 0.2,
       dragY: 180,
     });
