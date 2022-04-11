@@ -1,6 +1,7 @@
 import "phaser";
 
 import Spear from "./spear";
+import Player from "./player";
 import backend from "./backend";
 
 // TODO: write interfaces
@@ -36,7 +37,7 @@ interface UIDimensions {
 
 export default class FightScene extends Phaser.Scene {
   foes: Array<Foe>;
-  player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  player: Player;
   cluesGroup: Phaser.Physics.Arcade.Group;
   beDevice: Types.Device;
   beGame: Types.Game;
@@ -234,7 +235,7 @@ export default class FightScene extends Phaser.Scene {
       },
     );
 
-    this.createPlayer();
+    this.player = new Player(this);
 
     // this.scale.displaySize.setAspectRatio(
     //   this.cameras.main.width / this.cameras.main.height,
@@ -297,31 +298,6 @@ export default class FightScene extends Phaser.Scene {
       }),
       frameRate: 10,
       repeat: -1,
-    });
-  }
-
-  createPlayer() {
-    this.player = this.physics.add.sprite(0, 0, "oezi").setInteractive();
-    this.player.setScale(
-      // NOTE: this is a magic number related to critter height
-      (this.cameras.main.width * 0.15) / this.player.displayHeight,
-    );
-    this.player.setPosition(
-      // NOTE: just outside the bound and above the ground
-      this.cameras.main.width + 0.5 * this.player.displayWidth,
-      this.cameras.main.height - 30 - 0.5 * this.player.displayHeight,
-    );
-    this.player.flipX = true;
-    this.player.play({ key: "player_run" });
-    this.player.setCollideWorldBounds(true);
-    this.tweens.add({
-      targets: this.player,
-      x: this.cameras.main.width - this.player.displayWidth * 0.5,
-      ease: "Power2",
-      duration: 1000,
-      onComplete: () => {
-        this.player.play({ key: "player_run", repeat: -1 });
-      },
     });
   }
 

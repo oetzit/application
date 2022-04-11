@@ -4,19 +4,16 @@ import Critter from "./critter";
 
 import { GRAVITY_Y } from "./game";
 import newtonRaphson from "newton-raphson-method"; // TODO: TS signatures
+import Player from "./player";
 
 const SPEED = 550;
 
 class Spear extends Phaser.Physics.Arcade.Sprite {
-  source: Phaser.GameObjects.Sprite;
+  source: Player;
   target: Critter | undefined;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(
-    scene: FightScene,
-    source: Phaser.GameObjects.Sprite,
-    target: Critter | undefined,
-  ) {
+  constructor(scene: FightScene, source: Player, target: Critter | undefined) {
     super(scene, scene.player.x, scene.player.y, "spear");
     this.play({ key: "spearAni", repeat: -1 });
     scene.add.existing(this);
