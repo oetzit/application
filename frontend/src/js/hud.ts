@@ -152,4 +152,9 @@ export default class HUD {
       onComplete: (_tween, [target]) => target.destroy(),
     });
   }
+
+  changeFlash(object: Phaser.GameObjects.Text, color: number) {
+    object.setTintFill(color);
+    this.scene.time.delayedCall(100, () => object.clearTint());
+  }
 }

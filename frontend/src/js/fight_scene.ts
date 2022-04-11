@@ -304,12 +304,14 @@ export default class FightScene extends Phaser.Scene {
   updateScore(delta: number) {
     this.score += delta;
     this.hud.setScore(this.score);
+    this.hud.changeFlash(this.hud.score, delta > 0 ? 0xffff00 : 0xff0000);
   }
 
   updateHealth(delta: number) {
     this.health += delta;
     this.health = Math.max(this.health, 0);
     this.hud.setHealth(this.health);
+    this.hud.changeFlash(this.hud.health, delta > 0 ? 0x00ff00 : 0xff0000);
     this.checkAlive();
   }
 
