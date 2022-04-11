@@ -46,6 +46,7 @@ export default class FightScene extends Phaser.Scene {
   hud: HUD;
   gameTime: Phaser.Time.TimerEvent;
   uiDimensions: UIDimensions;
+  music!: Phaser.Sound.BaseSound;
 
   constructor() {
     super("fight");
@@ -55,6 +56,7 @@ export default class FightScene extends Phaser.Scene {
   preload() {
     this.preloadSprites();
     this.preloadSoundsEffects();
+    this.preloadMusicThemes();
   }
 
   preloadSoundsEffects() {
@@ -64,6 +66,12 @@ export default class FightScene extends Phaser.Scene {
     this.load.audio("sfx_hit_critter", "assets/audio/Hit damage 1.wav");
     this.load.audio("sfx_hit_player", "assets/audio/Boss hit 1.wav");
     this.load.audio("sfx_game_over", "assets/audio/Bubble heavy 2.wav");
+  }
+
+  preloadMusicThemes() {
+    this.load.audio("bkg_main_1", "assets/music/loop.wav");
+    this.load.audio("bkg_main_2", "assets/music/loopTwo.wav");
+    this.load.audio("bkg_main_3", "assets/music/loopThree.wav");
   }
 
   preloadSprites() {
@@ -120,12 +128,14 @@ export default class FightScene extends Phaser.Scene {
   onPause() {
     this.concealClues();
     this.typewriter.setActive(false);
+    this.music.pause();
     this.scene.launch("pause");
   }
 
   onResume() {
     this.uncoverClues();
     this.typewriter.setActive(true);
+    this.music.play();
     this.scene.stop("pause");
   }
 
@@ -166,7 +176,25 @@ export default class FightScene extends Phaser.Scene {
     };
   }
 
-  async create() {
+  musicSoftReplace(
+    nextMusic: Phaser.Sound.BaseSound,
+    prevMusic: Phaser.Sound.BaseSound,
+  ) {
+    this.music = prevMusic;
+    this.music.on("complete", () => {
+      this.music.stop();
+      this.music.destroy();
+      this.music = nextMusic;
+      this.music.play();
+    });
+  }
+
+  async create(data: { music: Phaser.Sound.BaseSound }) {
+    this.musicSoftReplace(
+      this.sound.add("bkg_main_1", { loop: true }),
+      data.music,
+    );
+
     this.bindPauseShortcut();
 
     this.gameTime = this.time.addEvent({
@@ -326,6 +354,7 @@ export default class FightScene extends Phaser.Scene {
     ).data;
     this.foes.forEach((foe) => foe.destroy());
     this.sound.play("sfx_game_over");
+    this.scene.start("game_over", { music: this.music });
   }
 
   initCluesGroup() {

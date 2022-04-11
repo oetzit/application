@@ -1,11 +1,33 @@
 import "phaser";
 
 export default class WelcomeScene extends Phaser.Scene {
+  music!: Phaser.Sound.BaseSound;
+
   constructor() {
     super("welcome");
   }
 
-  create() {
+  preload() {
+    this.load.audio("bkg_buildup", "assets/music/buildup.wav");
+    this.load.audio("bkg_breakdown", "assets/music/breakdown.wav");
+  }
+
+  musicHardReplace(
+    nextMusic: Phaser.Sound.BaseSound,
+    prevMusic?: Phaser.Sound.BaseSound,
+  ) {
+    prevMusic?.stop();
+    prevMusic?.destroy();
+    this.music = nextMusic;
+    this.music.play();
+  }
+
+  create(data: { music?: Phaser.Sound.BaseSound }) {
+    this.musicHardReplace(
+      this.sound.add("bkg_buildup", { loop: true }),
+      data.music,
+    );
+
     this.drawTitle();
     this.drawCTA();
     this.drawVersion();
@@ -72,6 +94,6 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   startFight() {
-    this.scene.start("fight");
+    this.scene.start("fight", { music: this.music });
   }
 }

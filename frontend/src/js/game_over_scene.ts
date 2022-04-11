@@ -1,11 +1,33 @@
 import "phaser";
 
 export default class GameOverScene extends Phaser.Scene {
+  music!: Phaser.Sound.BaseSound;
+
   constructor() {
     super("game_over");
   }
 
-  create() {
+  preload() {
+    this.load.audio("bkg_failure", "assets/music/loose.wav");
+    this.load.audio("bkg_success", "assets/music/win.wav");
+  }
+
+  musicHardReplace(
+    nextMusic: Phaser.Sound.BaseSound,
+    prevMusic?: Phaser.Sound.BaseSound,
+  ) {
+    prevMusic?.stop();
+    prevMusic?.destroy();
+    this.music = nextMusic;
+    this.music.play();
+  }
+
+  create(data: { music?: Phaser.Sound.BaseSound }) {
+    this.musicHardReplace(
+      this.sound.add("bkg_failure", { loop: false }),
+      data.music,
+    );
+
     this.drawTitle();
     this.drawCTA();
     this.bindEvents();
@@ -43,6 +65,6 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   startFight() {
-    this.scene.start("welcome");
+    this.scene.start("welcome", { music: this.music });
   }
 }
