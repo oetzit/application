@@ -109,3 +109,11 @@ Also, remember to
     This operation permits the ui to call the backend at `http://localhost:8080/oetzi_words/` instead of to the relative path.
 
 The webapp will be abailable at `http://localhost:1234`.
+
+### Assets
+
+- critters?
+- https://chierit.itch.io/elementals-ground-monk
+- https://edermunizz.itch.io/free-pixel-art-forest
+- https://jdwasabi.itch.io/8-bit-16-bit-sound-effects-pack
+- https://gooseninja.itch.io/minimalistc-loops
