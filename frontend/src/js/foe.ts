@@ -42,6 +42,7 @@ class Foe {
       this.scene.player,
       this.critter,
       () => {
+        this.scene.sound.play("sfx_hit_player");
         this.scene.physics.world.removeCollider(overlap);
         this.scene.popFoe(this);
         this.clue.delete();

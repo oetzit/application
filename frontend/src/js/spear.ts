@@ -57,6 +57,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
 
   hitTarget() {
     this.scene.physics.world.removeCollider(this);
+    this.scene.sound.play("sfx_hit_critter");
     // TODO: bounce?
     this.destroy();
     this.target.flee();

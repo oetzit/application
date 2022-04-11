@@ -54,6 +54,16 @@ export default class FightScene extends Phaser.Scene {
 
   preload() {
     this.preloadSprites();
+    this.preloadSoundsEffects();
+  }
+
+  preloadSoundsEffects() {
+    this.load.audio("sfx_lo_beep", "assets/audio/Cancel 1.wav");
+    this.load.audio("sfx_md_beep", "assets/audio/Text 1.wav");
+    this.load.audio("sfx_hi_beep", "assets/audio/Confirm 1.wav");
+    this.load.audio("sfx_hit_critter", "assets/audio/Hit damage 1.wav");
+    this.load.audio("sfx_hit_player", "assets/audio/Boss hit 1.wav");
+    this.load.audio("sfx_game_over", "assets/audio/Bubble heavy 2.wav");
   }
 
   preloadSprites() {
@@ -315,7 +325,7 @@ export default class FightScene extends Phaser.Scene {
       })
     ).data;
     this.foes.forEach((foe) => foe.destroy());
-    this.scene.start("game_over");
+    this.sound.play("sfx_game_over");
   }
 
   initCluesGroup() {
@@ -361,14 +371,17 @@ export default class FightScene extends Phaser.Scene {
     });
     if (match === null) {
       // NOOP
+      this.sound.play("sfx_md_beep");
       this.hud.showSubmitFeedback("white", inputStatus.final);
     } else if (score < 0.9) {
       // TODO: visual near misses based on score
+      this.sound.play("sfx_lo_beep");
       this.updateScore(-1);
       match.handleFailure();
       this.hud.showSubmitFeedback("red", inputStatus.final);
       new Spear(this, this.player, undefined);
     } else {
+      this.sound.play("sfx_hi_beep");
       backend.updateClue(match.beClue.id, {
         ended_at: new Date().toISOString(),
         ended_at_gmtm: this.getGameTime(),
@@ -409,6 +422,7 @@ export default class FightScene extends Phaser.Scene {
       });
     };
     this.typewriter.onChange = (inputStatus) => {
+      this.sound.play("sfx_md_beep");
       this.hud.setInput(inputStatus.final);
     };
   }
