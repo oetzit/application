@@ -113,15 +113,17 @@ const hackPhysicalKeyboardKeyUp = function (event: KeyboardEvent) {
 class Typewriter {
   inputStatus: InputStatus;
   keyboard: Keyboard;
+  desktop: boolean;
 
   onChange: (inputStatus: InputStatus) => unknown;
   onSubmit: (inputStatus: InputStatus) => unknown;
   getGameTime: () => number; // NOTE: sigh.
 
-  constructor() {
+  constructor(desktop: boolean) {
     this.onChange = () => {};
     this.onSubmit = () => {};
 
+    this.desktop = desktop;
     this.inputStatus = {
       began_at: null,
       ended_at: null,
@@ -133,8 +135,8 @@ class Typewriter {
 
     this.keyboard = new Keyboard({
       // debug: true,
-      physicalKeyboardHighlight: true,
-      physicalKeyboardHighlightPress: true,
+      // physicalKeyboardHighlight: true,
+      // physicalKeyboardHighlightPress: true,
       // autoUseTouchEvents: true,
       newLineOnEnter: true,
       disableCaretPositioning: true,
@@ -159,6 +161,12 @@ class Typewriter {
       },
       onChange: this.keyboardOnChangeHandler.bind(this),
     } as KeyboardOptions);
+
+    if (this.desktop) {
+      this.setShiftModeHoldable();
+    } else {
+      this.setShiftModeOneShot();
+    }
 
     this.keyboard.physicalKeyboard.handleHighlightKeyUp =
       hackPhysicalKeyboardKeyUp;
@@ -227,16 +235,12 @@ class Typewriter {
   setActive(active: boolean) {
     // disables physical kbd on desktop
     this.keyboard.setOptions({
-      physicalKeyboardHighlight: active,
-      physicalKeyboardHighlightPress: active,
+      physicalKeyboardHighlight: active && this.desktop,
+      physicalKeyboardHighlightPress: active && this.desktop,
     } as KeyboardOptions);
     // hides virtual kbd on mobile
-    this.setHidden(!active);
+    this.keyboard.keyboardDOM.hidden = !(active && !this.desktop);
     // NOTE: this is not really disabled at event level, but events can't be triggered
-  }
-
-  setHidden(hidden: boolean) {
-    this.keyboard.keyboardDOM.hidden = hidden;
   }
 
   setShiftModeHoldable() {
