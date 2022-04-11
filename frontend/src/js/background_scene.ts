@@ -45,7 +45,7 @@ export default class BackgroundScene extends Phaser.Scene {
     //   this.cameras.main.width / this.cameras.main.height,
     // );
     // this.scale.refresh();
-    this.scene.launch("welcome");
+    this.scene.launch("tutorial");
   }
 
   update() {

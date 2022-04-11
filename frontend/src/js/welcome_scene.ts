@@ -65,13 +65,13 @@ export default class WelcomeScene extends Phaser.Scene {
 
   bindEvents() {
     if (this.game.device.os.desktop) {
-      this.input.keyboard.once("keyup", this.startFight.bind(this));
+      this.input.keyboard.once("keyup", this.nextScene.bind(this));
     } else {
-      this.input.once("pointerup", this.startFight.bind(this));
+      this.input.once("pointerup", this.nextScene.bind(this));
     }
   }
 
-  startFight() {
-    this.scene.start("fight");
+  nextScene() {
+    this.scene.start("tutorial");
   }
 }
