@@ -47,6 +47,7 @@ export default class FightScene extends Phaser.Scene {
   gameTime: Phaser.Time.TimerEvent;
   uiDimensions: UIDimensions;
   music!: Phaser.Sound.BaseSound;
+  spawner: Phaser.Time.TimerEvent;
 
   constructor() {
     super("fight");
@@ -352,6 +353,7 @@ export default class FightScene extends Phaser.Scene {
         ended_at_gmtm: this.getGameTime(),
       })
     ).data;
+    this.spawner.remove();
     this.foes.forEach((foe) => foe.destroy());
     this.sound.play("sfx_game_over");
     this.typewriter.setActive(false);
@@ -465,7 +467,7 @@ export default class FightScene extends Phaser.Scene {
       (8 * 1000 * (60 * 1000 - this.getGameTime())) / 60 / 1000 + 2 * 1000,
     );
     // TODO: it should be ok calling this on time instead of gameTime, but... is it?
-    this.time.delayedCall(delay, this.spawnFoes.bind(this));
+    this.spawner = this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
   async spawnFoe() {
