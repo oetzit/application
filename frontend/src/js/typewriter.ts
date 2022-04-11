@@ -199,7 +199,6 @@ class Typewriter {
     if (this.inputStatus.began_at_gmtm === null)
       this.inputStatus.began_at_gmtm = this.getGameTime();
     if (key === Key.Enter) {
-      this.keyboard.clearInput();
       this.inputStatus.typed += "\n";
       this.inputStatus.ended_at = new Date();
       this.inputStatus.ended_at_gmtm = this.getGameTime();
@@ -222,6 +221,7 @@ class Typewriter {
   }
 
   resetInputStatus() {
+    this.keyboard.clearInput();
     this.inputStatus = {
       began_at: null,
       ended_at: null,
