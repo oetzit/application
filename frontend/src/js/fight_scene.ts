@@ -354,6 +354,7 @@ export default class FightScene extends Phaser.Scene {
     ).data;
     this.foes.forEach((foe) => foe.destroy());
     this.sound.play("sfx_game_over");
+    this.typewriter.setActive(false);
     this.scene.start("game_over", { music: this.music });
   }
 
