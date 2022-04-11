@@ -26,7 +26,7 @@ class Clue extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.word = word;
 
-    this.baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 25); // max(3.5vw,25px)
+    this.baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
 
     // TODO: we could be smarter and fully leverage caching, but meh.
     this.textureKey = `${word.id}-${Date.now()}`;
