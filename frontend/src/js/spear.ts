@@ -1,5 +1,6 @@
 import "phaser";
 import FightScene from "./fight_scene";
+import Critter from "./critter";
 
 import { GRAVITY_Y } from "./game";
 import newtonRaphson from "newton-raphson-method"; // TODO: TS signatures
@@ -8,13 +9,13 @@ const SPEED = 550;
 
 class Spear extends Phaser.Physics.Arcade.Sprite {
   source: Phaser.GameObjects.Sprite;
-  target: Phaser.GameObjects.Sprite | undefined;
+  target: Critter | undefined;
   body: Phaser.Physics.Arcade.Body;
 
   constructor(
     scene: FightScene,
     source: Phaser.GameObjects.Sprite,
-    target: Phaser.GameObjects.Sprite | undefined,
+    target: Critter | undefined,
   ) {
     super(scene, scene.player.x, scene.player.y, "spear");
     this.play({ key: "spearAni", repeat: -1 });
@@ -60,6 +61,8 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
     this.scene.sound.play("sfx_hit_critter");
     // TODO: bounce?
     this.destroy();
+    if (!this.target) return;
+    this.target.hitFlash();
     this.target.flee();
   }
 

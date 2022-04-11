@@ -82,6 +82,11 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.play({ key: this.species + "_run", repeat: -1 });
     this.body.setVelocity(3 * this.baseVelocity, 0);
   }
+
+  hitFlash() {
+    this.setTintFill(0xcc0000);
+    this.scene.time.delayedCall(100, () => this.clearTint());
+  }
 }
 
 export default Critter;
