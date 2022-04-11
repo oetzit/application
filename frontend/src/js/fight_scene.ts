@@ -429,6 +429,7 @@ export default class FightScene extends Phaser.Scene {
 
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter();
+    this.typewriter.setActive(true);
     if (this.game.device.os.desktop) {
       this.typewriter.setHidden(true);
       this.typewriter.setShiftModeHoldable();
