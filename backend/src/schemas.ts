@@ -72,6 +72,6 @@ export const WordChoice = Type.Object({
     default: 0.8,
     maximum: 1.0,
   }),
-  ocr_transcript_length_min: Type.Number({ minimum: 1, default: 1 }),
-  ocr_transcript_length_max: Type.Number({ minimum: 1, default: 20 }),
+  ocr_transcript_length_min: Type.Integer({ minimum: 1, default: 1 }),
+  ocr_transcript_length_max: Type.Integer({ minimum: 1, default: 20 }),
 });
