@@ -20,21 +20,34 @@ type IdInParamsType = Static<typeof IdInParamsSchema>;
 
 const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   fastify.route<{
+    Body: Types.WordChoice;
     Reply: Types.Word;
   }>({
-    method: "GET",
-    url: "/word",
+    method: "POST",
+    url: "/words/choice",
     schema: {
+      body: Schemas.WordChoice,
       response: {
         200: Schemas.Word,
         404: {}, // TODO: JSend error
       },
     },
     handler: async (request, reply) => {
+      const ocrConfidenceRange: readonly [number, number] = [
+        request.body.ocr_confidence_min,
+        request.body.ocr_confidence_max,
+      ];
+      const ocrTranscriptLengthRange: readonly [number, number] = [
+        request.body.ocr_transcript_length_min,
+        request.body.ocr_transcript_length_max,
+      ];
+      const ocrTranscriptRegex =
+        "^[[:alpha:]]{" + ocrTranscriptLengthRange.join(",") + "}$";
+
       // TODO: scope this to game to avoid collisions
       const word = await connection<Types.Word>("words")
-        .whereBetween("ocr_confidence", [0.4, 0.8]) // i.e. needs improvement but it's not trash
-        .whereRaw(`"ocr_transcript" ~ '^[[:alpha:]]+$'`) // i.e. no numbers nor symbols
+        .whereBetween("ocr_confidence", ocrConfidenceRange)
+        .where("ocr_transcript", "~", ocrTranscriptRegex)
         .orderByRaw("RANDOM()")
         .first();
       if (word === undefined) {

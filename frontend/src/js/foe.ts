@@ -22,7 +22,7 @@ class Foe {
   }
 
   async initialize() {
-    this.beWord = (await backend.getWord()).data;
+    this.beWord = (await backend.createWordChoice({})).data;
     if (!this.scene.scene.isActive()) return;
     this.beClue = (
       await backend.createClue(this.scene.beGame.id, {

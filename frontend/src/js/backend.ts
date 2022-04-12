@@ -18,7 +18,8 @@ export default {
   createDevice: () => backend.post<Types.Device>("/api/devices"),
   getDevice: (deviceId: string) =>
     backend.get<Types.Device>(`/api/devices/${deviceId}`),
-  getWord: () => backend.get<Types.Word>("/api/word"),
+  createWordChoice: (data: Types.WordChoice) =>
+    backend.post<Types.Word>("/api/words/choice", data),
   createGame: (deviceId: string, data: Types.GameCreate) =>
     backend.post<Types.Game>(`/api/devices/${deviceId}/games`, data),
   updateGame: (gameId: string, data: Types.GameUpdate) =>

@@ -13,3 +13,5 @@ export type GameUpdate = Static<typeof Schemas.GameUpdate>;
 export type ClueCreate = Static<typeof Schemas.ClueCreate>;
 export type ClueUpdate = Static<typeof Schemas.ClueUpdate>;
 export type ShotCreate = Static<typeof Schemas.ShotCreate>;
+
+export type WordChoice = Static<typeof Schemas.WordChoice>;

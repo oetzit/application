@@ -60,3 +60,18 @@ export const ClueCreate = Type.Intersect([
 ]);
 
 export const ShotCreate = Type.Omit(Shot, ["id", "game_id"]);
+
+export const WordChoice = Type.Object({
+  ocr_confidence_min: Type.Number({
+    minimum: 0.0,
+    default: 0.4,
+    maximum: 1.0,
+  }),
+  ocr_confidence_max: Type.Number({
+    minimum: 0.0,
+    default: 0.8,
+    maximum: 1.0,
+  }),
+  ocr_transcript_length_min: Type.Number({ minimum: 1, default: 1 }),
+  ocr_transcript_length_max: Type.Number({ minimum: 1, default: 20 }),
+});
