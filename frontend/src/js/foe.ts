@@ -14,6 +14,8 @@ class Foe {
   critter: Critter;
   clue: Clue;
 
+  collider: Phaser.Physics.Arcade.Collider;
+
   duration: number;
 
   constructor(scene: FightScene, duration = 15) {
@@ -38,38 +40,28 @@ class Foe {
     this.critter = new Critter(this.scene, critterSpeed);
     this.scene.foes.push(this);
 
-    const overlap = this.scene.physics.add.overlap(
+    this.collider = this.scene.physics.add.overlap(
       this.scene.player,
       this.critter,
-      () => {
+      this.handleCollisionWithPlayer.bind(this),
+    );
+  }
+
+  handleCollisionWithPlayer() {
         this.scene.sound.play("sfx_hit_player");
-        this.scene.physics.world.removeCollider(overlap);
+    this.scene.physics.world.removeCollider(this.collider);
         this.scene.popFoe(this);
         this.clue.delete();
         this.critter.escape();
         this.scene.player.hitFlash();
         this.scene.updateHealth(-10);
-      },
-    );
   }
 
   async handleSuccess() {
-    // TODO: update clue
-    // TODO: post shot
-    // TODO: destroy foe
     this.clue.delete();
   }
 
-  async handleFailure() {
-    // TODO: post shot
-    // await backend.createShot(this.scene.beGame.id, {
-    //   clue_id: this.beClue.id,
-    //   began_at: "",
-    //   ended_at: new Date().toISOString(),
-    //   typed: "",
-    //   final: "",
-    // });
-  }
+  async handleFailure() {}
 
   destroy() {
     this.clue.destroy();
