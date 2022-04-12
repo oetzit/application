@@ -23,8 +23,13 @@ class Foe {
     this.duration = duration;
   }
 
-  async initialize() {
-    this.beWord = (await backend.createWordChoice({})).data;
+  async initialize(length: number) {
+    this.beWord = (
+      await backend.createWordChoice({
+        ocr_transcript_length_min: length,
+        ocr_transcript_length_max: length,
+      })
+    ).data;
     if (!this.scene.scene.isActive()) return;
     this.beClue = (
       await backend.createClue(this.scene.beGame.id, {
@@ -48,13 +53,13 @@ class Foe {
   }
 
   handleCollisionWithPlayer() {
-        this.scene.sound.play("sfx_hit_player");
+    this.scene.sound.play("sfx_hit_player");
     this.scene.physics.world.removeCollider(this.collider);
-        this.scene.popFoe(this);
-        this.clue.delete();
-        this.critter.escape();
-        this.scene.player.hitFlash();
-        this.scene.updateHealth(-10);
+    this.scene.popFoe(this);
+    this.clue.delete();
+    this.critter.escape();
+    this.scene.player.hitFlash();
+    this.scene.updateHealth(-10);
   }
 
   async handleSuccess() {

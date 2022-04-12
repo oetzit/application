@@ -109,7 +109,7 @@ export default class FightScene extends Phaser.Scene {
 
   init() {
     this.score = 0;
-    this.health = 100;
+    this.health = 10000;
 
     this.uiDimensions = this.initUiDimensions();
     this.hud = new HUD(this, {
@@ -316,6 +316,8 @@ export default class FightScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    // TODO: something poissonian
+    // console.log(time, delta);
     this.hud.setClock(this.getGameTime());
   }
 
@@ -432,19 +434,72 @@ export default class FightScene extends Phaser.Scene {
     };
   }
 
+  clamp(num: number, min: number, max: number) {
+    return Math.min(Math.max(num, min), max);
+  }
+
+  randomExponential(rate = 1) {
+    // http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
+    return -Math.log(Math.random()) / rate;
+  }
+
+  randomPareto(scale = 1, shape = 1) {
+    // https://en.wikipedia.org/wiki/Pareto_distribution#Random_sample_generation
+    return scale / Math.pow(Math.random(), 1 / shape);
+  }
+
   async spawnFoes() {
-    await this.spawnFoe();
-    // TODO: think of a progression which makes sense
-    const delay = Math.max(
-      2000,
-      (8 * 1000 * (60 * 1000 - this.getGameTime())) / 60 / 1000 + 2 * 1000,
+    const AVG_WPM = 40; // avg is 41.4, current world record is ~212wpm
+    const minDelay = 60 / (5.0 * AVG_WPM); // 0.3s -> world record!
+    const maxDelay = 60 / (0.2 * AVG_WPM); // 7.5s -> utter boredom!
+
+    const expDelay = 60 / (1.0 * AVG_WPM); // 1.5s -> average typer
+    const rate = 1 / expDelay;
+
+    const delay =
+      this.clamp(this.randomExponential(rate), minDelay, maxDelay) * 1000;
+
+    const AVG_CPM = 200; // corresponds to AVG_WPM and AVG_CPW = 5
+    const minLength = 1;
+    const maxLength = 9;
+
+    const expLength = AVG_CPM / AVG_WPM; // i.e. 5 char is avg
+    const scale = minLength;
+    const shape = expLength / (expLength - scale);
+
+    const length = this.clamp(
+      Math.round(this.randomPareto(scale, shape)),
+      minLength,
+      maxLength,
     );
-    // TODO: it should be ok calling this on time instead of gameTime, but... is it?
+
+    // const minCount = 0; // NOTE: no minCount because the player deserves rest
+    const maxCount = 3;
+    // const minChars = 0; // NOTE: no minChars because the player deserves rest
+    const maxChars = 30;
+
+    const currentCount = this.foes.length;
+    const currentChars = this.foes
+      .map((foe) => foe.beWord.ocr_transcript.length)
+      .reduce((a, b) => a + b, 0);
+
+    // TODO: some smart length-dependent randomization
+    const duration = 5;
+
+    if (currentCount < maxCount && currentChars < maxChars) {
+      // TODO: shorter should get faster
+      await this.spawnFoe(length, duration);
+    }
+
+    // TODO: stuff should oscillate increasing to give illusion of waves
+    // TODO: increase difficulty w/ game time
+
     this.spawner = this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
-  async spawnFoe() {
-    await new Foe(this).initialize();
+  async spawnFoe(length: number, timeout: number) {
+    // TODO: this is a terrible pattern
+    await new Foe(this, timeout).initialize(length);
   }
 
   concealClues() {
