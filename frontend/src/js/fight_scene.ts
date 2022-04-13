@@ -452,11 +452,11 @@ export default class FightScene extends Phaser.Scene {
 
   getDifficulty() {
     const t = this.getGameTime();
-    if (t >= 20 * 60000) return 1; // NOTE: c'mon... 20 minutes?
+    if (t >= 15 * 60000) return 1; // NOTE: c'mon... 15 minutes?
     // NOTE: this ranges in [0;20]x[0;10]
     const progression = (t) =>
       (t + Math.sin((2 * Math.PI * t) / 4) + Math.sin(2 * Math.PI * t)) / 2;
-    return progression(t / 60000) / 10;
+    return progression((t * 15) / 20 / 60000) / 10;
   }
 
   async spawnFoes() {
