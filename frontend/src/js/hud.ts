@@ -129,7 +129,7 @@ export default class HUD {
   }
 
   setClock(milliseconds: number) {
-    this.clock.text = `${this.formatTime(milliseconds)}\u2009${ICONS.CLOCK}`;
+    this.clock.text = `${formatTime(milliseconds)}\u2009${ICONS.CLOCK}`;
   }
 
   showSubmitFeedback(color: string, input: string) {
