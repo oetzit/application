@@ -110,7 +110,7 @@ export default class FightScene extends Phaser.Scene {
 
   init() {
     this.score = 0;
-    this.health = 100;
+    this.health = 1;
 
     this.uiDimensions = this.initUiDimensions();
     this.hud = new HUD(this, {
@@ -179,12 +179,8 @@ export default class FightScene extends Phaser.Scene {
     };
   }
 
-  musicSoftReplace(
-    nextMusic: Phaser.Sound.BaseSound,
-    prevMusic: Phaser.Sound.BaseSound,
-  ) {
-    this.music = prevMusic;
-    this.music.on("complete", () => {
+  musicSoftReplace(nextMusic: Phaser.Sound.BaseSound) {
+    this.music.on("looped", () => {
       this.music.stop();
       this.music.destroy();
       this.music = nextMusic;
@@ -192,12 +188,23 @@ export default class FightScene extends Phaser.Scene {
     });
   }
 
+  planMusicChanges() {
+    this.time.delayedCall(0 * 60 * 1000, () =>
+      this.musicSoftReplace(this.sound.add("bkg_main_1", { loop: true })),
+    );
+    this.time.delayedCall(5 * 60 * 1000, () =>
+      this.musicSoftReplace(this.sound.add("bkg_main_2", { loop: true })),
+    );
+    this.time.delayedCall(10 * 60 * 1000, () =>
+      this.musicSoftReplace(this.sound.add("bkg_main_3", { loop: true })),
+    );
+  }
+
   async create(data: { music: Phaser.Sound.BaseSound }) {
     (this.scene.get("background") as BackgroundScene).atmosphere.play();
-    this.musicSoftReplace(
-      this.sound.add("bkg_main_1", { loop: true }),
-      data.music,
-    );
+
+    this.music = data.music;
+    this.planMusicChanges();
 
     this.bindPauseShortcut();
 
