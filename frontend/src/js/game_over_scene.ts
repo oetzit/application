@@ -1,4 +1,5 @@
 import "phaser";
+import BackgroundScene from "./background_scene";
 
 export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -23,6 +24,10 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create(data: { music?: Phaser.Sound.BaseSound }) {
+    (this.scene.get("background") as BackgroundScene).dropCurtain();
+    (this.scene.get("background") as BackgroundScene).atmosphere
+      .stop()
+      .restart();
     this.musicHardReplace(
       this.sound.add("bkg_failure", { loop: false }),
       data.music,
@@ -65,6 +70,7 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   startFight() {
+    (this.scene.get("background") as BackgroundScene).liftCurtain();
     this.scene.start("welcome", { music: this.music });
   }
 }

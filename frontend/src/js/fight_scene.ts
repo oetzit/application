@@ -11,6 +11,7 @@ import * as Types from "../../../backend/src/types";
 import Foe from "./foe";
 import Typewriter from "./typewriter";
 import HUD from "./hud";
+import BackgroundScene from "./background_scene";
 
 const DEVICE_KEY = "OETZI/DEVICE_ID";
 
@@ -192,6 +193,7 @@ export default class FightScene extends Phaser.Scene {
   }
 
   async create(data: { music: Phaser.Sound.BaseSound }) {
+    (this.scene.get("background") as BackgroundScene).atmosphere.play();
     this.musicSoftReplace(
       this.sound.add("bkg_main_1", { loop: true }),
       data.music,
