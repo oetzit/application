@@ -483,9 +483,9 @@ export default class FightScene extends Phaser.Scene {
 
   getDifficulty(t: number, plateausAt = 15 * 60000) {
     // NOTE: c'mon... 15 minutes?
-    // NOTE: this maps [0;∞] ↦ [0;10]
+    // NOTE: this maps [0;∞] ↦ [0;1]
     if (t >= plateausAt) return 1;
-    return this.sawtoothRamp(t / plateausAt) * 10;
+    return this.sawtoothRamp(t / plateausAt);
   }
 
   async spawnFoes() {
