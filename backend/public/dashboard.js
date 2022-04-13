@@ -104,3 +104,57 @@ new Chart(
   document.getElementById("shotsByDurationChart"),
   shotsByDurationConfig,
 );
+
+//=[ Devices behaviour ]========================================================
+
+const devicesBehaviourData = JSON.parse(
+  document.getElementById("devicesBehaviourData").textContent,
+)
+  .filter((item) => item.device_id)
+  .map((item) => [
+    item.ended_count,
+    item.interrupted_count,
+    parseFloat((item.time_spent / 100000).toFixed(2)),
+  ]);
+
+console.log(devicesBehaviourData);
+
+const devicesBehaviourConfig = {
+  type: "bubble",
+  data: {
+    datasets: [
+      {
+        data: devicesBehaviourData,
+        backgroundColor: "blue",
+      },
+    ],
+  },
+  options: {
+    // maintainAspectRatio: true,
+    // aspectRatio: 1,
+    scales: {
+      x: {
+        type: "logarithmic",
+        title: {
+          display: true,
+          text: "Finished games",
+        },
+      },
+      y: {
+        type: "logarithmic",
+        title: {
+          display: true,
+          text: "Interrupted games",
+        },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+    },
+  },
+};
+
+new Chart(
+  document.getElementById("devicesBehaviourChart"),
+  devicesBehaviourConfig,
+);
