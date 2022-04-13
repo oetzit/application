@@ -470,7 +470,7 @@ export default class FightScene extends Phaser.Scene {
     return scale / Math.pow(Math.random(), 1 / shape);
   }
 
-  sawtoothRamp(t: number, peaksCount = 10, dipsHeight = 0.1, midwayAt = 0.3) {
+  sawtoothRamp(t: number, peaksCount = 5, dipsHeight = 0.2, midwayAt = 0.3) {
     // https://www.desmos.com/calculator/7zcb6p8qeu
     // NOTE: this always maps [0;1] ↦ [0;1]
     const ramp = t * (peaksCount * dipsHeight + 1);
