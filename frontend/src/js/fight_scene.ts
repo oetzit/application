@@ -384,6 +384,10 @@ export default class FightScene extends Phaser.Scene {
     this.foes.splice(this.foes.indexOf(foe), 1);
   }
 
+  nthFibonacci(n: number) {
+    return Math.round(Math.pow((1 + Math.sqrt(5)) / 2, n) / Math.sqrt(5));
+  }
+
   submitTranscription(inputStatus: InputStatus) {
     // NOTE: this ain't async to avoid any UX delay
     const { score, match } = this.findMatchingFoe(inputStatus.final);
@@ -408,7 +412,16 @@ export default class FightScene extends Phaser.Scene {
         ended_at: new Date().toISOString(),
         ended_at_gmtm: this.getGameTime(),
       });
-      this.updateScore(+10);
+      const lengthScore = this.nthFibonacci(
+        1 + match.beWord.ocr_transcript.length,
+      );
+      const accuracyBonus = score;
+      const speedBonus =
+        2 -
+        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
+          (match.duration * 1000);
+      this.updateScore(Math.round(lengthScore * accuracyBonus * speedBonus));
+
       this.popFoe(match);
       match.handleSuccess();
       this.hud.showSubmitFeedback("green", inputStatus.final);
