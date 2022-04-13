@@ -81,7 +81,7 @@ export default class BackgroundScene extends Phaser.Scene {
       paused: true,
       from: 0,
       to: 255 * (COLORS.length - 1),
-      duration: 20 * 60 * 1000, // 3000 * (COLORS.length - 1),
+      duration: 15 * 60 * 1000, // 3000 * (COLORS.length - 1),
       onUpdate: (tween) => {
         const value = (tween.getValue() % 256) / 256;
         const i = Math.floor(tween.getValue() / 256);
