@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2022-04-13
+
+### Added
+
+- `FE` Sound effects.
+- `FE` Background music.
+- `FE` Critters flash when hit.
+- `FE` Player flashes when hit.
+- `FE` HUD flashes on change.
+- `BE` API for precise word choice.
+- `FE` Use exponential distribution for delay between foes (i.e. their arrival is a Poisson process).
+- `FE` Use parametric Pareto distribution for word length coice (i.e. we're bending the Zipfian law to control difficulty).
+- `FE` Modulate difficulty ramp up in waves.
+- `FE` Announce waves visually.
+- `FE` Change atmospheric color to tenser tones as difficulty increases.
+- `FE` Change music faster pace as difficulty increases.
+- `FE` Implement scoring system (accounting for length, accuracy and speed).
+- `FE`/`BE` Track score and similarity of every shot.
+- `FE` Make game over screen more informative.
+- `BE` Plot device behaviour in dashboard.
+- `BE` Plot word performance in dashboard.
+
+### Changed
+
+- `FE` Failing a word does damage proportional to length.
+
+### Fixed
+
+- `FE` Increase minimum clue size for small screens.
+- `FE` Deactivate typewriter at gameover.
+- `FE` Deactivate spawner at gameover.
+
 ## [0.6.0] - 2022-04-06
 
 ### Added
@@ -123,7 +155,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.6.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.7.0...development
+[0.7.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.6.0...0.7.0
 [0.6.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.5.0...0.6.0
 [0.5.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.4.0...0.5.0
 [0.4.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...0.4.0
