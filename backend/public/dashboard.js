@@ -117,8 +117,6 @@ const devicesBehaviourData = JSON.parse(
     parseFloat((item.time_spent / 100000).toFixed(2)),
   ]);
 
-console.log(devicesBehaviourData);
-
 const devicesBehaviourConfig = {
   type: "bubble",
   data: {
