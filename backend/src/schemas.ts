@@ -22,6 +22,7 @@ export const Game = Type.Object({
   ended_at: Nullable(Type.String({ format: "date-time" })),
   began_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
   ended_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
+  score: Nullable(Type.Integer()),
 });
 
 export const Clue = Type.Object({
@@ -44,10 +45,18 @@ export const Shot = Type.Object({
   ended_at_gmtm: Nullable(Type.Number({ minimum: 0 })),
   typed: Type.String(),
   final: Type.String(),
+  score: Type.Integer(),
+  similarity: Type.Number(),
 });
 
 export const GameUpdate = Type.Partial(
-  Type.Pick(Game, ["began_at", "ended_at", "began_at_gmtm", "ended_at_gmtm"]),
+  Type.Pick(Game, [
+    "began_at",
+    "ended_at",
+    "began_at_gmtm",
+    "ended_at_gmtm",
+    "score",
+  ]),
 );
 export const GameCreate = GameUpdate;
 

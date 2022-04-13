@@ -352,6 +352,7 @@ export default class FightScene extends Phaser.Scene {
       await backend.updateGame(this.beGame.id, {
         ended_at: new Date().toISOString(),
         ended_at_gmtm: this.getGameTime(),
+        score: this.score,
       })
     ).data;
     this.spawner.remove();
@@ -373,8 +374,8 @@ export default class FightScene extends Phaser.Scene {
   }
 
   findMatchingFoe(transcription: string) {
-    let result: { score: number; match: Foe | null } = {
-      score: -1,
+    let result: { similarity: number; match: Foe | null } = {
+      similarity: -1,
       match: null,
     };
     if (this.foes.length < 1) return result;
@@ -384,8 +385,8 @@ export default class FightScene extends Phaser.Scene {
         transcription,
         foe.beWord.ocr_transcript,
       ).similarity;
-      if (similarity < result.score) return;
-      result = { score: similarity, match: foe };
+      if (similarity < result.similarity) return;
+      result = { similarity: similarity, match: foe };
     });
     // match ??= scene.foes[0]; // TODO: remove this
     // console.log(similarity, match.beWord.ocr_transcript);
@@ -401,20 +402,42 @@ export default class FightScene extends Phaser.Scene {
   }
 
   submitTranscription(inputStatus: InputStatus) {
+    const similarityThreshold = 0.9;
     // NOTE: this ain't async to avoid any UX delay
-    const { score, match } = this.findMatchingFoe(inputStatus.final);
+    const { similarity, match } = this.findMatchingFoe(inputStatus.final);
+
+    let score = 0;
+    if (match === null) {
+      score = 0;
+    } else if (similarity < similarityThreshold) {
+      score = -1;
+    } else {
+      const lengthScore = this.nthFibonacci(
+        1 + match.beWord.ocr_transcript.length,
+      );
+      const accuracyBonus = similarity;
+      const speedBonus =
+        2 -
+        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
+          (match.duration * 1000);
+      score = Math.round(lengthScore * accuracyBonus * speedBonus);
+    }
+
     backend.createShot(this.beGame.id, {
       clue_id: match?.beClue?.id || null,
+      similarity: similarity,
+      score: score,
       ...inputStatus,
     });
+
     if (match === null) {
       // NOOP
       this.sound.play("sfx_md_beep");
       this.hud.showSubmitFeedback("white", inputStatus.final);
-    } else if (score < 0.9) {
+    } else if (similarity < similarityThreshold) {
       // TODO: visual near misses based on score
       this.sound.play("sfx_lo_beep");
-      this.updateScore(-1);
+      this.updateScore(score);
       match.handleFailure();
       this.hud.showSubmitFeedback("red", inputStatus.final);
       new Spear(this, this.player, undefined);
@@ -424,21 +447,11 @@ export default class FightScene extends Phaser.Scene {
         ended_at: new Date().toISOString(),
         ended_at_gmtm: this.getGameTime(),
       });
-      const lengthScore = this.nthFibonacci(
-        1 + match.beWord.ocr_transcript.length,
-      );
-      const accuracyBonus = score;
-      const speedBonus =
-        2 -
-        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
-          (match.duration * 1000);
-      this.updateScore(Math.round(lengthScore * accuracyBonus * speedBonus));
-
+      this.updateScore(score);
       this.popFoe(match);
       match.handleSuccess();
       this.hud.showSubmitFeedback("green", inputStatus.final);
       new Spear(this, this.player, match.critter);
-      // TODO: increase score
     }
   }
 
