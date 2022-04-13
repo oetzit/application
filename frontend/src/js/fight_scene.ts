@@ -470,22 +470,33 @@ export default class FightScene extends Phaser.Scene {
     return scale / Math.pow(Math.random(), 1 / shape);
   }
 
-  getDifficulty() {
-    const t = this.getGameTime();
-    if (t >= 15 * 60000) return 1; // NOTE: c'mon... 15 minutes?
-    // NOTE: this ranges in [0;20]x[0;10]
-    const progression = (t) =>
-      (t + Math.sin((2 * Math.PI * t) / 4) + Math.sin(2 * Math.PI * t)) / 2;
-    return progression((t * 15) / 20 / 60000) / 10;
+  sawtoothRamp(t: number, peaksCount = 10, dipsHeight = 0.1, midwayAt = 0.3) {
+    // https://www.desmos.com/calculator/7zcb6p8qeu
+    // NOTE: this always maps [0;1] ↦ [0;1]
+    const ramp = t * (peaksCount * dipsHeight + 1);
+    const dips =
+      (-Math.floor(t * peaksCount) * (peaksCount * dipsHeight)) /
+      (peaksCount - 1);
+    const bend = Math.log(0.5) / Math.log(midwayAt);
+    return Math.pow(ramp + dips, bend);
+  }
+
+  getDifficulty(t: number, plateausAt = 15 * 60000) {
+    // NOTE: c'mon... 15 minutes?
+    // NOTE: this maps [0;∞] ↦ [0;10]
+    if (t >= plateausAt) return 1;
+    return this.sawtoothRamp(t / plateausAt) * 10;
   }
 
   async spawnFoes() {
+    const difficulty = this.getDifficulty(this.getGameTime());
+
     const AVG_WPM = 40; // avg is 41.4, current world record is ~212wpm
     const minDelay = 60 / (5.0 * AVG_WPM); // 0.3s -> world record!
     const maxDelay = 60 / (0.2 * AVG_WPM); // 7.5s -> utter boredom!
 
     // const expDelay = 60 / (1.0 * AVG_WPM); // 1.5s -> average typer
-    const expDelay = maxDelay + (minDelay - maxDelay) * this.getDifficulty();
+    const expDelay = maxDelay + (minDelay - maxDelay) * difficulty;
     const rate = 1 / expDelay;
 
     const delay =
@@ -493,13 +504,12 @@ export default class FightScene extends Phaser.Scene {
 
     const AVG_CPM = 200; // corresponds to AVG_WPM and AVG_CPW = 5
     // const minLength = 1;
-    const minLength = Math.round(1 + (3 - 1) * this.getDifficulty());
+    const minLength = Math.round(1 + (3 - 1) * difficulty);
     // const maxLength = 12;
-    const maxLength = Math.round(6 + (18 - 6) * this.getDifficulty());
+    const maxLength = Math.round(6 + (18 - 6) * difficulty);
 
     // const expLength = AVG_CPM / AVG_WPM; // i.e. 5 char is avg
-    const expLength =
-      minLength + (maxLength - minLength) * this.getDifficulty();
+    const expLength = minLength + (maxLength - minLength) * difficulty;
     const scale = minLength;
     const shape = expLength / (expLength - scale);
 
@@ -520,8 +530,8 @@ export default class FightScene extends Phaser.Scene {
       .reduce((a, b) => a + b, 0);
 
     const duration =
-      (3 + (1 - 3) * this.getDifficulty()) *
-      (expLength + (length - expLength) * this.getDifficulty());
+      (3 + (1 - 3) * difficulty) *
+      (expLength + (length - expLength) * difficulty);
 
     if (currentCount < maxCount && currentChars < maxChars) {
       await this.spawnFoe(length, duration);
