@@ -1,5 +1,6 @@
 import "phaser";
 import BackgroundScene from "./background_scene";
+import { formatTime, ICONS } from "./hud";
 
 export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -23,7 +24,12 @@ export default class GameOverScene extends Phaser.Scene {
     this.music.play();
   }
 
-  create(data: { music?: Phaser.Sound.BaseSound }) {
+  create(data: {
+    music?: Phaser.Sound.BaseSound;
+    words: number;
+    score: number;
+    time: number;
+  }) {
     (this.scene.get("background") as BackgroundScene).dropCurtain();
     (this.scene.get("background") as BackgroundScene).atmosphere
       .stop()
@@ -34,20 +40,53 @@ export default class GameOverScene extends Phaser.Scene {
     );
 
     this.drawTitle();
+    this.drawSubtitle(data.words);
+    this.drawResult(data.score, data.time);
     this.drawCTA();
     this.bindEvents();
   }
 
   drawTitle() {
-    const text = "ÖTZI\nDIED";
+    const text = "ÖTZI LOST";
     const title = this.add.text(0, 0, text, {
       font: "bold 64px Courier",
       color: "#ff0000",
     });
-    title.setOrigin(0.5, 0.5);
+    title.setOrigin(0.5, 1);
     title.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.4,
+      this.cameras.main.height * 0.3,
+    );
+  }
+
+  drawSubtitle(wordCount = 1234) {
+    const text = `but you donated\n${wordCount} WORDS\n${ICONS.HEALTH}️ Thank you! ${ICONS.HEALTH}`;
+    const subtitle = this.add.text(0, 0, text, {
+      font: "bold 32px Courier",
+      color: "#aaff00",
+      align: "center",
+      testString: text,
+    });
+    subtitle.setOrigin(0.5, 0);
+    subtitle.setPosition(
+      this.cameras.main.width * 0.5,
+      this.cameras.main.height * 0.3,
+    );
+  }
+
+  drawResult(score = 12345678, time = 12 * 60 * 1000 + 34 * 1000 + 56 * 10) {
+    const timer = formatTime(time);
+    const text = `${score}\u2009${ICONS.SCORE}\n${timer}\u2009${ICONS.CLOCK}`;
+    const title = this.add.text(0, 0, text, {
+      font: "bold 32px Courier",
+      color: "#ffffff",
+      align: "right",
+      testString: text,
+    });
+    title.setOrigin(0.5, 1);
+    title.setPosition(
+      this.cameras.main.width * 0.5,
+      this.cameras.main.height * 0.7,
     );
   }
 
@@ -57,10 +96,10 @@ export default class GameOverScene extends Phaser.Scene {
       font: "bold 32px Courier",
       color: "#ffffff",
     });
-    cta.setOrigin(0.5, 0.5);
+    cta.setOrigin(0.5, 0);
     cta.setPosition(
       this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.7,
+      this.cameras.main.height * 0.75,
     );
   }
 

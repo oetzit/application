@@ -43,6 +43,7 @@ export default class FightScene extends Phaser.Scene {
   beDevice: Types.Device;
   beGame: Types.Game;
   typewriter: Typewriter;
+  acceptedWords: number;
   score: number;
   health: number;
   hud: HUD;
@@ -111,6 +112,7 @@ export default class FightScene extends Phaser.Scene {
   init() {
     this.score = 0;
     this.health = 100;
+    this.acceptedWords = 0;
 
     this.uiDimensions = this.initUiDimensions();
     this.hud = new HUD(this, {
@@ -360,7 +362,12 @@ export default class FightScene extends Phaser.Scene {
     this.sound.play("sfx_game_over");
     this.typewriter.setActive(false);
     this.typewriter.resetInputStatus();
-    this.scene.start("game_over", { music: this.music });
+    this.scene.start("game_over", {
+      music: this.music,
+      words: this.acceptedWords,
+      score: this.beGame.score,
+      time: this.beGame.ended_at_gmtm,
+    });
   }
 
   initCluesGroup() {
@@ -442,6 +449,7 @@ export default class FightScene extends Phaser.Scene {
       this.hud.showSubmitFeedback("red", inputStatus.final);
       new Spear(this, this.player, undefined);
     } else {
+      this.acceptedWords += 1;
       this.sound.play("sfx_hi_beep");
       backend.updateClue(match.beClue.id, {
         ended_at: new Date().toISOString(),
