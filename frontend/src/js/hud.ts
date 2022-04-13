@@ -1,4 +1,4 @@
-const ICONS = {
+export const ICONS = {
   SCORE: "️⭐️",
   CLOCK: "⏲️",
   HEALTH: "❤️️",
@@ -27,6 +27,17 @@ interface HudOptions {
   inputFontSize: string;
   inputPosition: number;
 }
+
+export const formatTime = (milliseconds: number) => {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000)
+    .toString()
+    .padStart(2, "0");
+  const hundredths = Math.floor((milliseconds % 1000) / 10)
+    .toString()
+    .padStart(2, "0");
+  return `${minutes}:${seconds}.${hundredths}`;
+};
 
 export default class HUD {
   scene: Phaser.Scene;
@@ -118,16 +129,7 @@ export default class HUD {
   }
 
   setClock(milliseconds: number) {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000)
-      .toString()
-      .padStart(2, "0");
-    const hundredths = Math.floor((milliseconds % 1000) / 10)
-      .toString()
-      .padStart(2, "0");
-    const formatted = `${minutes}:${seconds}.${hundredths}`;
-    // TODO: we can probably do away with the clock icon
-    this.clock.text = `${formatted}\u2009${ICONS.CLOCK}`;
+    this.clock.text = `${this.formatTime(milliseconds)}\u2009${ICONS.CLOCK}`;
   }
 
   showSubmitFeedback(color: string, input: string) {
