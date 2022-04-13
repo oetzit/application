@@ -110,7 +110,7 @@ export default class FightScene extends Phaser.Scene {
 
   init() {
     this.score = 0;
-    this.health = 1;
+    this.health = 100;
 
     this.uiDimensions = this.initUiDimensions();
     this.hud = new HUD(this, {
