@@ -156,3 +156,61 @@ new Chart(
   document.getElementById("devicesBehaviourChart"),
   devicesBehaviourConfig,
 );
+
+//=[ Words performance ]========================================================
+
+const wordsPerformanceData = JSON.parse(
+  document.getElementById("wordsPerformanceData").textContent,
+);
+
+const wordsPerformanceConfig = {
+  type: "scatter",
+  data: {
+    datasets: [
+      {
+        data: wordsPerformanceData,
+        backgroundColor: "blue",
+      },
+    ],
+  },
+  pointDot: true,
+  options: {
+    maintainAspectRatio: true,
+    aspectRatio: 1,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "OCR confidence",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Avg shot similarity",
+        },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `[${context.raw.ocr_transcript}](${context.parsed.x.toFixed(
+              2,
+            )};${context.parsed.y.toFixed(2)})`;
+          },
+        },
+      },
+    },
+    parsing: {
+      xAxisKey: "ocr_confidence",
+      yAxisKey: "avg_similarity",
+    },
+  },
+};
+
+new Chart(
+  document.getElementById("wordsPerformanceChart"),
+  wordsPerformanceConfig,
+);

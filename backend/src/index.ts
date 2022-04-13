@@ -83,6 +83,18 @@ server.get("/", async (request, reply) => {
     .from(normalizedGames.as("g"))
     .groupBy("device_id");
 
+  const wordsPerformance = await connection
+    .select(
+      connection.raw(
+        "words.id, words.ocr_transcript, words.ocr_confidence, AVG(shots.similarity) as avg_similarity",
+      ),
+    )
+    .from("shots")
+    .join("clues", "clues.id", "shots.clue_id")
+    .join("words", "words.id", "clues.word_id")
+    .whereNotNull("shots.similarity")
+    .groupBy("words.id");
+
   const devicesByDate = await connection
     .table("games")
     .select(connection.raw("COUNT(DISTINCT device_id), DATE(began_at)"))
@@ -116,6 +128,7 @@ server.get("/", async (request, reply) => {
     gamesByDate,
     shotsByDuration,
     devicesBehaviour,
+    wordsPerformance,
   });
 });
 
