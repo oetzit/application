@@ -153,6 +153,31 @@ export default class HUD {
     });
   }
 
+  announceWave(input: string) {
+    const text = this.scene.add
+      .text(
+        this.scene.cameras.main.width / 2,
+        this.scene.cameras.main.height / 4,
+        input,
+        {
+          ...this.inputTextStyle(),
+          color: "white",
+        },
+      )
+      .setOrigin(0.5, 0.5)
+      .setAlpha(0)
+      .setScale(0);
+    this.scene.tweens.add({
+      targets: text,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      ease: "Expo",
+      yoyo: true,
+      duration: 500,
+    });
+  }
+
   changeFlash(object: Phaser.GameObjects.Text, color: number) {
     object.setTintFill(color);
     this.scene.time.delayedCall(100, () => object.clearTint());
