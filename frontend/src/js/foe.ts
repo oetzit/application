@@ -59,7 +59,7 @@ class Foe {
     this.clue.delete();
     this.critter.escape();
     this.scene.player.hitFlash();
-    this.scene.updateHealth(-10);
+    this.scene.updateHealth(-this.beWord.ocr_transcript.length);
   }
 
   async handleSuccess() {
