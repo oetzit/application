@@ -1,6 +1,7 @@
 import "phaser";
 import BackgroundScene from "./background_scene";
 import { formatTime, ICONS } from "./hud";
+import { MFX } from "./assets";
 
 export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -10,7 +11,7 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.audio("bkg_failure", "assets/music/loose.mp3");
+    this.load.audio("bkg_failure", MFX.Failure);
   }
 
   musicHardReplace(

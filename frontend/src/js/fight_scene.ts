@@ -12,6 +12,7 @@ import Foe from "./foe";
 import Typewriter from "./typewriter";
 import HUD from "./hud";
 import BackgroundScene from "./background_scene";
+import { SFX, MFX, SPR } from "./assets";
 
 const DEVICE_KEY = "OETZI/DEVICE_ID";
 
@@ -64,46 +65,46 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preloadSoundsEffects() {
-    this.load.audio("sfx_lo_beep", "assets/audio/Cancel 1.mp3");
-    this.load.audio("sfx_md_beep", "assets/audio/Text 1.mp3");
-    this.load.audio("sfx_hi_beep", "assets/audio/Confirm 1.mp3");
-    this.load.audio("sfx_hit_critter", "assets/audio/Hit damage 1.mp3");
-    this.load.audio("sfx_hit_player", "assets/audio/Boss hit 1.mp3");
-    this.load.audio("sfx_game_over", "assets/audio/Bubble heavy 2.mp3");
+    this.load.audio("sfx_lo_beep", SFX.LoBeep);
+    this.load.audio("sfx_md_beep", SFX.MdBeep);
+    this.load.audio("sfx_hi_beep", SFX.HiBeep);
+    this.load.audio("sfx_hit_critter", SFX.HitCritter);
+    this.load.audio("sfx_hit_player", SFX.HitPlayer);
+    this.load.audio("sfx_game_over", SFX.GameOver);
   }
 
   preloadMusicThemes() {
-    this.load.audio("bkg_main_1", "assets/music/loop.mp3");
-    this.load.audio("bkg_main_2", "assets/music/loopTwo.mp3");
-    this.load.audio("bkg_main_3", "assets/music/loopThree.mp3");
+    this.load.audio("bkg_main_1", MFX.LoopOne);
+    this.load.audio("bkg_main_2", MFX.LoopTwo);
+    this.load.audio("bkg_main_3", MFX.LoopThree);
   }
 
   preloadSprites() {
-    this.load.spritesheet("oezi", "assets/sprites/player/oezi.png", {
+    this.load.spritesheet("oezi", SPR.Oetzi, {
       frameWidth: 27,
       frameHeight: 35,
     });
-    this.load.spritesheet("deer", "assets/sprites/player/deer.png", {
+    this.load.spritesheet("deer", SPR.Deer, {
       frameWidth: 72,
       frameHeight: 52,
     });
-    this.load.spritesheet("boar", "assets/sprites/player/boar.png", {
+    this.load.spritesheet("boar", SPR.Boar, {
       frameWidth: 52,
       frameHeight: 28,
     });
-    this.load.spritesheet("wolf", "assets/sprites/player/wolf.png", {
+    this.load.spritesheet("wolf", SPR.Wolf, {
       frameWidth: 54,
       frameHeight: 35,
     });
-    this.load.spritesheet("bear", "assets/sprites/player/bear.png", {
+    this.load.spritesheet("bear", SPR.Bear, {
       frameWidth: 60,
       frameHeight: 31,
     });
-    this.load.spritesheet("spear", "assets/sprites/player/spear.png", {
+    this.load.spritesheet("spear", SPR.SpearStill, {
       frameWidth: 31,
       frameHeight: 7,
     });
-    this.load.spritesheet("spearhit", "assets/sprites/player/spearhit.png", {
+    this.load.spritesheet("spearhit", SPR.SpearWobble, {
       frameWidth: 14,
       frameHeight: 33,
     });

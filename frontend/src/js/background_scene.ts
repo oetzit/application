@@ -1,19 +1,20 @@
 import "phaser";
+import { BKG } from "./assets";
 
 const LAYERS_HEIGHT = 793;
 const LAYERS = {
-  b00: "assets/background_layers/Layer_0011_0.png",
-  b01: "assets/background_layers/Layer_0010_1.png",
-  b02: "assets/background_layers/Layer_0009_2.png",
-  b03: "assets/background_layers/Layer_0008_3.png",
-  b04: "assets/background_layers/Layer_0007_Lights.png",
-  b05: "assets/background_layers/Layer_0006_4.png",
-  b06: "assets/background_layers/Layer_0005_5.png",
-  b07: "assets/background_layers/Layer_0004_Lights.png",
-  b08: "assets/background_layers/Layer_0003_6.png",
-  b09: "assets/background_layers/Layer_0002_7.png",
-  b10: "assets/background_layers/Layer_0001_8.png",
-  b11: "assets/background_layers/Layer_0000_9.png",
+  b00: BKG.L00,
+  b01: BKG.L01,
+  b02: BKG.L02,
+  b03: BKG.L03,
+  b04: BKG.L04,
+  b05: BKG.L05,
+  b06: BKG.L06,
+  b07: BKG.L07,
+  b08: BKG.L08,
+  b09: BKG.L09,
+  b10: BKG.L10,
+  b11: BKG.L11,
 };
 
 // prettier-ignore
