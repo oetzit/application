@@ -9,7 +9,7 @@ export default class WelcomeScene extends Phaser.Scene {
 
   preload() {
     this.load.audio("bkg_buildup", "assets/music/buildup.wav");
-    this.load.audio("bkg_breakdown", "assets/music/breakdown.wav");
+    // this.load.audio("bkg_breakdown", "assets/music/breakdown.wav");
   }
 
   musicHardReplace(

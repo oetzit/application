@@ -11,7 +11,7 @@ export default class GameOverScene extends Phaser.Scene {
 
   preload() {
     this.load.audio("bkg_failure", "assets/music/loose.wav");
-    this.load.audio("bkg_success", "assets/music/win.wav");
+    // this.load.audio("bkg_success", "assets/music/win.wav");
   }
 
   musicHardReplace(
