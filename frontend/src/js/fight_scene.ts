@@ -64,18 +64,18 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preloadSoundsEffects() {
-    this.load.audio("sfx_lo_beep", "assets/audio/Cancel 1.wav");
-    this.load.audio("sfx_md_beep", "assets/audio/Text 1.wav");
-    this.load.audio("sfx_hi_beep", "assets/audio/Confirm 1.wav");
-    this.load.audio("sfx_hit_critter", "assets/audio/Hit damage 1.wav");
-    this.load.audio("sfx_hit_player", "assets/audio/Boss hit 1.wav");
-    this.load.audio("sfx_game_over", "assets/audio/Bubble heavy 2.wav");
+    this.load.audio("sfx_lo_beep", "assets/audio/Cancel 1.mp3");
+    this.load.audio("sfx_md_beep", "assets/audio/Text 1.mp3");
+    this.load.audio("sfx_hi_beep", "assets/audio/Confirm 1.mp3");
+    this.load.audio("sfx_hit_critter", "assets/audio/Hit damage 1.mp3");
+    this.load.audio("sfx_hit_player", "assets/audio/Boss hit 1.mp3");
+    this.load.audio("sfx_game_over", "assets/audio/Bubble heavy 2.mp3");
   }
 
   preloadMusicThemes() {
-    this.load.audio("bkg_main_1", "assets/music/loop.wav");
-    this.load.audio("bkg_main_2", "assets/music/loopTwo.wav");
-    this.load.audio("bkg_main_3", "assets/music/loopThree.wav");
+    this.load.audio("bkg_main_1", "assets/music/loop.mp3");
+    this.load.audio("bkg_main_2", "assets/music/loopTwo.mp3");
+    this.load.audio("bkg_main_3", "assets/music/loopThree.mp3");
   }
 
   preloadSprites() {
