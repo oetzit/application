@@ -35,7 +35,6 @@
     "jest": "^27.4.2",
     "node-notifier": "^10.0.1",
     "parcel": "^2.4.1",
-    "parcel-plugin-static-files-copy": "^2.6.0",
     "prettier": "^2.5.1",
     "sass": "^1.49.9",
     "ts-jest": "^27.0.7",
@@ -47,10 +46,6 @@
   },
   "repository": {
     "url": "https://gitlab.inf.unibz.it/commul/oetzi"
-  },
-  "staticFiles": {
-    "staticPath": "public",
-    "watcherGlob": "**"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead"
 }
