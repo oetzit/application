@@ -16,11 +16,7 @@ images:
     newName: gitlab.inf.unibz.it:4567/commul/oetzit/backend
     newTag: development
 secretGenerator:
-  # TODO: avoid using literals
-  - literals:
-      - username=db_user
-      - password=db_pass
-      - database=db_name
-      - url=postgres://db_user:db_pass@oetzit-database-service/db_name
+  - envs:
+      - database.secrets.env
     name: oetzit-database-credentials
     type: Opaque
