@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oetzit-webserver-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: kommul.eurac.edu
+      http:
+        paths:
+          - path: /oetzit
+            backend:
+              serviceName: oetzit-webserver-service
+              servicePort: 80
