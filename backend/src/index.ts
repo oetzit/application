@@ -25,8 +25,8 @@ server.register(fastifySwagger, {
   routePrefix: "/api/doc",
   swagger: {
     info: {
-      title: "Ötzi",
-      description: "Ötzi app backend API",
+      title: "Ötzit!",
+      description: "Ötzit! backend API",
       version: "0.1.0",
     },
     host: "localhost:8080",

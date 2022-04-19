@@ -1,7 +1,7 @@
 {
   "name": "oetzit-backend",
   "version": "0.7.0",
-  "description": "Ötzi game frontend.",
+  "description": "Ötzit! frontend.",
   "license": "MIT",
   "scripts": {
     "serve": "parcel serve src/index.html",

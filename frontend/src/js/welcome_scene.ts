@@ -35,7 +35,7 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   drawTitle() {
-    const text = "ÖTZI\nGAME";
+    const text = "ÖTZIT!";
     const title = this.add.text(0, 0, text, {
       fontFamily: "Courier",
       fontSize: "64px",

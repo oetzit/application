@@ -1,7 +1,7 @@
 {
   "name": "oetzit-backend",
   "version": "0.7.0",
-  "description": "Ötzi game backend.",
+  "description": "Ötzit! backend.",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
