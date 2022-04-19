@@ -12,8 +12,8 @@ patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
 images:
-  - name: oetzi-webserver-image
-    newName: gitlab.inf.unibz.it:4567/commul/oetzi/backend
+  - name: oetzit-webserver-image
+    newName: gitlab.inf.unibz.it:4567/commul/oetzit/backend
     newTag: latest
 secretGenerator:
   # TODO: avoid using literals
@@ -21,6 +21,6 @@ secretGenerator:
       - username=db_user
       - password=db_pass
       - database=db_name
-      - url=postgres://db_user:db_pass@oetzi-database-service/db_name
-    name: oetzi-database-credentials
+      - url=postgres://db_user:db_pass@oetzit-database-service/db_name
+    name: oetzit-database-credentials
     type: Opaque

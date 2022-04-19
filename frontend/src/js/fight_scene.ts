@@ -14,7 +14,7 @@ import HUD from "./hud";
 import BackgroundScene from "./background_scene";
 import { SFX, MFX, SPR } from "./assets";
 
-const DEVICE_KEY = "OETZI/DEVICE_ID";
+const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
 interface InputStatus {
   began_at: string;

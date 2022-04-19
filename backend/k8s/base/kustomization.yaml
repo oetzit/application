@@ -4,7 +4,7 @@ resources:
   - ./database
   - ./webserver
 # namespace: kommul-dev
-namePrefix: oetzi-
+namePrefix: oetzit-
 commonLabels:
   app.kubernetes.io/part-of: oetzi
   app.kubernetes.io/managed-by: kustomize

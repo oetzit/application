@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: oetzi-database-deployment
+  name: oetzit-database-deployment
 spec:
   template:
     spec:
@@ -11,15 +11,15 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: oetzi-database-credentials
+                  name: oetzit-database-credentials
                   key: database
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: oetzi-database-credentials
+                  name: oetzit-database-credentials
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: oetzi-database-credentials
+                  name: oetzit-database-credentials
                   key: password

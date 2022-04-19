@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: oetzi-webserver-deployment
+  name: oetzit-webserver-deployment
 spec:
   template:
     spec:
@@ -12,5 +12,5 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: oetzi-database-credentials
+                  name: oetzit-database-credentials
                   key: url

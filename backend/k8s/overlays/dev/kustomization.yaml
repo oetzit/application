@@ -11,8 +11,8 @@ patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
 images:
-  - name: oetzi-webserver-image
-    # NOTE: use `minikube image load oetzi:latest` to push into container runtime
+  - name: oetzit-webserver-image
+    # NOTE: use `minikube image load oetzit:latest` to push into container runtime
     newName: oetzi
     newTag: latest
 secretGenerator:
@@ -20,6 +20,6 @@ secretGenerator:
       - username=db_user
       - password=db_pass
       - database=db_name
-      - url=postgres://db_user:db_pass@oetzi-database-service/db_name
-    name: oetzi-database-credentials
+      - url=postgres://db_user:db_pass@oetzit-database-service/db_name
+    name: oetzit-database-credentials
     type: Opaque

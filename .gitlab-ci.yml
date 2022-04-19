@@ -202,9 +202,9 @@ prd-fe-deploy-job:
   environment:
     name: production/frontend
     deployment_tier: production
-    url: https://eurac.itch.io/oetzi
+    url: https://eurac.itch.io/oetzit
   variables:
-    GAME_NAME: oetzi
+    GAME_NAME: oetzit
     DIST_PATH: frontend/dist/prd
   only:
     - tags
@@ -217,9 +217,9 @@ stg-fe-deploy-job:
   environment:
     name: staging/frontend
     deployment_tier: staging
-    url: https://eurac.itch.io/oetzi-staging
+    url: https://eurac.itch.io/oetzit-staging
   variables:
-    GAME_NAME: oetzi-staging
+    GAME_NAME: oetzit-staging
     DIST_PATH: frontend/dist/stg
   only:
     - development
@@ -239,7 +239,7 @@ stg-fe-deploy-job:
   before_script:
     - ./ci/install-kubectl-on-alpine.sh
   script:
-    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzi=${IMAGE_NAME}:${CI_COMMIT_SHA} --namespace=${K8S_NAMESPACE}
+    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzit=${IMAGE_NAME}:${CI_COMMIT_SHA} --namespace=${K8S_NAMESPACE}
 
 prd-be-deploy-job:
   extends: .be-deploy-job
@@ -249,7 +249,7 @@ prd-be-deploy-job:
     url: https://kommul.eurac.edu/oetzi
   variables:
     K8S_NAMESPACE: kommul
-    K8S_DEPLOYMENT: oetzi-webserver-deployment
+    K8S_DEPLOYMENT: oetzit-webserver-deployment
   only:
     - tags
 
@@ -261,6 +261,6 @@ stg-be-deploy-job:
     url: https://kommul-dev.eurac.edu/oetzi
   variables:
     K8S_NAMESPACE: kommul-dev
-    K8S_DEPLOYMENT: oetzi-webserver-deployment
+    K8S_DEPLOYMENT: oetzit-webserver-deployment
   only:
     - development

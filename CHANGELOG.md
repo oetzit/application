@@ -155,12 +155,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.7.0...development
-[0.7.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.6.0...0.7.0
-[0.6.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.5.0...0.6.0
-[0.5.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.4.0...0.5.0
-[0.4.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.3.0...0.4.0
-[0.3.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.2.0...0.3.0
-[0.2.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.1.0...0.2.0
-[0.1.0]: https://gitlab.inf.unibz.it/commul/oetzi/compare/0.0.1...0.1.0
-[0.0.1]: https://gitlab.inf.unibz.it/commul/oetzi/tree/v0.0.1
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.7.0...development
+[0.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.6.0...0.7.0
+[0.6.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.5.0...0.6.0
+[0.5.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.4.0...0.5.0
+[0.4.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.3.0...0.4.0
+[0.3.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.2.0...0.3.0
+[0.2.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.1.0...0.2.0
+[0.1.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.0.1...0.1.0
+[0.0.1]: https://gitlab.inf.unibz.it/commul/oetzit/tree/v0.0.1

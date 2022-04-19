@@ -34,8 +34,8 @@ minikube start
 Then you build the backend image and push it to the runtime cache of `minikube`:
 
 ```bash
-docker build -t oetzi:latest backend/
-minikube image load oetzi:latest
+docker build -t oetzit:latest backend/
+minikube image load oetzit:latest
 ```
 
 Finally you apply the `dev` manifest and open a tunnel:

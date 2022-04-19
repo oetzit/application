@@ -1,5 +1,5 @@
 {
-  "name": "oetzi-backend",
+  "name": "oetzit-backend",
   "version": "0.7.0",
   "description": "Ötzi game frontend.",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "node": "16.x"
   },
   "repository": {
-    "url": "https://gitlab.inf.unibz.it/commul/oetzi"
+    "url": "https://gitlab.inf.unibz.it/commul/oetzit"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead"
 }
