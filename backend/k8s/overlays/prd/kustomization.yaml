@@ -14,7 +14,7 @@ patchesStrategicMerge:
 images:
   - name: oetzit-webserver-image
     newName: gitlab.inf.unibz.it:4567/commul/oetzit/backend
-    newTag: main
+    newTag: latest
 secretGenerator:
   - envs:
       - database.secrets.env
