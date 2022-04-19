@@ -1,6 +1,7 @@
 import fastify from "fastify";
 import fastifyCors from "fastify-cors";
 import fastifySwagger from "fastify-swagger";
+import fastifyRollbar from "./rollbar_plugin";
 
 const server = fastify({
   logger: {
@@ -11,6 +12,8 @@ const server = fastify({
     },
   },
 });
+
+server.register(fastifyRollbar);
 
 server.register(fastifyCors, {
   // TODO: use the correct origins
