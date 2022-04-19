@@ -5,7 +5,7 @@ resources:
   - webserver.ingress.yaml
 commonLabels:
   eurac.edu/environment: dev
-  app.kubernetes.io/part-of: oetzi
+  app.kubernetes.io/part-of: oetzit
   app.kubernetes.io/managed-by: kustomize
 patchesStrategicMerge:
   - database.deployment.yaml
@@ -13,7 +13,7 @@ patchesStrategicMerge:
 images:
   - name: oetzit-webserver-image
     # NOTE: use `minikube image load oetzit:latest` to push into container runtime
-    newName: oetzi
+    newName: oetzit
     newTag: latest
 secretGenerator:
   - literals:

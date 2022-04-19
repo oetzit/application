@@ -246,7 +246,7 @@ prd-be-deploy-job:
   environment:
     name: production/backend
     deployment_tier: production
-    url: https://kommul.eurac.edu/oetzi
+    url: https://kommul.eurac.edu/oetzit
   variables:
     K8S_NAMESPACE: kommul
     K8S_DEPLOYMENT: oetzit-webserver-deployment
@@ -258,7 +258,7 @@ stg-be-deploy-job:
   environment:
     name: staging/backend
     deployment_tier: staging
-    url: https://kommul-dev.eurac.edu/oetzi
+    url: https://kommul-dev.eurac.edu/oetzit
   variables:
     K8S_NAMESPACE: kommul-dev
     K8S_DEPLOYMENT: oetzit-webserver-deployment

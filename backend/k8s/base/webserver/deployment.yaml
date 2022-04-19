@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - name: oetzi
+        - name: oetzit
           image: oetzit-webserver-image
           resources: {}
           ports:
