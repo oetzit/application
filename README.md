@@ -1,6 +1,9 @@
-# Ötzi
+# Ötzit!
 
-This is a web-based typing game.
+This is an Ötzi-themed typing webgame; its name is:
+
+- "**Ötzit!**" (human readable)
+- "`oetzit`" (machine readable)
 
 ## Backend
 
