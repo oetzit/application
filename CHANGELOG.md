@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2022-04-21
+
+### Added
+
+- `BE` Favicon.
+- `BE` Automatic DB triggers on timestamps.
+- `FE`/`BE` Rollbar.
+
+### Changed
+
+- Official game name is "Ötzit!" (`oetzit` for machines).
+
+### Removed
+
+- `BE` Deprecated seeds.
+
 ## [0.7.0] - 2022-04-13
 
 ### Added
@@ -155,7 +171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.7.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.0.0...development
+[1.0.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.7.0...1.0.0
 [0.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.6.0...0.7.0
 [0.6.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.5.0...0.6.0
 [0.5.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.4.0...0.5.0

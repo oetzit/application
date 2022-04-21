@@ -1,6 +1,6 @@
 {
   "name": "oetzit-backend",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Ötzit! backend.",
   "main": "src/index.js",
   "scripts": {
