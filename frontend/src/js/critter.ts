@@ -2,6 +2,15 @@ import "phaser";
 import FightScene from "./fight_scene";
 
 const SPECIES = ["Bear", "Boar", "Deer", "Fox", "Horse", "Rabbit", "Wolf"];
+const RELATIVE_SCALE_ADJUSTMENT: { [key: string]: number } = {
+  Bear: 1.0,
+  Boar: 0.6,
+  Deer: 1.0,
+  Fox: 0.6,
+  Horse: 1.2,
+  Rabbit: 0.5,
+  Wolf: 0.7,
+};
 
 enum CritterState {
   Moving,
@@ -29,11 +38,12 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.add(this.body);
     this.setCollideWorldBounds(true);
 
-    // NOTE: our sprites widths are in the 52-72 range; average: 62.
-    // NOTE: the idea is to fit 5 critters onscreen, tail to tail
-    const averageWidth = 62;
+    const averageWidth = 50; // NOTE: magic number
     const targetAverageWidth = this.scene.cameras.main.width * 0.2;
-    this.setScale(targetAverageWidth / averageWidth);
+    this.setScale(
+      (targetAverageWidth / averageWidth) *
+        RELATIVE_SCALE_ADJUSTMENT[this.species],
+    );
 
     // NOTE: just outside the bound and above the ground
     this.setPosition(
