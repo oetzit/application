@@ -40,6 +40,8 @@ import DeerWalkURL from "url:/public/assets/sprites/animals/Deer_Walk.png";
 import DeerRunURL from "url:/public/assets/sprites/animals/Deer_Run.png";
 import FoxWalkURL from "url:/public/assets/sprites/animals/Fox_Walk.png";
 import FoxRunURL from "url:/public/assets/sprites/animals/Fox_Run.png";
+import HorseWalkURL from "url:/public/assets/sprites/animals/Horse_Walk.png";
+import HorseRunURL from "url:/public/assets/sprites/animals/Horse_Run.png";
 import RabbitWalkURL from "url:/public/assets/sprites/animals/Rabbit_Walk.png";
 import RabbitRunURL from "url:/public/assets/sprites/animals/Rabbit_Run.png";
 import WolfWalkURL from "url:/public/assets/sprites/animals/Wolf_Walk.png";
@@ -77,6 +79,16 @@ export const SpriteSheets: {
     key: "DeerRun",
     url: DeerRunURL as string,
     frameConfig: { frameWidth: 72, frameHeight: 52 },
+  },
+  HorseWalk: {
+    key: "HorseWalk",
+    url: HorseWalkURL as string,
+    frameConfig: { frameWidth: 60, frameHeight: 33 },
+  },
+  HorseRun: {
+    key: "HorseRun",
+    url: HorseRunURL as string,
+    frameConfig: { frameWidth: 60, frameHeight: 33 },
   },
   FoxWalk: {
     key: "FoxWalk",

@@ -1,7 +1,7 @@
 import "phaser";
 import FightScene from "./fight_scene";
 
-const SPECIES = ["Bear", "Boar", "Deer", "Fox", "Rabbit", "Wolf"];
+const SPECIES = ["Bear", "Boar", "Deer", "Fox", "Horse", "Rabbit", "Wolf"];
 
 enum CritterState {
   Moving,

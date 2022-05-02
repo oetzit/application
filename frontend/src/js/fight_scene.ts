@@ -101,6 +101,8 @@ export default class FightScene extends Phaser.Scene {
     this.load.spritesheet(SpriteSheets.DeerRun);
     this.load.spritesheet(SpriteSheets.FoxWalk);
     this.load.spritesheet(SpriteSheets.FoxRun);
+    this.load.spritesheet(SpriteSheets.HorseWalk);
+    this.load.spritesheet(SpriteSheets.HorseRun);
     this.load.spritesheet(SpriteSheets.RabbitWalk);
     this.load.spritesheet(SpriteSheets.RabbitRun);
     this.load.spritesheet(SpriteSheets.WolfWalk);
@@ -309,6 +311,8 @@ export default class FightScene extends Phaser.Scene {
     this.anims.create({ key: "DeerWalk", frames: "DeerWalk", ...defaults });
     this.anims.create({ key: "FoxRun", frames: "FoxRun", ...defaults });
     this.anims.create({ key: "FoxWalk", frames: "FoxWalk", ...defaults });
+    this.anims.create({ key: "HorseRun", frames: "HorseRun", ...defaults });
+    this.anims.create({ key: "HorseWalk", frames: "HorseWalk", ...defaults });
     this.anims.create({ key: "RabbitRun", frames: "RabbitRun", ...defaults });
     this.anims.create({ key: "RabbitWalk", frames: "RabbitWalk", ...defaults });
     this.anims.create({ key: "WolfRun", frames: "WolfRun", ...defaults });
