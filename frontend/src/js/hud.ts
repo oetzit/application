@@ -109,12 +109,7 @@ export default class HUD {
 
   initClock(scene: Phaser.Scene) {
     return scene.add
-      .text(
-        scene.cameras.main.width * 0.5,
-        0,
-        `${ICONS.CLOCK}1:23.32`,
-        this.statsTextStyle(),
-      )
+      .text(scene.cameras.main.width * 0.5, 0, "", this.statsTextStyle())
       .setOrigin(0.5, 0);
   }
 
@@ -131,7 +126,8 @@ export default class HUD {
   }
 
   setClock(milliseconds: number) {
-    this.clock.text = `${formatTime(milliseconds)}${THIN_SPACE}${ICONS.CLOCK}`;
+    this.clock.text = formatTime(milliseconds);
+    // this.clock.text = `${formatTime(milliseconds)}${THIN_SPACE}${ICONS.CLOCK}`;
   }
 
   showSubmitFeedback(color: string, input: string) {
