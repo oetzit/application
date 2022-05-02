@@ -114,6 +114,7 @@ class Typewriter {
   inputStatus: InputStatus;
   keyboard: Keyboard;
   desktop: boolean;
+  heldKey!: Key;
 
   onChange: (inputStatus: InputStatus) => unknown;
   onSubmit: (inputStatus: InputStatus) => unknown;
@@ -193,8 +194,11 @@ class Typewriter {
     input: string,
     event: KeyboardEvent | PointerEvent | MouseEvent | TouchEvent,
   ) {
-    if (navigator.vibrate) navigator.vibrate(50);
-    const key = this.extractKeyfromEvent(event);
+    const key = this.keyboard.isMouseHold
+      ? this.heldKey
+      : this.extractKeyfromEvent(event);
+    this.heldKey = key;
+
     if (this.inputStatus.began_at === null)
       this.inputStatus.began_at = new Date();
     if (this.inputStatus.began_at_gmtm === null)
