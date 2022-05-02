@@ -194,6 +194,8 @@ class Typewriter {
     input: string,
     event: KeyboardEvent | PointerEvent | MouseEvent | TouchEvent,
   ) {
+    if (navigator.vibrate) navigator.vibrate(20);
+
     const key = this.keyboard.isMouseHold
       ? this.heldKey
       : this.extractKeyfromEvent(event);

@@ -57,6 +57,7 @@ class Foe {
   }
 
   handleCollisionWithPlayer() {
+    if (navigator.vibrate) navigator.vibrate([60, 30, 120, 30, 180]);
     this.scene.sound.play("sfx_hit_player");
     this.scene.physics.world.removeCollider(this.collider);
     this.scene.popFoe(this);
@@ -67,10 +68,13 @@ class Foe {
   }
 
   async handleSuccess() {
+    if (navigator.vibrate) navigator.vibrate([30, 60, 30]);
     this.clue.delete();
   }
 
-  async handleFailure() {}
+  async handleFailure() {
+    if (navigator.vibrate) navigator.vibrate([30 + 60 + 30]);
+  }
 
   destroy() {
     this.clue.destroy();
