@@ -4,11 +4,13 @@ export const ICONS = {
   HEALTH: "❤️️",
 };
 
+const THIN_SPACE = "\u2009";
+
 const STATS_BASE_TEXT_STYLE = {
   fontFamily: "Courier",
   fontStyle: "bold",
   color: "white",
-  testString: `${ICONS.CLOCK}${ICONS.HEALTH}${ICONS.SCORE}1234567890:.`,
+  testString: `${Object.values(ICONS).join("")}1234567890:.`,
   stroke: "black",
   strokeThickness: 4,
 } as Phaser.Types.GameObjects.Text.TextStyle;
@@ -121,15 +123,15 @@ export default class HUD {
   }
 
   setScore(score: number) {
-    this.score.text = `${ICONS.SCORE}\u2009${score}`;
+    this.score.text = `${ICONS.SCORE}${THIN_SPACE}${score}`;
   }
 
   setHealth(health: number) {
-    this.health.text = `${health}\u2009${ICONS.HEALTH}`;
+    this.health.text = `${health}${THIN_SPACE}${ICONS.HEALTH}`;
   }
 
   setClock(milliseconds: number) {
-    this.clock.text = `${formatTime(milliseconds)}\u2009${ICONS.CLOCK}`;
+    this.clock.text = `${formatTime(milliseconds)}${THIN_SPACE}${ICONS.CLOCK}`;
   }
 
   showSubmitFeedback(color: string, input: string) {
