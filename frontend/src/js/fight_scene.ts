@@ -12,7 +12,7 @@ import Foe from "./foe";
 import Typewriter from "./typewriter";
 import HUD from "./hud";
 import BackgroundScene from "./background_scene";
-import { SFX, MFX, SPR } from "./assets";
+import { SFX, MFX, SPR, SpriteSheets } from "./assets";
 
 const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
@@ -84,22 +84,6 @@ export default class FightScene extends Phaser.Scene {
       frameWidth: 27,
       frameHeight: 35,
     });
-    this.load.spritesheet("deer", SPR.Deer, {
-      frameWidth: 72,
-      frameHeight: 52,
-    });
-    this.load.spritesheet("boar", SPR.Boar, {
-      frameWidth: 52,
-      frameHeight: 28,
-    });
-    this.load.spritesheet("wolf", SPR.Wolf, {
-      frameWidth: 54,
-      frameHeight: 35,
-    });
-    this.load.spritesheet("bear", SPR.Bear, {
-      frameWidth: 60,
-      frameHeight: 31,
-    });
     this.load.spritesheet("spear", SPR.SpearStill, {
       frameWidth: 31,
       frameHeight: 7,
@@ -108,6 +92,19 @@ export default class FightScene extends Phaser.Scene {
       frameWidth: 14,
       frameHeight: 33,
     });
+
+    this.load.spritesheet(SpriteSheets.BearWalk);
+    this.load.spritesheet(SpriteSheets.BearRun);
+    this.load.spritesheet(SpriteSheets.BoarWalk);
+    this.load.spritesheet(SpriteSheets.BoarRun);
+    this.load.spritesheet(SpriteSheets.DeerWalk);
+    this.load.spritesheet(SpriteSheets.DeerRun);
+    this.load.spritesheet(SpriteSheets.FoxWalk);
+    this.load.spritesheet(SpriteSheets.FoxRun);
+    this.load.spritesheet(SpriteSheets.RabbitWalk);
+    this.load.spritesheet(SpriteSheets.RabbitRun);
+    this.load.spritesheet(SpriteSheets.WolfWalk);
+    this.load.spritesheet(SpriteSheets.WolfRun);
   }
 
   init() {
@@ -297,20 +294,25 @@ export default class FightScene extends Phaser.Scene {
   createAnimations() {
     this.createAnimation("player_idle", "oezi", 1, 5);
     this.createAnimation("player_run", "oezi", 6, 13);
-    this.createAnimation("deer_run", "deer", 0, 5);
-    this.createAnimation("deer_idle", "deer", 6, 15);
-    this.createAnimation("deer_walk", "deer", 16, 23);
-    this.createAnimation("boar_run", "boar", 0, 5);
-    this.createAnimation("boar_idle", "boar", 6, 13);
-    this.createAnimation("boar_walk", "boar", 14, 22);
-    this.createAnimation("wolf_run", "wolf", 0, 5);
-    this.createAnimation("wolf_idle", "wolf", 6, 15);
-    this.createAnimation("wolf_walk", "wolf", 16, 23);
-    this.createAnimation("bear_run", "bear", 12, 16);
-    this.createAnimation("bear_idle", "bear", 0, 11);
-    this.createAnimation("bear_walk", "bear", 17, 24);
     this.createAnimation("spearAni", "spear", 0, 3);
     this.createAnimation("spearHitAni", "spearhit", 0, 8);
+
+    const defaults: Phaser.Types.Animations.Animation = {
+      frameRate: 10,
+      repeat: -1,
+    };
+    this.anims.create({ key: "BearRun", frames: "BearRun", ...defaults });
+    this.anims.create({ key: "BearWalk", frames: "BearWalk", ...defaults });
+    this.anims.create({ key: "BoarRun", frames: "BoarRun", ...defaults });
+    this.anims.create({ key: "BoarWalk", frames: "BoarWalk", ...defaults });
+    this.anims.create({ key: "DeerRun", frames: "DeerRun", ...defaults });
+    this.anims.create({ key: "DeerWalk", frames: "DeerWalk", ...defaults });
+    this.anims.create({ key: "FoxRun", frames: "FoxRun", ...defaults });
+    this.anims.create({ key: "FoxWalk", frames: "FoxWalk", ...defaults });
+    this.anims.create({ key: "RabbitRun", frames: "RabbitRun", ...defaults });
+    this.anims.create({ key: "Rabbitwalk", frames: "RabbitWalk", ...defaults });
+    this.anims.create({ key: "WolfRun", frames: "WolfRun", ...defaults });
+    this.anims.create({ key: "WolfWalk", frames: "WolfWalk", ...defaults });
   }
 
   createAnimation(key: string, refKey: string, from: number, to: number) {

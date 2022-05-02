@@ -29,19 +29,89 @@ export const MFX = {
 };
 
 import oetzi from "url:/public/assets/sprites/player/oezi.png";
-import deer from "url:/public/assets/sprites/player/deer.png";
-import boar from "url:/public/assets/sprites/player/boar.png";
-import wolf from "url:/public/assets/sprites/player/wolf.png";
-import bear from "url:/public/assets/sprites/player/bear.png";
 import spearStill from "url:/public/assets/sprites/player/spear.png";
 import spearWobble from "url:/public/assets/sprites/player/spearhit.png";
 
+import BearWalkURL from "url:/public/assets/sprites/animals/Bear_Walk.png";
+import BearRunURL from "url:/public/assets/sprites/animals/Bear_Run.png";
+import BoarWalkURL from "url:/public/assets/sprites/animals/Boar_Walk.png";
+import BoarRunURL from "url:/public/assets/sprites/animals/Boar_Run.png";
+import DeerWalkURL from "url:/public/assets/sprites/animals/Deer_Walk.png";
+import DeerRunURL from "url:/public/assets/sprites/animals/Deer_Run.png";
+import FoxWalkURL from "url:/public/assets/sprites/animals/Fox_Walk.png";
+import FoxRunURL from "url:/public/assets/sprites/animals/Fox_Run.png";
+import RabbitWalkURL from "url:/public/assets/sprites/animals/Rabbit_Walk.png";
+import RabbitRunURL from "url:/public/assets/sprites/animals/Rabbit_Run.png";
+import WolfWalkURL from "url:/public/assets/sprites/animals/Wolf_Walk.png";
+import WolfRunURL from "url:/public/assets/sprites/animals/Wolf_Run.png";
+
+export const SpriteSheets: {
+  [key: string]: Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig;
+} = {
+  BearWalk: {
+    key: "BearWalk",
+    url: BearWalkURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 33 },
+  },
+  BearRun: {
+    key: "BearRun",
+    url: BearRunURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 33 },
+  },
+  BoarWalk: {
+    key: "BoarWalk",
+    url: BoarWalkURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 40 },
+  },
+  BoarRun: {
+    key: "BoarRun",
+    url: BoarRunURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 40 },
+  },
+  DeerWalk: {
+    key: "DeerWalk",
+    url: DeerWalkURL as string,
+    frameConfig: { frameWidth: 72, frameHeight: 52 },
+  },
+  DeerRun: {
+    key: "DeerRun",
+    url: DeerRunURL as string,
+    frameConfig: { frameWidth: 72, frameHeight: 52 },
+  },
+  FoxWalk: {
+    key: "FoxWalk",
+    url: FoxWalkURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 36 },
+  },
+  FoxRun: {
+    key: "FoxRun",
+    url: FoxRunURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 36 },
+  },
+  RabbitWalk: {
+    key: "RabbitWalk",
+    url: RabbitWalkURL as string,
+    frameConfig: { frameWidth: 32, frameHeight: 26 },
+  },
+  RabbitRun: {
+    key: "RabbitRun",
+    url: RabbitRunURL as string,
+    frameConfig: { frameWidth: 32, frameHeight: 26 },
+  },
+  WolfWalk: {
+    key: "WolfWalk",
+    url: WolfWalkURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 40 },
+  },
+  WolfRun: {
+    key: "WolfRun",
+    url: WolfRunURL as string,
+    frameConfig: { frameWidth: 64, frameHeight: 40 },
+  },
+};
+
 export const SPR = {
   Oetzi: oetzi as string,
-  Deer: deer as string,
-  Boar: boar as string,
-  Wolf: wolf as string,
-  Bear: bear as string,
   SpearStill: spearStill as string,
   SpearWobble: spearWobble as string,
 };

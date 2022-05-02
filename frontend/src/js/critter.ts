@@ -1,7 +1,7 @@
 import "phaser";
 import FightScene from "./fight_scene";
 
-const SPECIES = ["bear", "wolf", "deer", "boar"];
+const SPECIES = ["Bear", "Boar", "Deer", "Fox", "Rabbit", "Wolf"];
 
 enum CritterState {
   Moving,
@@ -65,21 +65,21 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
   walk() {
     this.state = CritterState.Moving;
     this.flipX = true;
-    this.play({ key: this.species + "_walk", repeat: -1 });
+    this.play({ key: this.species + "Walk", repeat: -1 });
     this.body.setVelocity(this.baseVelocity, 0);
   }
 
   flee() {
     this.state = CritterState.Fleeing;
     this.flipX = false;
-    this.play({ key: this.species + "_run", repeat: -1 });
+    this.play({ key: this.species + "Run", repeat: -1 });
     this.body.setVelocity(-2 * this.baseVelocity, 0);
   }
 
   escape() {
     this.state = CritterState.Escaping;
     this.flipX = true;
-    this.play({ key: this.species + "_run", repeat: -1 });
+    this.play({ key: this.species + "Run", repeat: -1 });
     this.body.setVelocity(3 * this.baseVelocity, 0);
   }
 
