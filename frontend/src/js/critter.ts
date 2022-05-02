@@ -18,7 +18,7 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
 
   constructor(scene: FightScene, baseVelocity = 100) {
     const species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
-    super(scene, 0, 0, species);
+    super(scene, 0, 0, `${species}Walk`);
     scene.add.existing(this);
 
     this.scene = scene;
