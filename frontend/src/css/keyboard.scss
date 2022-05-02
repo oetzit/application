@@ -34,10 +34,12 @@ $key-width: 8vw; // 100/12 ~ 8.3
       grid-template-columns: repeat(11, $key-width) 1fr;
     }
     &:nth-child(2) {
-      grid-template-columns: 0.666 * $key-width repeat(11, $key-width) 1fr;
+      padding-left: 0.666 * $key-width;
+      grid-template-columns: repeat(11, $key-width);
     }
     &:nth-child(3) {
       grid-template-columns: 2.333 * $key-width repeat(8, $key-width) 1fr;
+      & > :first-child { display: none; }
     }
   }
 

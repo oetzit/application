@@ -142,15 +142,16 @@ class Typewriter {
       newLineOnEnter: true,
       disableCaretPositioning: true,
       layout: {
+        // NOTE: we keep both SHIFTs to catch events from both sides of physical keyboards
         default: [
           `q w e r t z u i o p ü ${Key.Backspace}`,
-          `${Key.ShiftLeft} a s d f g h j k l ö ä ${Key.ShiftRight}`,
-          `${Key.Space} y x c v b n m ß ${Key.Enter}`,
+          `a s d f g h j k l ö ä`,
+          `${Key.ShiftLeft} ${Key.ShiftRight} y x c v b n m ß ${Key.Enter}`,
         ],
         shifted: [
           `Q W E R T Z U I O P Ü ${Key.Backspace}`,
-          `${Key.ShiftLeft} A S D F G H J K L Ö Ä ${Key.ShiftRight}`,
-          `${Key.Space} Y X C V B N M ẞ ${Key.Enter}`,
+          `A S D F G H J K L Ö Ä`,
+          `${Key.ShiftLeft} ${Key.ShiftRight} Y X C V B N M ẞ ${Key.Enter}`,
         ],
       },
       display: {
