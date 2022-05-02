@@ -1,7 +1,16 @@
 import "phaser";
 import FightScene from "./fight_scene";
 
-const SPECIES = ["Bear", "Boar", "Deer", "Fox", "Horse", "Rabbit", "Wolf"];
+const SPECIES = [
+  // NOTE: these are ordered by size (i.e. difficulty)
+  "Rabbit",
+  "Fox",
+  "Boar",
+  "Wolf",
+  "Horse",
+  "Bear",
+  "Deer",
+];
 const RELATIVE_SCALE_ADJUSTMENT: { [key: string]: number } = {
   Bear: 1.0,
   Boar: 0.6,
@@ -25,8 +34,12 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
   species: string;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(scene: FightScene, baseVelocity = 100) {
-    const species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
+  constructor(scene: FightScene, baseVelocity = 100, size = 1.0) {
+    const speciesIndex = Math.min(
+      SPECIES.length - 1,
+      Math.floor(size * SPECIES.length),
+    );
+    const species = SPECIES[speciesIndex];
     super(scene, 0, 0, `${species}Walk`);
     scene.add.existing(this);
 
