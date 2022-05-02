@@ -193,6 +193,7 @@ class Typewriter {
     input: string,
     event: KeyboardEvent | PointerEvent | MouseEvent | TouchEvent,
   ) {
+    if (navigator.vibrate) navigator.vibrate(50);
     const key = this.extractKeyfromEvent(event);
     if (this.inputStatus.began_at === null)
       this.inputStatus.began_at = new Date();
