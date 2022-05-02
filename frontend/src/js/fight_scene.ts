@@ -310,7 +310,7 @@ export default class FightScene extends Phaser.Scene {
     this.anims.create({ key: "FoxRun", frames: "FoxRun", ...defaults });
     this.anims.create({ key: "FoxWalk", frames: "FoxWalk", ...defaults });
     this.anims.create({ key: "RabbitRun", frames: "RabbitRun", ...defaults });
-    this.anims.create({ key: "Rabbitwalk", frames: "RabbitWalk", ...defaults });
+    this.anims.create({ key: "RabbitWalk", frames: "RabbitWalk", ...defaults });
     this.anims.create({ key: "WolfRun", frames: "WolfRun", ...defaults });
     this.anims.create({ key: "WolfWalk", frames: "WolfWalk", ...defaults });
   }
