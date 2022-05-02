@@ -13,8 +13,8 @@ stages:
 
 .node-job: &node-job
   image: node:16-alpine
-  # tags:
-  #   - shared
+  tags:
+    - shared
   only:
     - pushes
 
@@ -232,8 +232,8 @@ stg-fe-deploy-job:
   needs:
     - job: build-be-job
       artifacts: false
-  # tags:
-  #   - shared
+  tags:
+    - shared
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
