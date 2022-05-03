@@ -44,9 +44,9 @@ export default class BackgroundScene extends Phaser.Scene {
     const scale = this.cameras.main.height / LAYERS_HEIGHT;
     const width = this.cameras.main.width / scale;
     const height = this.cameras.main.height / scale;
-    return Object.keys(BackgroundImages).map((textureKey) =>
+    return BackgroundImages.map((config) =>
       this.add
-        .tileSprite(0, 0, width, height, textureKey)
+        .tileSprite(0, 0, width, height, config.key)
         .setOrigin(0)
         .setScale(scale)
         .setTint(

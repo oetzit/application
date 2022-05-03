@@ -27,12 +27,8 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.on("fileprogress", this.onLoadFileProgress.bind(this));
     this.load.on("complete", this.onLoadComplete.bind(this));
 
-    Object.values(BackgroundImages).forEach((config) =>
-      this.load.image(config),
-    );
-    Object.values(SpriteSheets).forEach((config) =>
-      this.load.spritesheet(config),
-    );
+    this.load.image(BackgroundImages);
+    this.load.spritesheet(SpriteSheets);
     this.load.audio(SoundEffects);
     this.load.audio(MusicEffects);
   }
