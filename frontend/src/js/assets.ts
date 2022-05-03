@@ -128,32 +128,34 @@ export const SPR = {
   SpearWobble: spearWobble as string,
 };
 
-import l00 from "url:/public/assets/background_layers/Layer_0011_0.png";
-import l01 from "url:/public/assets/background_layers/Layer_0010_1.png";
-import l02 from "url:/public/assets/background_layers/Layer_0009_2.png";
-import l03 from "url:/public/assets/background_layers/Layer_0008_3.png";
-import l04 from "url:/public/assets/background_layers/Layer_0007_Lights.png";
-import l05 from "url:/public/assets/background_layers/Layer_0006_4.png";
-import l06 from "url:/public/assets/background_layers/Layer_0005_5.png";
-import l07 from "url:/public/assets/background_layers/Layer_0004_Lights.png";
-import l08 from "url:/public/assets/background_layers/Layer_0003_6.png";
-import l09 from "url:/public/assets/background_layers/Layer_0002_7.png";
-import l10 from "url:/public/assets/background_layers/Layer_0001_8.png";
-import l11 from "url:/public/assets/background_layers/Layer_0000_9.png";
+import L00URL from "url:/public/assets/background_layers/Layer_0011_0.png";
+import L01URL from "url:/public/assets/background_layers/Layer_0010_1.png";
+import L02URL from "url:/public/assets/background_layers/Layer_0009_2.png";
+import L03URL from "url:/public/assets/background_layers/Layer_0008_3.png";
+import L04URL from "url:/public/assets/background_layers/Layer_0007_Lights.png";
+import L05URL from "url:/public/assets/background_layers/Layer_0006_4.png";
+import L06URL from "url:/public/assets/background_layers/Layer_0005_5.png";
+import L07URL from "url:/public/assets/background_layers/Layer_0004_Lights.png";
+import L08URL from "url:/public/assets/background_layers/Layer_0003_6.png";
+import L09URL from "url:/public/assets/background_layers/Layer_0002_7.png";
+import L10URL from "url:/public/assets/background_layers/Layer_0001_8.png";
+import L11URL from "url:/public/assets/background_layers/Layer_0000_9.png";
 
-export const BKG = {
-  L00: l00 as string,
-  L01: l01 as string,
-  L02: l02 as string,
-  L03: l03 as string,
-  L04: l04 as string,
-  L05: l05 as string,
-  L06: l06 as string,
-  L07: l07 as string,
-  L08: l08 as string,
-  L09: l09 as string,
-  L10: l10 as string,
-  L11: l11 as string,
+export const BackgroundImages: {
+  [key: string]: Phaser.Types.Loader.FileTypes.ImageFileConfig;
+} = {
+  L00: { key: "L00", url: L00URL as string },
+  L01: { key: "L01", url: L01URL as string },
+  L02: { key: "L02", url: L02URL as string },
+  L03: { key: "L03", url: L03URL as string },
+  L04: { key: "L04", url: L04URL as string },
+  L05: { key: "L05", url: L05URL as string },
+  L06: { key: "L06", url: L06URL as string },
+  L07: { key: "L07", url: L07URL as string },
+  L08: { key: "L08", url: L08URL as string },
+  L09: { key: "L09", url: L09URL as string },
+  L10: { key: "L10", url: L10URL as string },
+  L11: { key: "L11", url: L11URL as string },
 };
 
-export default { SFX, MFX, SPR, BKG };
+export default { SFX, MFX, SPR };

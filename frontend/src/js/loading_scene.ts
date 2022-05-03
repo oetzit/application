@@ -1,21 +1,5 @@
 import "phaser";
-import { BKG } from "./assets";
-
-const LAYERS = {
-  b00: BKG.L00,
-  b01: BKG.L01,
-  b02: BKG.L02,
-  b03: BKG.L03,
-  b04: BKG.L04,
-  b05: BKG.L05,
-  b06: BKG.L06,
-  b07: BKG.L07,
-  b08: BKG.L08,
-  b09: BKG.L09,
-  b10: BKG.L10,
-  b11: BKG.L11,
-};
-
+import { BackgroundImages } from "./assets";
 export default class LoadingScene extends Phaser.Scene {
   progressBar!: Phaser.GameObjects.Graphics;
   progressBox!: Phaser.GameObjects.Graphics;
@@ -38,7 +22,9 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.on("fileprogress", this.onLoadFileProgress.bind(this));
     this.load.on("complete", this.onLoadComplete.bind(this));
 
-    Object.entries(LAYERS).forEach(([key, path]) => this.load.image(key, path));
+    Object.values(BackgroundImages).forEach((config) =>
+      this.load.image(config),
+    );
   }
 
   drawBar(

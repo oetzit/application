@@ -1,21 +1,7 @@
 import "phaser";
-import { BKG } from "./assets";
+import { BackgroundImages } from "./assets";
 
 const LAYERS_HEIGHT = 793;
-const LAYERS = {
-  b00: BKG.L00,
-  b01: BKG.L01,
-  b02: BKG.L02,
-  b03: BKG.L03,
-  b04: BKG.L04,
-  b05: BKG.L05,
-  b06: BKG.L06,
-  b07: BKG.L07,
-  b08: BKG.L08,
-  b09: BKG.L09,
-  b10: BKG.L10,
-  b11: BKG.L11,
-};
 
 // prettier-ignore
 const HSL_COLORS = [
@@ -42,10 +28,6 @@ export default class BackgroundScene extends Phaser.Scene {
     super("background");
   }
 
-  preload() {
-    Object.entries(LAYERS).forEach(([key, path]) => this.load.image(key, path));
-  }
-
   interpColor(
     source: Phaser.Display.Color,
     target: Phaser.Display.Color,
@@ -62,7 +44,7 @@ export default class BackgroundScene extends Phaser.Scene {
     const scale = this.cameras.main.height / LAYERS_HEIGHT;
     const width = this.cameras.main.width / scale;
     const height = this.cameras.main.height / scale;
-    return Object.keys(LAYERS).map((textureKey) =>
+    return Object.keys(BackgroundImages).map((textureKey) =>
       this.add
         .tileSprite(0, 0, width, height, textureKey)
         .setOrigin(0)
