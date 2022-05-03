@@ -4,7 +4,7 @@ export const ICONS = {
   HEALTH: "❤️️",
 };
 
-const THIN_SPACE = "\u2009";
+export const THIN_SPACE = "\u2009";
 
 const STATS_BASE_TEXT_STYLE = {
   fontFamily: "Courier",
