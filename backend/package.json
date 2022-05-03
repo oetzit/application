@@ -2,7 +2,12 @@
   "name": "oetzit-backend",
   "version": "1.0.0",
   "description": "Ötzit! backend.",
-  "main": "src/index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Paolo Brasolin",
+    "email": "paolo.brasolin@eurac.edu",
+    "url": "https://github.com/paolobrasolin"
+  },
   "scripts": {
     "build": "tsc",
     "start": "NODE_PATH=./dist node dist/index.js",
@@ -59,8 +64,5 @@
   "repository": {
     "url": "https://gitlab.inf.unibz.it/commul/oetzit"
   },
-  "license": "MIT",
-  "keywords": [
-    "node"
-  ]
+  "main": "src/index.js"
 }

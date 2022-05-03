@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Ötzit! frontend.",
   "license": "MIT",
+  "author": {
+    "name": "Paolo Brasolin",
+    "email": "paolo.brasolin@eurac.edu",
+    "url": "https://github.com/paolobrasolin"
+  },
   "scripts": {
     "serve": "parcel serve src/index.html",
     "build": "parcel build src/index.html --public-url ./",
