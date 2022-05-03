@@ -28,10 +28,6 @@ export const MFX = {
   Failure: failure as string,
 };
 
-import oetzi from "url:/public/assets/sprites/player/oezi.png";
-import spearStill from "url:/public/assets/sprites/player/spear.png";
-import spearWobble from "url:/public/assets/sprites/player/spearhit.png";
-
 import BearWalkURL from "url:/public/assets/sprites/animals/Bear_Walk.png";
 import BearRunURL from "url:/public/assets/sprites/animals/Bear_Run.png";
 import BoarWalkURL from "url:/public/assets/sprites/animals/Boar_Walk.png";
@@ -46,6 +42,10 @@ import RabbitWalkURL from "url:/public/assets/sprites/animals/Rabbit_Walk.png";
 import RabbitRunURL from "url:/public/assets/sprites/animals/Rabbit_Run.png";
 import WolfWalkURL from "url:/public/assets/sprites/animals/Wolf_Walk.png";
 import WolfRunURL from "url:/public/assets/sprites/animals/Wolf_Run.png";
+
+import OetziURL from "url:/public/assets/sprites/player/oezi.png";
+import SpearStillURL from "url:/public/assets/sprites/player/spear.png";
+import SpearWobbleURL from "url:/public/assets/sprites/player/spearhit.png";
 
 export const SpriteSheets: {
   [key: string]: Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig;
@@ -120,12 +120,21 @@ export const SpriteSheets: {
     url: WolfRunURL as string,
     frameConfig: { frameWidth: 64, frameHeight: 40 },
   },
-};
-
-export const SPR = {
-  Oetzi: oetzi as string,
-  SpearStill: spearStill as string,
-  SpearWobble: spearWobble as string,
+  Oetzi: {
+    key: "Oetzi",
+    url: OetziURL as string,
+    frameConfig: { frameWidth: 27, frameHeight: 35 },
+  },
+  SpearStill: {
+    key: "SpearStill",
+    url: SpearStillURL as string,
+    frameConfig: { frameWidth: 31, frameHeight: 7 },
+  },
+  SpearWobble: {
+    key: "SpearWobble",
+    url: SpearWobbleURL as string,
+    frameConfig: { frameWidth: 14, frameHeight: 33 },
+  },
 };
 
 import L00URL from "url:/public/assets/background_layers/Layer_0011_0.png";
@@ -158,4 +167,4 @@ export const BackgroundImages: {
   L11: { key: "L11", url: L11URL as string },
 };
 
-export default { SFX, MFX, SPR };
+export default { SFX, MFX };

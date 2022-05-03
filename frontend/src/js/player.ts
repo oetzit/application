@@ -5,7 +5,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   body: Phaser.Physics.Arcade.Body;
 
   constructor(scene: FightScene) {
-    super(scene, 0, 0, "oezi");
+    super(scene, 0, 0, "Oetzi");
     scene.add.existing(this);
 
     this.setScale(

@@ -12,7 +12,7 @@ import Foe from "./foe";
 import Typewriter from "./typewriter";
 import HUD from "./hud";
 import BackgroundScene from "./background_scene";
-import { SFX, MFX, SPR, SpriteSheets } from "./assets";
+import { SFX, MFX, SpriteSheets } from "./assets";
 
 const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
@@ -80,19 +80,6 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preloadSprites() {
-    this.load.spritesheet("oezi", SPR.Oetzi, {
-      frameWidth: 27,
-      frameHeight: 35,
-    });
-    this.load.spritesheet("spear", SPR.SpearStill, {
-      frameWidth: 31,
-      frameHeight: 7,
-    });
-    this.load.spritesheet("spearhit", SPR.SpearWobble, {
-      frameWidth: 14,
-      frameHeight: 33,
-    });
-
     this.load.spritesheet(SpriteSheets.BearWalk);
     this.load.spritesheet(SpriteSheets.BearRun);
     this.load.spritesheet(SpriteSheets.BoarWalk);
@@ -107,6 +94,9 @@ export default class FightScene extends Phaser.Scene {
     this.load.spritesheet(SpriteSheets.RabbitRun);
     this.load.spritesheet(SpriteSheets.WolfWalk);
     this.load.spritesheet(SpriteSheets.WolfRun);
+    this.load.spritesheet(SpriteSheets.Oetzi);
+    this.load.spritesheet(SpriteSheets.SpearStill);
+    this.load.spritesheet(SpriteSheets.SpearWobble);
   }
 
   init() {
@@ -294,10 +284,10 @@ export default class FightScene extends Phaser.Scene {
   }
 
   createAnimations() {
-    this.createAnimation("player_idle", "oezi", 1, 5);
-    this.createAnimation("player_run", "oezi", 6, 13);
-    this.createAnimation("spearAni", "spear", 0, 3);
-    this.createAnimation("spearHitAni", "spearhit", 0, 8);
+    this.createAnimation("player_idle", "Oetzi", 1, 5);
+    this.createAnimation("player_run", "Oetzi", 6, 13);
+    this.createAnimation("spearAni", "SpearStill", 0, 3);
+    this.createAnimation("spearHitAni", "SpearWobble", 0, 8);
 
     const defaults: Phaser.Types.Animations.Animation = {
       frameRate: 10,
