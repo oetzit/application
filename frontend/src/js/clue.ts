@@ -15,8 +15,9 @@ class Clue extends Phaser.GameObjects.Sprite {
   textureKey: string;
   body: Phaser.Physics.Arcade.Body;
   baseHeight: number;
+  duration: number;
 
-  constructor(scene: FightScene, word: Types.Word) {
+  constructor(scene: FightScene, word: Types.Word, duration: number) {
     // TODO: set positions
     super(scene, 0, 0, "__MISSING");
     scene.add.existing(this);
@@ -25,6 +26,7 @@ class Clue extends Phaser.GameObjects.Sprite {
 
     this.scene = scene;
     this.word = word;
+    this.duration = duration;
 
     this.baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
 
@@ -67,6 +69,21 @@ class Clue extends Phaser.GameObjects.Sprite {
     this.scene.cluesGroup.add(this);
     this.setPositionForDrop();
     this.fadeIn();
+    this.createExpirationTween();
+  }
+
+  createExpirationTween() {
+    this.scene.tweens.addCounter({
+      from: 255,
+      to: 64,
+      delay: this.duration * 1000 * 0.5,
+      duration: this.duration * 1000 * 0.5,
+      ease: Phaser.Math.Easing.Expo.In,
+      onUpdate: (tween) => {
+        const value = Math.floor(tween.getValue());
+        this.setTint(Phaser.Display.Color.GetColor(255, value, value));
+      },
+    });
   }
 
   setPositionForDrop() {

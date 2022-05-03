@@ -39,7 +39,7 @@ class Foe {
       })
     ).data;
 
-    this.clue = new Clue(this.scene, this.beWord);
+    this.clue = new Clue(this.scene, this.beWord, this.duration);
     // TODO: this is the time to reach a collision w/player, but maybe we should just use the transversal of the full screen.
     const critterSpeed = this.scene.player.getBounds().left / this.duration;
     this.critter = new Critter(
