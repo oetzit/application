@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 
+import LoadingScene from "./loading_scene";
 import BackgroundScene from "./background_scene";
 import WelcomeScene from "./welcome_scene";
 import FightScene from "./fight_scene";
@@ -21,7 +22,14 @@ const CONFIG = {
       // debug: true,
     },
   },
-  scene: [BackgroundScene, WelcomeScene, FightScene, PauseScene, GameOverScene],
+  scene: [
+    LoadingScene,
+    BackgroundScene,
+    WelcomeScene,
+    FightScene,
+    PauseScene,
+    GameOverScene,
+  ],
 };
 
 export default class Game extends Phaser.Game {
