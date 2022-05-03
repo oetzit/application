@@ -59,7 +59,6 @@ export default class FightScene extends Phaser.Scene {
   }
 
   preload() {
-    this.preloadSprites();
     this.preloadSoundsEffects();
     this.preloadMusicThemes();
   }
@@ -77,26 +76,6 @@ export default class FightScene extends Phaser.Scene {
     this.load.audio("bkg_main_1", MFX.LoopOne);
     this.load.audio("bkg_main_2", MFX.LoopTwo);
     this.load.audio("bkg_main_3", MFX.LoopThree);
-  }
-
-  preloadSprites() {
-    this.load.spritesheet(SpriteSheets.BearWalk);
-    this.load.spritesheet(SpriteSheets.BearRun);
-    this.load.spritesheet(SpriteSheets.BoarWalk);
-    this.load.spritesheet(SpriteSheets.BoarRun);
-    this.load.spritesheet(SpriteSheets.DeerWalk);
-    this.load.spritesheet(SpriteSheets.DeerRun);
-    this.load.spritesheet(SpriteSheets.FoxWalk);
-    this.load.spritesheet(SpriteSheets.FoxRun);
-    this.load.spritesheet(SpriteSheets.HorseWalk);
-    this.load.spritesheet(SpriteSheets.HorseRun);
-    this.load.spritesheet(SpriteSheets.RabbitWalk);
-    this.load.spritesheet(SpriteSheets.RabbitRun);
-    this.load.spritesheet(SpriteSheets.WolfWalk);
-    this.load.spritesheet(SpriteSheets.WolfRun);
-    this.load.spritesheet(SpriteSheets.Oetzi);
-    this.load.spritesheet(SpriteSheets.SpearStill);
-    this.load.spritesheet(SpriteSheets.SpearWobble);
   }
 
   init() {

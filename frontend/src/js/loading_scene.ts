@@ -1,5 +1,5 @@
 import "phaser";
-import { BackgroundImages } from "./assets";
+import { BackgroundImages, SpriteSheets } from "./assets";
 export default class LoadingScene extends Phaser.Scene {
   progressBar!: Phaser.GameObjects.Graphics;
   progressBox!: Phaser.GameObjects.Graphics;
@@ -24,6 +24,9 @@ export default class LoadingScene extends Phaser.Scene {
 
     Object.values(BackgroundImages).forEach((config) =>
       this.load.image(config),
+    );
+    Object.values(SpriteSheets).forEach((config) =>
+      this.load.spritesheet(config),
     );
   }
 
