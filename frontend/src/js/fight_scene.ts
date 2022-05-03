@@ -505,7 +505,7 @@ export default class FightScene extends Phaser.Scene {
     // const minLength = 1;
     const minLength = Math.round(1 + (3 - 1) * difficulty);
     // const maxLength = 12;
-    const maxLength = Math.round(6 + (18 - 6) * difficulty);
+    const maxLength = Math.round(3 + (18 - 3) * difficulty);
 
     // const expLength = AVG_CPM / AVG_WPM; // i.e. 5 char is avg
     const expLength = minLength + (maxLength - minLength) * difficulty;
