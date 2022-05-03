@@ -153,12 +153,20 @@ export default class FightScene extends Phaser.Scene {
   }
 
   planWaveAnnouncements() {
-    this.time.delayedCall(0 * 60 * 1000, () => this.hud.announceWave("WAVE 1"));
-    this.time.delayedCall(3 * 60 * 1000, () => this.hud.announceWave("WAVE 2"));
-    this.time.delayedCall(6 * 60 * 1000, () => this.hud.announceWave("WAVE 3"));
-    this.time.delayedCall(9 * 60 * 1000, () => this.hud.announceWave("WAVE 4"));
+    this.time.delayedCall(0 * 60 * 1000, () =>
+      this.hud.announceWave("LEVEL 1"),
+    );
+    this.time.delayedCall(3 * 60 * 1000, () =>
+      this.hud.announceWave("LEVEL 2"),
+    );
+    this.time.delayedCall(6 * 60 * 1000, () =>
+      this.hud.announceWave("LEVEL 3"),
+    );
+    this.time.delayedCall(9 * 60 * 1000, () =>
+      this.hud.announceWave("LEVEL 4"),
+    );
     this.time.delayedCall(12 * 60 * 1000, () =>
-      this.hud.announceWave("FINAL WAVE"),
+      this.hud.announceWave("FINAL LEVEL"),
     );
   }
 
