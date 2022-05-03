@@ -300,6 +300,7 @@ export default class FightScene extends Phaser.Scene {
     this.health = Math.max(this.health, 0);
     this.hud.setHealth(this.health);
     this.hud.changeFlash(this.hud.health, delta > 0 ? 0x00ff00 : 0xff0000);
+    if (this.health <= 25) this.hud.startLowHealthPulse();
     this.checkAlive();
   }
 

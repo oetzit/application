@@ -49,6 +49,8 @@ export default class HUD {
   clock: Phaser.GameObjects.Text;
   health: Phaser.GameObjects.Text;
 
+  lowHealthPulse: Phaser.Tweens.Tween;
+
   constructor(scene: Phaser.Scene, options?: HudOptions) {
     this.scene = scene;
     this.options = options || {
@@ -181,5 +183,19 @@ export default class HUD {
   changeFlash(object: Phaser.GameObjects.Text, color: number) {
     object.setTintFill(color);
     this.scene.time.delayedCall(100, () => object.clearTint());
+  }
+
+  startLowHealthPulse() {
+    this.lowHealthPulse ??= this.scene.tweens.addCounter({
+      from: 0,
+      to: 255,
+      duration: 500,
+      ease: Phaser.Math.Easing.Sine.Out,
+      repeat: -1,
+      onUpdate: (tween) => {
+        const value = Math.floor(tween.getValue());
+        this.health.setTint(Phaser.Display.Color.GetColor(255, value, value));
+      },
+    });
   }
 }
