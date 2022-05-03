@@ -12,7 +12,6 @@ import Foe from "./foe";
 import Typewriter from "./typewriter";
 import HUD from "./hud";
 import BackgroundScene from "./background_scene";
-import { SFX, MFX, SpriteSheets } from "./assets";
 
 const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
@@ -58,25 +57,7 @@ export default class FightScene extends Phaser.Scene {
     this.foes = [];
   }
 
-  preload() {
-    this.preloadSoundsEffects();
-    this.preloadMusicThemes();
-  }
-
-  preloadSoundsEffects() {
-    this.load.audio("sfx_lo_beep", SFX.LoBeep);
-    this.load.audio("sfx_md_beep", SFX.MdBeep);
-    this.load.audio("sfx_hi_beep", SFX.HiBeep);
-    this.load.audio("sfx_hit_critter", SFX.HitCritter);
-    this.load.audio("sfx_hit_player", SFX.HitPlayer);
-    this.load.audio("sfx_game_over", SFX.GameOver);
-  }
-
-  preloadMusicThemes() {
-    this.load.audio("bkg_main_1", MFX.LoopOne);
-    this.load.audio("bkg_main_2", MFX.LoopTwo);
-    this.load.audio("bkg_main_3", MFX.LoopThree);
-  }
+  preload() {}
 
   init() {
     this.score = 0;

@@ -1,5 +1,4 @@
 import "phaser";
-import { MFX } from "./assets";
 
 export default class WelcomeScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -8,9 +7,7 @@ export default class WelcomeScene extends Phaser.Scene {
     super("welcome");
   }
 
-  preload() {
-    this.load.audio("bkg_buildup", MFX.Buildup);
-  }
+  preload() {}
 
   musicHardReplace(
     nextMusic: Phaser.Sound.BaseSound,

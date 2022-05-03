@@ -5,14 +5,14 @@ import hitCritter from "url:/public/assets/audio/Hit damage 1.mp3";
 import hitPlayer from "url:/public/assets/audio/Boss hit 1.mp3";
 import gameOver from "url:/public/assets/audio/Bubble heavy 2.mp3";
 
-export const SFX = {
-  LoBeep: loBeep as string,
-  MdBeep: mdBeep as string,
-  HiBeep: hiBeep as string,
-  HitCritter: hitCritter as string,
-  HitPlayer: hitPlayer as string,
-  GameOver: gameOver as string,
-};
+export const SoundEffects: Phaser.Types.Loader.FileTypes.AudioFileConfig[] = [
+  { key: "sfx_lo_beep", url: loBeep as string },
+  { key: "sfx_md_beep", url: mdBeep as string },
+  { key: "sfx_hi_beep", url: hiBeep as string },
+  { key: "sfx_hit_critter", url: hitCritter as string },
+  { key: "sfx_hit_player", url: hitPlayer as string },
+  { key: "sfx_game_over", url: gameOver as string },
+];
 
 import buildup from "url:/public/assets/music/buildup.mp3";
 import loopOne from "url:/public/assets/music/loop.mp3";
@@ -20,13 +20,13 @@ import loopTwo from "url:/public/assets/music/loopTwo.mp3";
 import loopThree from "url:/public/assets/music/loopThree.mp3";
 import failure from "url:/public/assets/music/loose.mp3";
 
-export const MFX = {
-  Buildup: buildup as string,
-  LoopOne: loopOne as string,
-  LoopTwo: loopTwo as string,
-  LoopThree: loopThree as string,
-  Failure: failure as string,
-};
+export const MusicEffects: Phaser.Types.Loader.FileTypes.AudioFileConfig[] = [
+  { key: "bkg_buildup", url: buildup as string },
+  { key: "bkg_main_1", url: loopOne as string },
+  { key: "bkg_main_2", url: loopTwo as string },
+  { key: "bkg_main_3", url: loopThree as string },
+  { key: "bkg_failure", url: failure as string },
+];
 
 import BearWalkURL from "url:/public/assets/sprites/animals/Bear_Walk.png";
 import BearRunURL from "url:/public/assets/sprites/animals/Bear_Run.png";
@@ -166,5 +166,3 @@ export const BackgroundImages: {
   L10: { key: "L10", url: L10URL as string },
   L11: { key: "L11", url: L11URL as string },
 };
-
-export default { SFX, MFX };

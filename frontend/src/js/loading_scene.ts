@@ -1,5 +1,10 @@
 import "phaser";
-import { BackgroundImages, SpriteSheets } from "./assets";
+import {
+  BackgroundImages,
+  MusicEffects,
+  SoundEffects,
+  SpriteSheets,
+} from "./assets";
 export default class LoadingScene extends Phaser.Scene {
   progressBar!: Phaser.GameObjects.Graphics;
   progressBox!: Phaser.GameObjects.Graphics;
@@ -28,6 +33,8 @@ export default class LoadingScene extends Phaser.Scene {
     Object.values(SpriteSheets).forEach((config) =>
       this.load.spritesheet(config),
     );
+    this.load.audio(SoundEffects);
+    this.load.audio(MusicEffects);
   }
 
   drawBar(
