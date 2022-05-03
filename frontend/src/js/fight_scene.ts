@@ -106,9 +106,9 @@ export default class FightScene extends Phaser.Scene {
     const statsFontSize = "max(3vw,20px)"; // never smaller than 20px for readability
     const statsHeight = Math.max(3 * vw, 20) * 1.4 + 2 * statsPadding;
 
-    const inputPadding = Math.min(0.5 * vw, 5);
-    const inputFontSize = "min(12vw,60px)"; // always fit ~12 chars comfortably in width
-    const inputHeight = Math.min(12 * vw, 60) * 1.4 + 2 * inputPadding;
+    const inputPadding = 0; //Math.min(0.5 * vw, 0);
+    const inputFontSize = "min(12vw,48px)"; // always fit ~12 chars comfortably in width
+    const inputHeight = Math.min(12 * vw, 48) * 1.2 + 2 * inputPadding;
     const inputPosition = (ch - kbdHeight - 0.5 * inputHeight) / ch;
 
     const cluesBounds = new Phaser.Geom.Rectangle(
