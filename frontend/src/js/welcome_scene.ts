@@ -1,14 +1,45 @@
 import "phaser";
 import { FONTS } from "./assets";
 
+const BUTTON_HIGHLIGHT_COLOR = "darkorange";
+
+const TEXT_STYLE: {
+  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
+} = {
+  TITLE: {
+    fontFamily: FONTS.MONO,
+    fontStyle: "bold",
+    color: "white",
+    stroke: "black",
+    strokeThickness: 8,
+  },
+  BUTTON: {
+    fontFamily: FONTS.MONO,
+    fontStyle: "bold",
+    color: "white",
+    stroke: "black",
+    strokeThickness: 8,
+    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  },
+  VERSION: {
+    fontFamily: FONTS.MONO,
+    fontSize: "16px",
+    fontStyle: "bold",
+    color: "#888888",
+    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.",
+  },
+};
+
 export default class WelcomeScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
+  titleText!: Phaser.GameObjects.Text;
+  helpButton!: Phaser.GameObjects.Text;
+  playButton!: Phaser.GameObjects.Text;
+  versionText!: Phaser.GameObjects.Text;
 
   constructor() {
     super("welcome");
   }
-
-  preload() {}
 
   musicHardReplace(
     nextMusic: Phaser.Sound.BaseSound,
@@ -26,71 +57,76 @@ export default class WelcomeScene extends Phaser.Scene {
       data.music,
     );
 
-    this.drawTitle();
-    this.drawCTA();
-    this.drawVersion();
+    this.createTitleText();
+    this.createHelpButton();
+    this.createPlayButton();
+    this.createVersionText();
+
     this.bindEvents();
   }
 
-  drawTitle() {
+  createHelpButton() {
+    const text = "Tutorial";
+    this.helpButton = this.add
+      .text(this.cameras.main.centerX, this.cameras.main.height * 0.6, text, {
+        ...TEXT_STYLE.BUTTON,
+        fontSize: `${Math.min(this.cameras.main.width * 0.125, 48)}px`,
+        color: "gray",
+        stroke: "gray",
+      })
+      .setOrigin(0.5, 1)
+      .setPadding(4)
+      // .setInteractive({ useHandCursor: true })
+      .on("pointerover", () =>
+        this.helpButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+      )
+      .on("pointerout", () =>
+        this.helpButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+      );
+  }
+
+  createPlayButton() {
+    const text = "Play";
+    this.playButton = this.add
+      .text(this.cameras.main.centerX, this.cameras.main.height * 0.6, text, {
+        ...TEXT_STYLE.BUTTON,
+        fontSize: `${Math.min(this.cameras.main.width * 0.125, 48)}px`,
+      })
+      .setOrigin(0.5, 0)
+      .setPadding(4)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerover", () =>
+        this.playButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+      )
+      .on("pointerout", () =>
+        this.playButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+      );
+  }
+
+  createTitleText() {
     const text = "ÖTZIT!";
-    const title = this.add.text(0, 0, text, {
-      fontFamily: FONTS.MONO,
-      fontSize: "64px",
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 4,
-      testString: text,
-    });
-    title.setOrigin(0.5, 1);
-    title.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.475,
-    );
+    this.titleText = this.add
+      .text(0, 0, text, {
+        ...TEXT_STYLE.TITLE,
+        fontSize: `${Math.min(this.cameras.main.width * 0.125, 128)}px`,
+        testString: text,
+      })
+      .setOrigin(0.5, 1)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.3);
   }
 
-  drawCTA() {
-    const text = this.game.device.os.desktop
-      ? "any key to begin\nESC key to pause\n TYPE ALL WORDS"
-      : " tap to begin\n tap to pause\nTYPE ALL WORDS";
-    const cta = this.add.text(0, 0, text, {
-      fontFamily: FONTS.MONO,
-      fontSize: "32px",
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 4,
-      testString: text,
-    });
-    cta.setOrigin(0.5, 0);
-    cta.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.525,
-    );
-  }
-
-  drawVersion() {
+  createVersionText() {
     const text = process.env.APP_VERSION || "unknown";
-    const cta = this.add.text(0, 0, text.toUpperCase(), {
-      fontFamily: FONTS.MONO,
-      fontSize: "16px",
-      fontStyle: "bold",
-      color: "#888888",
-    });
-    cta.setOrigin(0.5, 1);
-    cta.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height - 8,
-    );
+    this.versionText = this.add
+      .text(0, 0, text.toUpperCase(), TEXT_STYLE.VERSION)
+      .setOrigin(0.5, 1)
+      .setPadding(8)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height);
   }
 
   bindEvents() {
-    if (this.game.device.os.desktop) {
-      this.input.keyboard.once("keyup", this.startFight.bind(this));
-    } else {
-      this.input.once("pointerup", this.startFight.bind(this));
-    }
+    this.helpButton.on("pointerup", () => {});
+    this.playButton.on("pointerup", this.startFight.bind(this));
   }
 
   startFight() {
