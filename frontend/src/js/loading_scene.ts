@@ -5,13 +5,31 @@ import {
   SoundEffects,
   SpriteSheets,
 } from "./assets";
+
+const RexWebFontLoaderPluginFileConfig: Phaser.Types.Loader.FileConfig = {
+  type: "plugin",
+  key: "rexwebfontloaderplugin",
+  url: "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexwebfontloaderplugin.min.js",
+  // start: true,
+};
+
+const WebFonts = {
+  google: {
+    families: ["UnifrakturMaguntia", "Cousine"],
+  },
+};
+
 export default class LoadingScene extends Phaser.Scene {
   progressBar!: Phaser.GameObjects.Graphics;
   progressBox!: Phaser.GameObjects.Graphics;
   progressTxt!: Phaser.GameObjects.Text;
 
   constructor() {
-    super("preload");
+    super({
+      key: "preload",
+      // NOTE: this plugin is loaded in the pack (instead of the preload) because we need to use it in the preload
+      pack: { files: [RexWebFontLoaderPluginFileConfig] },
+    });
   }
 
   preload() {
@@ -26,6 +44,11 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.on("progress", this.onLoadProgress.bind(this));
     this.load.on("fileprogress", this.onLoadFileProgress.bind(this));
     this.load.on("complete", this.onLoadComplete.bind(this));
+
+    // @ts-expect-error TODO: addToScene exists but it's private; find a kosher alternative.
+    this.plugins.get("rexwebfontloaderplugin").addToScene(this);
+    // @ts-expect-error the plugin is loaded but the LoaderPlugin signature isn't extended
+    this.load.rexWebFont(WebFonts);
 
     this.load.image(BackgroundImages);
     this.load.spritesheet(SpriteSheets);
@@ -58,7 +81,7 @@ export default class LoadingScene extends Phaser.Scene {
       origin: 0.5,
       text: "LOADING: 0%",
       style: {
-        fontFamily: "Courier",
+        fontFamily: "monospace, Cousine",
         fontStyle: "bold",
         fontSize: "32px",
         color: "white",
