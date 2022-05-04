@@ -77,7 +77,7 @@ class Foe {
   }
 
   destroy() {
-    this.clue.destroy();
+    this.clue.delete();
     this.critter.destroy();
   }
 }
