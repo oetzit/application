@@ -2,120 +2,28 @@ import "phaser";
 import FightScene from "./fight_scene";
 
 import * as Types from "../../../backend/src/types";
-import { FONTS } from "./assets";
-
-// const HYPERASCENDERS = /[ÄÖÜ]/;
-const ASCENDERS = /[ABCDEFGHIJKLMNOPQRSTUVWXYZbdfhijklstäöüß]/;
-const DESCENDERS = /[AFHJPQYZÄfghjpqsyzß]/;
+import { SpriteCluePayload, TextCluePayload } from "./clue_payloads";
 
 const CONCEAL_TINT = 0xaaaaaa;
-
-interface CluePayload {
-  word: Types.Word;
-  loadWord: (word: Types.Word) => void;
-  delete: () => void;
-}
-
-class TextCluePayload extends Phaser.GameObjects.Text implements CluePayload {
-  word: Types.Word;
-
-  constructor(scene: FightScene) {
-    super(scene, 0, 0, "", {
-      fontSize: "48px",
-      fontFamily: FONTS.FRAK,
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 8,
-    });
-    scene.add.existing(this);
-    this.setAlpha(0);
-  }
-
-  loadWord(word: Types.Word) {
-    this.word = word;
-    this.setText(this.word.ocr_transcript);
-    this.emit("CLUE_PAYLOAD_READY");
-  }
-
-  delete() {
-    this.destroy();
-  }
-}
-
-class SpriteCluePayload
-  extends Phaser.GameObjects.Sprite
-  implements CluePayload
-{
-  word: Types.Word;
-
-  textureKey: string;
-  baseHeight: number;
-
-  constructor(scene: FightScene) {
-    super(scene, 0, 0, "__MISSING");
-    scene.add.existing(this);
-    this.setAlpha(0);
-    this.baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
-  }
-
-  loadWord(word: Types.Word) {
-    this.word = word;
-    // TODO: we could be smarter and fully leverage caching, but meh.
-    this.textureKey = `${word.id}-${Date.now()}`;
-    this.loadTexture();
-  }
-
-  loadTexture() {
-    // this.scene.textures.remove()
-    this.scene.textures.addBase64(this.textureKey, this.word.image);
-    this.scene.textures.once(
-      "addtexture",
-      () => {
-        this.applyTexture();
-        this.emit("CLUE_PAYLOAD_READY");
-      },
-      this.scene,
-    );
-  }
-
-  estimateWordHeight() {
-    let height = 1.0;
-    // if (this.word.ocr_transcript.match(HYPERASCENDERS)) height += 0.2;
-    if (this.word.ocr_transcript.match(ASCENDERS)) height += 0.2;
-    if (this.word.ocr_transcript.match(DESCENDERS)) height += 0.2;
-    return height;
-  }
-
-  applyTexture() {
-    this.setTexture(this.textureKey);
-    const scale =
-      (this.estimateWordHeight() * this.baseHeight) /
-      this.texture.getSourceImage().height;
-    this.setScale(scale);
-  }
-
-  delete() {
-    this.texture.destroy();
-    this.destroy();
-  }
-}
-
 class Clue {
   scene: FightScene;
   word: Types.Word;
   duration: number;
-  payload: TextCluePayload | SpriteCluePayload;
+  payload: SpriteCluePayload | TextCluePayload;
 
   constructor(scene: FightScene, word: Types.Word, duration: number) {
     this.scene = scene;
     this.word = word;
     this.duration = duration;
 
-    // this.payload = new TextCluePayload(this.scene);
-    this.payload = new SpriteCluePayload(this.scene);
+    // TODO: is this size really ok?
+    const baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
+    this.payload =
+      Math.random() < 0.5
+        ? new TextCluePayload(this.scene, baseHeight)
+        : new SpriteCluePayload(this.scene, baseHeight);
 
-    this.payload.once("CLUE_PAYLOAD_READY", this.showTexture.bind(this));
+    this.payload.once("addedtoscene", this.showTexture.bind(this));
     this.payload.loadWord(word);
   }
 
