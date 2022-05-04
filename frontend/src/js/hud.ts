@@ -1,3 +1,5 @@
+import { FONTS } from "./assets";
+
 export const ICONS = {
   SCORE: "️⭐️",
   CLOCK: "⏲️",
@@ -7,7 +9,7 @@ export const ICONS = {
 export const THIN_SPACE = "\u2009";
 
 const STATS_BASE_TEXT_STYLE = {
-  fontFamily: "Courier",
+  fontFamily: FONTS.MONO,
   fontStyle: "bold",
   color: "white",
   testString: `${Object.values(ICONS).join("")}1234567890:.`,
@@ -16,7 +18,7 @@ const STATS_BASE_TEXT_STYLE = {
 } as Phaser.Types.GameObjects.Text.TextStyle;
 
 const INPUT_BASE_TEXT_STYLE = {
-  fontFamily: "Courier",
+  fontFamily: FONTS.MONO,
   fontStyle: "bold",
   color: "white",
   testString: `ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖẞabcdefghijklmnopqrstuvwxyzäüöß `,

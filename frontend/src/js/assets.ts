@@ -164,3 +164,25 @@ export const BackgroundImages: Phaser.Types.Loader.FileTypes.ImageFileConfig[] =
     { key: "L10", url: L10URL as string },
     { key: "L11", url: L11URL as string },
   ];
+
+const RexWebFontLoaderPluginURL =
+  "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexwebfontloaderplugin.min.js";
+
+export const RexWebFontLoaderPluginFileConfig: Phaser.Types.Loader.FileConfig =
+  {
+    type: "plugin",
+    key: "rexwebfontloaderplugin",
+    url: RexWebFontLoaderPluginURL,
+    // start: true,
+  };
+
+export const FONTS = {
+  MONO: "Cousine, monospace",
+  FRAK: "UnifrakturMaguntia",
+};
+
+export const RexWebFontLoaderConfig = {
+  google: {
+    families: ["UnifrakturMaguntia", "Cousine"],
+  },
+};

@@ -1,4 +1,5 @@
 import "phaser";
+import { FONTS } from "./assets";
 
 export default class PauseScene extends Phaser.Scene {
   constructor() {
@@ -28,7 +29,7 @@ export default class PauseScene extends Phaser.Scene {
   drawTitle() {
     const text = "PAUSED";
     const title = this.add.text(0, 0, text, {
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontSize: "64px",
       fontStyle: "bold",
       color: "white",
@@ -48,7 +49,7 @@ export default class PauseScene extends Phaser.Scene {
       ? "  TAKE A BREATH\nESC key to resume"
       : "TAKE A BREATH\ntap to resume";
     const title = this.add.text(0, 0, text, {
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontSize: "32px",
       fontStyle: "bold",
       color: "white",

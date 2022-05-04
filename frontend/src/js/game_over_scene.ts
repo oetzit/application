@@ -1,4 +1,5 @@
 import "phaser";
+import { FONTS } from "./assets";
 import BackgroundScene from "./background_scene";
 import { formatTime, ICONS, THIN_SPACE } from "./hud";
 
@@ -47,7 +48,7 @@ export default class GameOverScene extends Phaser.Scene {
     const text = "GAME OVER";
     const title = this.add.text(0, 0, text, {
       fontSize: "48px",
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontStyle: "bold",
       color: "#ff0000",
     });
@@ -62,7 +63,7 @@ export default class GameOverScene extends Phaser.Scene {
     const text = `You donated to our research\n${wordCount} WORDS\n${ICONS.HEALTH}${THIN_SPACE}Thank you!${THIN_SPACE}${ICONS.HEALTH}`; //
     const subtitle = this.add.text(0, 0, text, {
       fontSize: "28px",
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontStyle: "bold",
       color: "#aaff00",
       align: "center",
@@ -80,7 +81,7 @@ export default class GameOverScene extends Phaser.Scene {
     const text = `${score}\u2009${ICONS.SCORE}\n${timer}\u2009${ICONS.CLOCK}`;
     const title = this.add.text(0, 0, text, {
       fontSize: "28px",
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontStyle: "bold",
       color: "#ffffff",
       align: "right",
@@ -97,7 +98,7 @@ export default class GameOverScene extends Phaser.Scene {
     const text = "press to continue";
     const cta = this.add.text(0, 0, text, {
       fontSize: "32px",
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontStyle: "bold",
       color: "#ffffff",
     });

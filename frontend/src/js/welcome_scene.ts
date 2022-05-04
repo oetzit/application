@@ -1,4 +1,5 @@
 import "phaser";
+import { FONTS } from "./assets";
 
 export default class WelcomeScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -34,7 +35,7 @@ export default class WelcomeScene extends Phaser.Scene {
   drawTitle() {
     const text = "ÖTZIT!";
     const title = this.add.text(0, 0, text, {
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontSize: "64px",
       fontStyle: "bold",
       color: "white",
@@ -54,7 +55,7 @@ export default class WelcomeScene extends Phaser.Scene {
       ? "any key to begin\nESC key to pause\n TYPE ALL WORDS"
       : " tap to begin\n tap to pause\nTYPE ALL WORDS";
     const cta = this.add.text(0, 0, text, {
-      fontFamily: "Courier",
+      fontFamily: FONTS.MONO,
       fontSize: "32px",
       fontStyle: "bold",
       color: "white",
@@ -72,7 +73,9 @@ export default class WelcomeScene extends Phaser.Scene {
   drawVersion() {
     const text = process.env.APP_VERSION || "unknown";
     const cta = this.add.text(0, 0, text.toUpperCase(), {
-      font: "bold 16px Courier",
+      fontFamily: FONTS.MONO,
+      fontSize: "16px",
+      fontStyle: "bold",
       color: "#888888",
     });
     cta.setOrigin(0.5, 1);
