@@ -18,10 +18,11 @@ class Clue {
 
     // TODO: is this size really ok?
     const baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
-    this.payload =
-      Math.random() < 0.5
-        ? new TextCluePayload(this.scene, baseHeight)
-        : new SpriteCluePayload(this.scene, baseHeight);
+    this.payload = new SpriteCluePayload(this.scene, baseHeight);
+    // this.payload =
+    //   Math.random() < 0.5
+    //     ? new TextCluePayload(this.scene, baseHeight)
+    //     : new SpriteCluePayload(this.scene, baseHeight);
 
     this.payload.once("addedtoscene", this.showTexture.bind(this));
     this.payload.loadWord(word);
