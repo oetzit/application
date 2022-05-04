@@ -4,7 +4,6 @@ import Spear from "./spear";
 import Player from "./player";
 import backend from "./backend";
 
-// TODO: write interfaces
 import levenshtein from "damerau-levenshtein";
 
 import * as Types from "../../../backend/src/types";
