@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2022-05-05
+
 ### Added
 
 - `FE` Add fox and rabbit critters.
@@ -198,7 +200,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.0.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.1.0...development
+[1.1.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.0.0...1.1.0
 [1.0.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.7.0...1.0.0
 [0.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.6.0...0.7.0
 [0.6.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.5.0...0.6.0
