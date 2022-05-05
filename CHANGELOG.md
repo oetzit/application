@@ -7,9 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `FE` Add fox and rabbit critters.
+- `FE` Critter size is now proportional to word length.
+- `FE` Implement asset preloading.
+- `FE` Implement haptic feedback for mobile devices.
+- `FE` Allow key stroke repetition on hold.
+- `FE` Implement loading screen.
+- `FE` Expiring clues flash red before disappearing.
+- `FE` Health pulses red when low.
+- `FE` Implement webfont preloading.
+- `FE` Switch to using only webfonts.
+- `FE` Implement text clues (as opposed to image clues). Propedeutic to tutorial mode.
+- `FE` Implement buttons on welcome screen. Propedeutic to tutorial mode.
+
 ### Changed
 
 - `FE` Removed redundant clock icon from HUD.
+- `FE` Remove SHIFT keys; replace SPACE with SHIFT.
+- `FE` Make input preview smaller to improve clue overlaps for slow typers on mobile.
+- `FE` Rename "wave" to "level".
+- `FE` Lower max length to 3 at game start.
+
+### Fixed
+
+- `FE` Avoid text overlap on mobile in game over screen.
 
 ## [1.0.0] - 2022-04-21
 
