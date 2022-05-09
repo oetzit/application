@@ -1,5 +1,5 @@
 import "phaser";
-import FightScene from "./fight_scene";
+import MainScene from "./main_scene";
 
 const SPECIES = [
   // NOTE: these are ordered by size (i.e. difficulty)
@@ -30,11 +30,11 @@ enum CritterState {
 class Critter extends Phaser.Physics.Arcade.Sprite {
   baseVelocity: number;
   state: CritterState;
-  scene: FightScene;
+  scene: MainScene;
   species: string;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(scene: FightScene, baseVelocity = 100, size = 1.0) {
+  constructor(scene: MainScene, baseVelocity = 100, size = 1.0) {
     const speciesIndex = Math.min(
       SPECIES.length - 1,
       Math.floor(size * SPECIES.length),

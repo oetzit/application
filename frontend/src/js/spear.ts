@@ -1,5 +1,5 @@
 import "phaser";
-import FightScene from "./fight_scene";
+import MainScene from "./main_scene";
 import Critter from "./critter";
 
 import { GRAVITY_Y } from "./game";
@@ -13,7 +13,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
   target: Critter | undefined;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(scene: FightScene, source: Player, target: Critter | undefined) {
+  constructor(scene: MainScene, source: Player, target: Critter | undefined) {
     super(scene, scene.player.x, scene.player.y, "spear");
     this.play({ key: "SpearStill" });
     scene.add.existing(this);
