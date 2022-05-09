@@ -222,10 +222,10 @@ export default class FightScene extends MainScene {
       (expLength + (length - expLength) * difficulty);
 
     if (currentCount < maxCount && currentChars < maxChars) {
-      await this.spawnFoe(10, 1);
+      await this.spawnFoe(length, duration);
     }
 
-    this.spawner = this.time.delayedCall(100, this.spawnFoes.bind(this));
+    this.spawner = this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
   async spawnFoe(length: number, timeout: number) {
