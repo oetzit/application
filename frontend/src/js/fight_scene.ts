@@ -260,7 +260,24 @@ export default class FightScene extends MainScene {
   }
 
   async spawnFoe(length: number, timeout: number) {
-    // TODO: this is a terrible pattern
-    await new Foe(this, timeout).initialize(length);
+    const beWord = (
+      await backend.createWordChoice({
+        ocr_transcript_length_min: length,
+        ocr_transcript_length_max: length,
+      })
+    ).data;
+
+    const beClue = (
+      await backend.createClue(this.beGame.id, {
+        word_id: beWord.id,
+        began_at: new Date().toISOString(),
+        began_at_gmtm: this.getGameTime(),
+      })
+    ).data;
+
+    if (!this.scene.isActive()) return;
+
+    const foe = new Foe(this, timeout);
+    foe.initialize(length, beWord, beClue);
   }
 }

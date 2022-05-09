@@ -3,7 +3,6 @@ import Clue from "./clue";
 import Critter from "./critter";
 import FightScene from "./fight_scene";
 
-import backend from "./backend";
 import * as Types from "../../../backend/src/types";
 
 class Foe {
@@ -23,21 +22,9 @@ class Foe {
     this.duration = duration;
   }
 
-  async initialize(length: number) {
-    this.beWord = (
-      await backend.createWordChoice({
-        ocr_transcript_length_min: length,
-        ocr_transcript_length_max: length,
-      })
-    ).data;
-    if (!this.scene.scene.isActive()) return;
-    this.beClue = (
-      await backend.createClue(this.scene.beGame.id, {
-        word_id: this.beWord.id,
-        began_at: new Date().toISOString(),
-        began_at_gmtm: this.scene.getGameTime(),
-      })
-    ).data;
+  initialize(length: number, beWord: Types.Word, beClue: Types.Clue) {
+    this.beWord = beWord;
+    this.beClue = beClue;
 
     this.clue = new Clue(this.scene, this.beWord, this.duration);
     // TODO: this is the time to reach a collision w/player, but maybe we should just use the transversal of the full screen.
