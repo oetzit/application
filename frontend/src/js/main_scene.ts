@@ -1,12 +1,10 @@
 import "phaser";
-
-import Player from "./player";
-
 import levenshtein from "damerau-levenshtein";
 
 import Foe from "./foe";
-import Typewriter from "./typewriter";
 import HUD from "./hud";
+import Player from "./player";
+import Typewriter from "./typewriter";
 
 export interface InputStatus {
   began_at: string;
@@ -30,135 +28,28 @@ interface UIDimensions {
 }
 
 export default class MainScene extends Phaser.Scene {
-  foes: Array<Foe>;
-  player: Player;
-  cluesGroup: Phaser.Physics.Arcade.Group;
-  typewriter: Typewriter;
-  acceptedWords: number;
-  score: number;
-  health: number;
-  hud: HUD;
-  gameTime: Phaser.Time.TimerEvent;
-  uiDimensions: UIDimensions;
   music!: Phaser.Sound.BaseSound;
-
-  constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
-    super(config);
-    this.foes = [];
-  }
-
-  init() {
-    this.score = 0;
-    this.health = 100;
-    this.acceptedWords = 0;
-
-    this.uiDimensions = this.initUiDimensions();
-    this.hud = new HUD(this, {
-      statsPadding: this.uiDimensions.statsPadding,
-      statsFontSize: this.uiDimensions.statsFontSize,
-      inputPadding: this.uiDimensions.inputPadding,
-      inputFontSize: this.uiDimensions.inputFontSize,
-      inputPosition: this.uiDimensions.inputPosition,
-    });
-    this.hud.setHealth(this.health);
-    this.hud.setScore(this.score);
-    this.hud.setClock(0);
-
-    this.events.on("pause", this.onPause.bind(this));
-    this.events.on("resume", this.onResume.bind(this));
-  }
-
-  onPause() {
-    this.concealClues();
-    this.typewriter.setActive(false);
-    this.music.pause();
-    this.scene.launch("pause");
-  }
-
-  onResume() {
-    this.uncoverClues();
-    this.typewriter.setActive(true);
-    this.music.play();
-    this.scene.stop("pause");
-  }
-
-  initUiDimensions(): UIDimensions {
-    const ch = this.cameras.main.height;
-    const cw = this.cameras.main.width;
-    const vh = ch * 0.01;
-    const vw = cw * 0.01;
-
-    const kbdHeight = Math.min(40 * vh, 48 * vw); // see max-height of .hg-theme-default
-
-    const statsPadding = Math.min(1 * vw, 10);
-    const statsFontSize = "max(3vw,20px)"; // never smaller than 20px for readability
-    const statsHeight = Math.max(3 * vw, 20) * 1.4 + 2 * statsPadding;
-
-    const inputPadding = 0; //Math.min(0.5 * vw, 0);
-    const inputFontSize = "min(12vw,48px)"; // always fit ~12 chars comfortably in width
-    const inputHeight = Math.min(12 * vw, 48) * 1.2 + 2 * inputPadding;
-    const inputPosition = (ch - kbdHeight - 0.5 * inputHeight) / ch;
-
-    const cluesBounds = new Phaser.Geom.Rectangle(
-      5,
-      statsHeight,
-      cw - 2 * 15,
-      ch - statsHeight - kbdHeight - inputHeight,
-    );
-
-    return {
-      kbdHeight,
-      statsPadding,
-      statsFontSize,
-      statsHeight,
-      inputPadding,
-      inputFontSize,
-      inputHeight,
-      inputPosition,
-      cluesBounds,
-    };
-  }
+  player!: Player;
 
   async create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
 
-    this.bindPauseShortcut();
-
-    this.gameTime = this.time.addEvent({
-      delay: Number.MAX_SAFE_INTEGER,
-      paused: true,
-    });
-
-    this.initCluesGroup();
-
     this.createAnimations();
 
-    this.physics.world.setBounds(
-      0,
-      0,
-      this.cameras.main.width,
-      this.cameras.main.height - 30,
-      false,
-      false,
-      false,
-      true,
-    );
+    this.resetGameState();
 
-    // NOTE: this helps w/ clue sprite overlap
-    this.physics.world.setFPS(2 * this.game.loop.targetFps);
+    this.createGameTime();
+    this.resetGameTime();
 
-    this.physics.world.on(
-      "worldbounds",
-      function (
-        body: Phaser.Physics.Arcade.Body,
-        up: boolean,
-        down: boolean,
-        left: boolean,
-        right: boolean,
-      ) {
-        body.gameObject.emit("hitWorldBounds", { up, down, left, right });
-      },
-    );
+    this.createUiDimensions();
+    this.createHUD();
+    this.resetHUD();
+
+    this.bindPauseResumeEvents();
+    this.bindPauseUserControls();
+
+    this.createPhysics();
+    this.initCluesGroup();
 
     this.player = new Player(this);
 
@@ -169,12 +60,33 @@ export default class MainScene extends Phaser.Scene {
 
     this.createAndBindTypewriter();
 
-    await this.afterCreate();
+    await this.beforeGameStart();
+    this.setGameTimePaused(false);
   }
 
-  async afterCreate() {
-    this.gameTime.paused = false;
+  update() {
+    this.updateClock();
   }
+
+  async beforeGameStart() {
+    console.error("beforeGameStart not implemented");
+  }
+
+  async endGame() {
+    this.setGameTimePaused(true);
+    this.foes.forEach((foe) => foe.destroy());
+    this.sound.play("sfx_game_over");
+    this.typewriter.setActive(false);
+    this.typewriter.resetInputStatus();
+
+    await this.afterGameEnd();
+  }
+
+  async afterGameEnd() {
+    console.error("afterGameEnd not implemented");
+  }
+
+  //=[ Sprite animations ]======================================================
 
   createAnimations() {
     const defaults: Phaser.Types.Animations.Animation = {
@@ -223,6 +135,194 @@ export default class MainScene extends Phaser.Scene {
     this.anims.create({ key: "WolfWalk", frames: "WolfWalk", ...defaults });
   }
 
+  //=[ Game time ]==============================================================
+
+  gameTime!: Phaser.Time.TimerEvent;
+
+  getGameTime() {
+    // NOTE: we round because we don't need sub-ms precision.
+    return Math.round(this.gameTime.getElapsed());
+  }
+
+  createGameTime() {
+    this.gameTime = this.time.addEvent({});
+  }
+
+  resetGameTime() {
+    this.gameTime.reset({
+      delay: Number.MAX_SAFE_INTEGER,
+      paused: true,
+    });
+  }
+
+  setGameTimePaused(paused: boolean) {
+    this.gameTime.paused = paused;
+  }
+
+  //=[ Pause/resume ]===========================================================
+
+  bindPauseResumeEvents() {
+    this.events.on("pause", this.onPause.bind(this));
+    this.events.on("resume", this.onResume.bind(this));
+  }
+
+  onPause() {
+    this.concealClues();
+    this.typewriter.setActive(false);
+    this.music.pause();
+    this.scene.launch("pause");
+  }
+
+  concealClues() {
+    this.foes.forEach((foe) => foe.clue.conceal());
+  }
+
+  onResume() {
+    this.uncoverClues();
+    this.typewriter.setActive(true);
+    this.music.play();
+    this.scene.stop("pause");
+  }
+
+  uncoverClues() {
+    this.foes.forEach((foe) => foe.clue.uncover());
+  }
+
+  bindPauseUserControls() {
+    if (this.game.device.os.desktop) {
+      const escBinding = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.ESC,
+      );
+      escBinding.onDown = () => this.scene.pause();
+    } else {
+      const onPointerUp = (pointer: Phaser.Input.Pointer) => {
+        const tapped =
+          pointer.downY <
+          this.cameras.main.height - this.uiDimensions.kbdHeight;
+        if (tapped) this.scene.pause();
+      };
+      this.input.on("pointerup", onPointerUp);
+    }
+  }
+
+  //=[ HUD and UI dimensions ]==================================================
+
+  uiDimensions!: UIDimensions;
+  hud!: HUD;
+
+  createUiDimensions() {
+    this.uiDimensions = this.computeUiDimensions(this.cameras.main);
+  }
+
+  createHUD() {
+    this.hud = new HUD(this, {
+      statsPadding: this.uiDimensions.statsPadding,
+      statsFontSize: this.uiDimensions.statsFontSize,
+      inputPadding: this.uiDimensions.inputPadding,
+      inputFontSize: this.uiDimensions.inputFontSize,
+      inputPosition: this.uiDimensions.inputPosition,
+    });
+  }
+
+  resetHUD() {
+    this.hud.setHealth(this.health);
+    this.hud.setScore(this.score);
+    this.hud.setClock(0);
+  }
+
+  computeUiDimensions(camera: Phaser.Cameras.Scene2D.Camera): UIDimensions {
+    const ch = camera.height;
+    const cw = camera.width;
+    const vh = ch * 0.01;
+    const vw = cw * 0.01;
+
+    const kbdHeight = Math.min(40 * vh, 48 * vw); // see max-height of .hg-theme-default
+
+    const statsPadding = Math.min(1 * vw, 10);
+    const statsFontSize = "max(3vw,20px)"; // never smaller than 20px for readability
+    const statsHeight = Math.max(3 * vw, 20) * 1.4 + 2 * statsPadding;
+
+    const inputPadding = 0; //Math.min(0.5 * vw, 0);
+    const inputFontSize = "min(12vw,48px)"; // always fit ~12 chars comfortably in width
+    const inputHeight = Math.min(12 * vw, 48) * 1.2 + 2 * inputPadding;
+    const inputPosition = (ch - kbdHeight - 0.5 * inputHeight) / ch;
+
+    const cluesBounds = new Phaser.Geom.Rectangle(
+      5,
+      statsHeight,
+      cw - 2 * 15,
+      ch - statsHeight - kbdHeight - inputHeight,
+    );
+
+    return {
+      kbdHeight,
+      statsPadding,
+      statsFontSize,
+      statsHeight,
+      inputPadding,
+      inputFontSize,
+      inputHeight,
+      inputPosition,
+      cluesBounds,
+    };
+  }
+
+  //=[ Physics ]================================================================
+
+  cluesGroup!: Phaser.Physics.Arcade.Group;
+
+  createPhysics() {
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.cameras.main.width,
+      this.cameras.main.height - 30,
+      false,
+      false,
+      false,
+      true,
+    );
+
+    // NOTE: this helps w/ clue sprite overlap
+    this.physics.world.setFPS(2 * this.game.loop.targetFps);
+
+    this.physics.world.on(
+      "worldbounds",
+      function (
+        body: Phaser.Physics.Arcade.Body,
+        up: boolean,
+        down: boolean,
+        left: boolean,
+        right: boolean,
+      ) {
+        body.gameObject.emit("hitWorldBounds", { up, down, left, right });
+      },
+    );
+  }
+
+  initCluesGroup() {
+    this.cluesGroup = this.physics.add.group({
+      collideWorldBounds: true,
+      customBoundsRectangle: this.uiDimensions.cluesBounds,
+      bounceY: 0.2,
+      dragY: 180,
+    });
+    this.physics.add.collider(this.cluesGroup, this.cluesGroup);
+  }
+
+  //=[ Game state ]=============================================================
+
+  foes!: Array<Foe>;
+  score!: number;
+  health!: number;
+  acceptedWords!: number;
+
+  resetGameState() {
+    this.foes = [];
+    this.score = 0;
+    this.health = 100;
+    this.acceptedWords = 0;
+  }
   updateScore(delta: number) {
     this.score += delta;
     this.hud.setScore(this.score);
@@ -235,42 +335,18 @@ export default class MainScene extends Phaser.Scene {
     this.hud.setHealth(this.health);
     this.hud.changeFlash(this.hud.health, delta > 0 ? 0x00ff00 : 0xff0000);
     if (this.health <= 25) this.hud.startLowHealthPulse();
-    this.checkAlive();
+    if (this.health <= 0) this.endGame();
   }
 
-  update(time: number, delta: number): void {
-    // TODO: something poissonian
-    // console.log(time, delta);
+  updateClock() {
     this.hud.setClock(this.getGameTime());
   }
 
-  checkAlive() {
-    if (this.health > 0) return;
-    this.endGame();
+  popFoe(foe: Foe) {
+    this.foes.splice(this.foes.indexOf(foe), 1);
   }
 
-  async endGame() {
-    this.foes.forEach((foe) => foe.destroy());
-    this.sound.play("sfx_game_over");
-    this.typewriter.setActive(false);
-    this.typewriter.resetInputStatus();
-
-    await this.afterEndGame();
-  }
-
-  async afterEndGame() {
-    console.error("afterEndGame not implemented");
-  }
-
-  initCluesGroup() {
-    this.cluesGroup = this.physics.add.group({
-      collideWorldBounds: true,
-      customBoundsRectangle: this.uiDimensions.cluesBounds,
-      bounceY: 0.2,
-      dragY: 180,
-    });
-    this.physics.add.collider(this.cluesGroup, this.cluesGroup);
-  }
+  //=[ Matching logic ]=========================================================
 
   findMatchingFoe(transcription: string) {
     let result: { similarity: number; match: Foe | null } = {
@@ -292,9 +368,9 @@ export default class MainScene extends Phaser.Scene {
     return result;
   }
 
-  popFoe(foe) {
-    this.foes.splice(this.foes.indexOf(foe), 1);
-  }
+  //=[ Typewriter and submission ]==============================================
+
+  typewriter!: Typewriter;
 
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter(this.game.device.os.desktop);
@@ -322,38 +398,7 @@ export default class MainScene extends Phaser.Scene {
     };
   }
 
-  submitTranscription(inputStatus: InputStatus) {
-    console.debug(inputStatus);
-  }
-
-  concealClues() {
-    this.foes.forEach((foe) => foe.clue.conceal());
-  }
-
-  uncoverClues() {
-    this.foes.forEach((foe) => foe.clue.uncover());
-  }
-
-  getGameTime() {
-    // NOTE: we don't need sub-ms precision.
-    // NOTE: pretty please, don't access the timer directly.
-    return Math.round(this.gameTime.getElapsed());
-  }
-
-  bindPauseShortcut() {
-    if (this.game.device.os.desktop) {
-      const escBinding = this.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.ESC,
-      );
-      escBinding.onDown = () => this.scene.pause();
-    } else {
-      const onPointerUp = (pointer: Phaser.Input.Pointer) => {
-        const tapped =
-          pointer.downY <
-          this.cameras.main.height - this.uiDimensions.kbdHeight;
-        if (tapped) this.scene.pause();
-      };
-      this.input.on("pointerup", onPointerUp);
-    }
+  submitTranscription(_inputStatus: InputStatus) {
+    console.error("submitTranscription not implemented");
   }
 }

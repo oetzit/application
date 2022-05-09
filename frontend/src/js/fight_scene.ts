@@ -56,7 +56,7 @@ export default class FightScene extends MainScene {
     );
   }
 
-  async afterCreate() {
+  async beforeGameStart() {
     (this.scene.get("background") as BackgroundScene).atmosphere.play();
     this.planMusicChanges();
     this.planWaveAnnouncements();
@@ -222,7 +222,7 @@ export default class FightScene extends MainScene {
       (expLength + (length - expLength) * difficulty);
 
     if (currentCount < maxCount && currentChars < maxChars) {
-      await this.spawnFoe(length, duration);
+      await this.spawnFoe(10, 1);
     }
 
     this.spawner = this.time.delayedCall(100, this.spawnFoes.bind(this));
@@ -233,7 +233,7 @@ export default class FightScene extends MainScene {
     await new Foe(this, timeout).initialize(length);
   }
 
-  async afterEndGame() {
+  async afterGameEnd() {
     this.beGame = (
       await backend.updateGame(this.beGame.id, {
         ended_at: new Date().toISOString(),

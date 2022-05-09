@@ -1,10 +1,9 @@
 import "phaser";
-import FightScene from "./fight_scene";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(scene: FightScene) {
+  constructor(scene: Phaser.Scene) {
     super(scene, 0, 0, "Oetzi");
     scene.add.existing(this);
 
