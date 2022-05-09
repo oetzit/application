@@ -3,7 +3,7 @@ import { FONTS } from "./assets";
 export const ICONS = {
   SCORE: "️⭐️",
   CLOCK: "⏲️",
-  HEALTH: "❤️️",
+  HEALTH: "💙",
 };
 
 export const THIN_SPACE = "\u2009";
