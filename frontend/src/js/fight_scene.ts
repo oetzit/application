@@ -17,6 +17,42 @@ export default class FightScene extends MainScene {
     super("fight");
   }
 
+  async beforeGameStart() {
+    this.planBackgroundTransitions();
+    this.planMusicChanges();
+    this.planWaveAnnouncements();
+
+    await this.initBeDevice();
+    await this.initBeGame();
+
+    this.spawnFoes();
+  }
+
+  async afterGameEnd() {
+    this.beGame = (
+      await backend.updateGame(this.beGame.id, {
+        ended_at: new Date().toISOString(),
+        ended_at_gmtm: this.getGameTime(),
+        score: this.score,
+      })
+    ).data;
+
+    this.spawner.remove();
+
+    this.scene.start("game_over", {
+      music: this.music,
+      words: this.acceptedWords,
+      score: this.beGame.score,
+      time: this.beGame.ended_at_gmtm,
+    });
+  }
+
+  //=[ Ambient transitions ]====================================================
+
+  planBackgroundTransitions() {
+    (this.scene.get("background") as BackgroundScene).atmosphere.play();
+  }
+
   musicSoftReplace(nextMusic: Phaser.Sound.BaseSound) {
     this.music.on("looped", () => {
       this.music.stop();
@@ -39,6 +75,7 @@ export default class FightScene extends MainScene {
   }
 
   planWaveAnnouncements() {
+    // TODO: parameterize
     this.time.delayedCall(0 * 60 * 1000, () =>
       this.hud.announceWave("LEVEL 1"),
     );
@@ -56,15 +93,7 @@ export default class FightScene extends MainScene {
     );
   }
 
-  async beforeGameStart() {
-    (this.scene.get("background") as BackgroundScene).atmosphere.play();
-    this.planMusicChanges();
-    this.planWaveAnnouncements();
-    await this.initBeDevice();
-    await this.initBeGame();
-    this.gameTime.paused = false;
-    this.spawnFoes();
-  }
+  //=[ BE initialization ]======================================================
 
   async initBeDevice() {
     const deviceId = sessionStorage.getItem(DEVICE_KEY);
@@ -84,6 +113,8 @@ export default class FightScene extends MainScene {
       })
     ).data;
   }
+
+  //=[ Game loop ]==============================================================
 
   nthFibonacci(n: number) {
     return Math.round(Math.pow((1 + Math.sqrt(5)) / 2, n) / Math.sqrt(5));
@@ -231,23 +262,5 @@ export default class FightScene extends MainScene {
   async spawnFoe(length: number, timeout: number) {
     // TODO: this is a terrible pattern
     await new Foe(this, timeout).initialize(length);
-  }
-
-  async afterGameEnd() {
-    this.beGame = (
-      await backend.updateGame(this.beGame.id, {
-        ended_at: new Date().toISOString(),
-        ended_at_gmtm: this.getGameTime(),
-        score: this.score,
-      })
-    ).data;
-    this.spawner.remove();
-
-    this.scene.start("game_over", {
-      music: this.music,
-      words: this.acceptedWords,
-      score: this.beGame.score,
-      time: this.beGame.ended_at_gmtm,
-    });
   }
 }
