@@ -71,12 +71,10 @@ export default class WelcomeScene extends Phaser.Scene {
       .text(this.cameras.main.centerX, this.cameras.main.height * 0.6, text, {
         ...TEXT_STYLE.BUTTON,
         fontSize: `${Math.min(this.cameras.main.width * 0.125, 48)}px`,
-        color: "gray",
-        stroke: "gray",
       })
       .setOrigin(0.5, 1)
       .setPadding(4)
-      // .setInteractive({ useHandCursor: true })
+      .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
         this.helpButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
       )
@@ -125,8 +123,12 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   bindEvents() {
-    this.helpButton.on("pointerup", () => {});
+    this.helpButton.on("pointerup", this.startTutorial.bind(this));
     this.playButton.on("pointerup", this.startFight.bind(this));
+  }
+
+  startTutorial() {
+    this.scene.start("tutorial", { music: this.music });
   }
 
   startFight() {

@@ -6,6 +6,7 @@ import WelcomeScene from "./welcome_scene";
 import FightScene from "./fight_scene";
 import GameOverScene from "./game_over_scene";
 import PauseScene from "./pause_scene";
+import TutorialScene from "./tutorial_scene";
 
 export const GRAVITY_Y = 200;
 
@@ -26,6 +27,7 @@ const CONFIG = {
     LoadingScene,
     BackgroundScene,
     WelcomeScene,
+    TutorialScene,
     FightScene,
     PauseScene,
     GameOverScene,

@@ -60,8 +60,8 @@ export default class MainScene extends Phaser.Scene {
 
     this.createAndBindTypewriter();
 
-    await this.beforeGameStart();
     this.setGameTimePaused(false);
+    await this.beforeGameStart();
   }
 
   update() {
