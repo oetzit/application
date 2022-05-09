@@ -251,15 +251,36 @@ export default class FightScene extends Phaser.Scene {
   }
 
   createAnimations() {
-    this.createAnimation("player_idle", "Oetzi", 1, 5);
-    this.createAnimation("player_run", "Oetzi", 6, 13);
-    this.createAnimation("spearAni", "SpearStill", 0, 3);
-    this.createAnimation("spearHitAni", "SpearWobble", 0, 8);
-
     const defaults: Phaser.Types.Animations.Animation = {
       frameRate: 10,
       repeat: -1,
     };
+
+    this.anims.create({
+      key: "player_idle",
+      frames: this.anims.generateFrameNumbers("Oetzi", {
+        start: 1,
+        end: 5,
+      }),
+      ...defaults,
+    });
+    this.anims.create({
+      key: "player_run",
+      frames: this.anims.generateFrameNumbers("Oetzi", {
+        start: 6,
+        end: 13,
+      }),
+      ...defaults,
+    });
+
+    this.anims.create({ key: "SpearStill", frames: "SpearStill", ...defaults });
+    this.anims.create({
+      key: "SpearWobble",
+      frames: "SpearWobble",
+      ...defaults,
+      frameRate: 48,
+    });
+
     this.anims.create({ key: "BearRun", frames: "BearRun", ...defaults });
     this.anims.create({ key: "BearWalk", frames: "BearWalk", ...defaults });
     this.anims.create({ key: "BoarRun", frames: "BoarRun", ...defaults });
@@ -274,18 +295,6 @@ export default class FightScene extends Phaser.Scene {
     this.anims.create({ key: "RabbitWalk", frames: "RabbitWalk", ...defaults });
     this.anims.create({ key: "WolfRun", frames: "WolfRun", ...defaults });
     this.anims.create({ key: "WolfWalk", frames: "WolfWalk", ...defaults });
-  }
-
-  createAnimation(key: string, refKey: string, from: number, to: number) {
-    this.anims.create({
-      key: key,
-      frames: this.anims.generateFrameNumbers(refKey, {
-        start: from,
-        end: to,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
   }
 
   updateScore(delta: number) {

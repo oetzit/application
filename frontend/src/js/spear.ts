@@ -15,7 +15,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
 
   constructor(scene: FightScene, source: Player, target: Critter | undefined) {
     super(scene, scene.player.x, scene.player.y, "spear");
-    this.play({ key: "spearAni", repeat: -1 });
+    this.play({ key: "SpearStill" });
     scene.add.existing(this);
 
     // NOTE: a spear reaching shoulder height makes sense
@@ -71,7 +71,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
   hitGround() {
     // this.scene.physics.world.remove(this.body);
     this.body.setEnable(false);
-    this.play({ key: "spearHitAni", repeat: -1, frameRate: 48 });
+    this.play({ key: "SpearWobble" });
     this.setRotation(this.rotation - Math.PI / 2);
     this.scene.tweens.add({
       targets: this,
