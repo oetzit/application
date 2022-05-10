@@ -1,7 +1,7 @@
 import "phaser";
 import Clue from "./clue";
 import Critter from "./critter";
-import FightScene from "./fight_scene";
+import MainScene from "./main_scene";
 
 import * as Types from "../../../backend/src/types";
 
@@ -9,7 +9,7 @@ class Foe {
   beWord: Types.Word;
   beClue: Types.Clue;
 
-  scene: FightScene;
+  scene: MainScene;
   critter: Critter;
   clue: Clue;
 
@@ -17,7 +17,7 @@ class Foe {
 
   duration: number;
 
-  constructor(scene: FightScene, duration = 15) {
+  constructor(scene: MainScene, duration = 15) {
     this.scene = scene;
     this.duration = duration;
   }
@@ -25,6 +25,8 @@ class Foe {
   initialize(length: number, beWord: Types.Word, beClue: Types.Clue) {
     this.beWord = beWord;
     this.beClue = beClue;
+
+    // TODO: generate clue payload here.
 
     this.clue = new Clue(this.scene, this.beWord, this.duration);
     // TODO: this is the time to reach a collision w/player, but maybe we should just use the transversal of the full screen.

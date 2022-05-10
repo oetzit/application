@@ -116,10 +116,6 @@ export default class FightScene extends MainScene {
 
   //=[ Game loop ]==============================================================
 
-  nthFibonacci(n: number) {
-    return Math.round(Math.pow((1 + Math.sqrt(5)) / 2, n) / Math.sqrt(5));
-  }
-
   submitTranscription = (inputStatus: InputStatus) => {
     const similarityThreshold = 0.9;
     // NOTE: this ain't async to avoid any UX delay

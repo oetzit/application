@@ -18,17 +18,18 @@ class Clue {
 
     // TODO: is this size really ok?
     const baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
-    this.payload = new SpriteCluePayload(this.scene, baseHeight);
-    // this.payload =
-    //   Math.random() < 0.5
-    //     ? new TextCluePayload(this.scene, baseHeight)
-    //     : new SpriteCluePayload(this.scene, baseHeight);
 
-    this.payload.once("addedtoscene", this.showTexture.bind(this));
+    this.payload =
+      this.word.id == ""
+        ? new TextCluePayload(this.scene, baseHeight)
+        : new SpriteCluePayload(this.scene, baseHeight);
+
+    this.payload.once("addedtoscene", this.showPayload.bind(this));
     this.payload.loadWord(word);
   }
 
-  showTexture() {
+  showPayload() {
+    console.log(this.scene.scene.isActive());
     if (!this.scene.scene.isActive()) return;
     this.scene.physics.add.existing(this.payload);
     this.scene.cluesGroup.add(this.payload);

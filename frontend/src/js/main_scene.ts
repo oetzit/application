@@ -401,4 +401,10 @@ export default class MainScene extends Phaser.Scene {
   submitTranscription(_inputStatus: InputStatus) {
     console.error("submitTranscription not implemented");
   }
+
+  //=[ Game loop ]==============================================================
+
+  nthFibonacci(n: number) {
+    return Math.round(Math.pow((1 + Math.sqrt(5)) / 2, n) / Math.sqrt(5));
+  }
 }

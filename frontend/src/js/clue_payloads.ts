@@ -1,11 +1,10 @@
 import "phaser";
-import FightScene from "./fight_scene";
 
-import * as Types from "../../../backend/src/types";
+import { Word } from "../../../backend/src/types";
 
 interface CluePayload {
   baseHeight: number;
-  loadWord: (word: Types.Word) => void;
+  loadWord: (word: Word) => void;
   delete: () => void;
 }
 
@@ -40,7 +39,19 @@ const TEXT_STYLE: {
       testString: GERMAN_ALPHABET,
     };
   },
-  NEWSPAPER: (height) => {
+  MONO_NEWSPAPER: (height) => {
+    return {
+      fontSize: `${height * 1.4}px`,
+      fontFamily: FONTS.MONO,
+      color: "#333333",
+      stroke: "#666666",
+      strokeThickness: 4,
+      testString: GERMAN_ALPHABET,
+      backgroundColor: "#aaaaaa",
+      padding: { x: 8 },
+    };
+  },
+  FRAK_NEWSPAPER: (height) => {
     return {
       fontSize: `${height * 1.4}px`,
       fontFamily: FONTS.FRAK,
@@ -60,13 +71,13 @@ export class TextCluePayload
 {
   baseHeight: number;
 
-  constructor(scene: FightScene, baseHeight: number) {
-    super(scene, 0, 0, "", TEXT_STYLE.TYPEWRITER(baseHeight));
+  constructor(scene: Phaser.Scene, baseHeight: number) {
+    super(scene, 0, 0, "", TEXT_STYLE.FRAK_NEWSPAPER(baseHeight));
     this.setAlpha(0);
     this.baseHeight = baseHeight;
   }
 
-  loadWord(word: Types.Word) {
+  loadWord(word: { ocr_transcript: string }) {
     this.setText(word.ocr_transcript);
     this.scene.add.existing(this);
   }
@@ -88,13 +99,13 @@ export class SpriteCluePayload
 {
   baseHeight: number;
 
-  constructor(scene: FightScene, baseHeight: number) {
+  constructor(scene: Phaser.Scene, baseHeight: number) {
     super(scene, 0, 0, "__MISSING");
     this.setAlpha(0);
     this.baseHeight = baseHeight;
   }
 
-  loadWord(word: Types.Word) {
+  loadWord(word: { id: string; image: string; ocr_transcript: string }) {
     // NOTE: this is a throwaway key, we're not leveraging cache
     const textureKey = `${word.id}-${Date.now()}`;
     this.scene.textures.addBase64(textureKey, word.image);
@@ -105,13 +116,13 @@ export class SpriteCluePayload
     });
   }
 
-  adjustTextureScale(word: Types.Word) {
+  adjustTextureScale(word: { ocr_transcript: string }) {
     const fullHeight = this.estimateRelativeFullHeight(word) * this.baseHeight;
     const scale = fullHeight / this.texture.getSourceImage().height;
     this.setScale(scale);
   }
 
-  estimateRelativeFullHeight(word: Types.Word) {
+  estimateRelativeFullHeight(word: { ocr_transcript: string }) {
     let height = 1.0;
     // if (word.ocr_transcript.match(HYPERASCENDERS)) height += 0.2;
     if (word.ocr_transcript.match(ASCENDERS)) height += 0.2;
