@@ -22,7 +22,7 @@ const TEXT_STYLE: {
 };
 
 export interface TutorialStep {
-  setup: (scenescene: TutorialScene) => void;
+  setup: (scene: TutorialScene) => void;
   teardown: (scene: TutorialScene) => void;
 }
 

@@ -4,13 +4,14 @@ import TutorialScene, { TutorialStep } from "./tutorial_scene";
 import Critter from "./critter";
 import Spear from "./spear";
 import Foe from "./foe";
+import { FONTS } from "./assets";
 
 interface TrialRoundOptions {
   scene: TutorialScene;
   words: string[];
   initialDelay: number;
   wordsDelay: number;
-  fixedDuration: number | undefined;
+  fixedDuration?: number;
 }
 
 function trialRound({
@@ -89,6 +90,7 @@ export const STEPS: TutorialStep[] = [
         "That's a mob of\nangry bunnies\n🢇 🐰💢",
       );
       scene.bucket.push(text);
+
       scene.time.addEvent({
         delay: 500,
         repeat: 5,
@@ -144,7 +146,6 @@ export const STEPS: TutorialStep[] = [
         "his (rubber) lances\nscare them away!\n🔫🤯",
       );
       scene.bucket.push(text);
-      const bunnies = [];
 
       scene.time.addEvent({
         delay: 500,
@@ -155,9 +156,9 @@ export const STEPS: TutorialStep[] = [
             scene.player.getBounds().left / 3,
             0,
           );
-          bunnies.push(critter);
           const spear = new Spear(scene, scene.player, critter);
           const collider = scene.physics.add.overlap(spear, critter, () => {
+            scene.physics.world.removeCollider(collider);
             scene.sound.play("sfx_hi_beep");
             scene.updateScore(1);
           });
@@ -191,8 +192,8 @@ export const STEPS: TutorialStep[] = [
         text: `Try! Type your name\nthen ${verb} ENTER ↩🔨`,
         positionY: scene.uiDimensions.cluesBounds.centerY,
       });
-
       scene.bucket.push(text);
+
       scene.submitTranscription = (inputStatus) => {
         scene.userName = inputStatus.final;
         scene.nextStep();
@@ -226,7 +227,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const text = scene.createText({
-        text: "🡼 💪🏅\nGreat! You scored\na bunch of points",
+        text: `🡼 💪🏅\nGreat! You scored\n${scene.score} points`,
         positionY: scene.uiDimensions.cluesBounds.centerY,
       });
       scene.bucket.push(text);
@@ -337,7 +338,7 @@ export const STEPS: TutorialStep[] = [
             (p + h) * j + p + h * 0.5,
             letter + letter.toLocaleLowerCase(),
             {
-              fontFamily: "UnifrakturMaguntia",
+              fontFamily: FONTS.FRAK,
               fontSize: `${h / 1.4}px`,
               testString: alphabet + alphabet.toLowerCase(),
               color: "#ffffff",
