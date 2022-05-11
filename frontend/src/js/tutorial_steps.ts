@@ -5,6 +5,7 @@ import Critter from "./critter";
 import Spear from "./spear";
 import Foe from "./foe";
 import { FONTS } from "./assets";
+import { TextCluePayload, TEXT_STYLE } from "./clue_payloads";
 
 interface TrialRoundOptions {
   scene: TutorialScene;
@@ -223,6 +224,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
+      TextCluePayload.prototype.textStyle = TEXT_STYLE.MONO_NEWSPAPER;
       trialRound({
         scene: scene,
         words: ["i", "am", scene.userName],
@@ -261,6 +263,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
+      TextCluePayload.prototype.textStyle = TEXT_STYLE.MONO_NEWSPAPER;
       trialRound({
         scene: scene,
         words: "no way you will catch all of these lol".split(" "),
@@ -397,6 +400,7 @@ export const STEPS: TutorialStep[] = [
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
       scene.tapoutEnabled = true;
+      TextCluePayload.prototype.textStyle = TEXT_STYLE.FRAK_NEWSPAPER;
       trialRound({
         scene: scene,
         words: "Üben von Xylophon und Querflöte ist ja zweckmäßig".split(" "),

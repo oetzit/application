@@ -15,7 +15,7 @@ import { FONTS } from "./assets";
 const GERMAN_ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ" + "abcdefghijklmnopqrstuvwxyzäöüß";
 
-const TEXT_STYLE: {
+export const TEXT_STYLE: {
   [key: string]: (height: number) => Phaser.Types.GameObjects.Text.TextStyle;
 } = {
   TYPEWRITER: (height) => {
@@ -70,9 +70,10 @@ export class TextCluePayload
   implements CluePayload
 {
   baseHeight: number;
+  textStyle = TEXT_STYLE.TYPEWRITER;
 
   constructor(scene: Phaser.Scene, baseHeight: number) {
-    super(scene, 0, 0, "", TEXT_STYLE.FRAK_NEWSPAPER(baseHeight));
+    super(scene, 0, 0, "", TextCluePayload.prototype.textStyle(baseHeight));
     this.setAlpha(0);
     this.baseHeight = baseHeight;
   }
