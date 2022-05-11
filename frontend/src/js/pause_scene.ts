@@ -2,11 +2,14 @@ import "phaser";
 import { FONTS } from "./assets";
 
 export default class PauseScene extends Phaser.Scene {
+  pausedScene!: string;
+
   constructor() {
     super("pause");
   }
 
-  create() {
+  create(data: { pausedScene: string }) {
+    this.pausedScene = data.pausedScene;
     this.drawShade();
     this.drawTitle();
     this.drawCTA();
@@ -69,9 +72,13 @@ export default class PauseScene extends Phaser.Scene {
       const escBinding = this.input.keyboard.addKey(
         Phaser.Input.Keyboard.KeyCodes.ESC,
       );
-      escBinding.onDown = () => this.scene.resume("fight");
+      escBinding.onDown = () => this.resumePausedScene();
     } else {
-      this.input.on("pointerup", () => this.scene.resume("fight"));
+      this.input.on("pointerup", () => this.resumePausedScene());
     }
+  }
+
+  resumePausedScene() {
+    this.scene.resume(this.pausedScene);
   }
 }

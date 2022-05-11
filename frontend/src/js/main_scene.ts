@@ -170,7 +170,7 @@ export default class MainScene extends Phaser.Scene {
     this.concealClues();
     this.typewriter.setActive(false);
     this.music.pause();
-    this.scene.launch("pause");
+    this.scene.launch("pause", { pausedScene: this.scene.key });
   }
 
   concealClues() {
