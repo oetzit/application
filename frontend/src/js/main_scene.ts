@@ -29,6 +29,7 @@ interface UIDimensions {
 }
 
 export default class MainScene extends Phaser.Scene {
+  typewriterEnabled!: boolean;
   tapoutEnabled!: boolean;
   lastTapoutTimestamp = 0;
 
@@ -182,7 +183,7 @@ export default class MainScene extends Phaser.Scene {
 
   onResume() {
     this.uncoverClues();
-    this.typewriter.setActive(true);
+    this.typewriter.setActive(this.typewriterEnabled);
     this.music.play();
   }
 
@@ -211,6 +212,11 @@ export default class MainScene extends Phaser.Scene {
       };
       this.input.on("pointerup", onPointerUp);
     }
+  }
+
+  setTypewriterEnabled(enabled: boolean) {
+    this.typewriterEnabled = enabled;
+    this.typewriter.setActive(this.typewriterEnabled);
   }
 
   //=[ HUD and UI dimensions ]==================================================
@@ -382,7 +388,7 @@ export default class MainScene extends Phaser.Scene {
 
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter(this.game.device.os.desktop);
-    this.typewriter.setActive(false); // safety
+    this.typewriter.setActive(this.typewriterEnabled);
     this.typewriter.getGameTime = this.getGameTime.bind(this);
     this.typewriter.onSubmit = async (inputStatus) => {
       if (inputStatus.began_at === null) return;
