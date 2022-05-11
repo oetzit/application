@@ -30,6 +30,7 @@ interface UIDimensions {
 export default class MainScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
   player!: Player;
+  lastPauseTapTime = 0;
 
   async create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
@@ -196,10 +197,16 @@ export default class MainScene extends Phaser.Scene {
       escBinding.onDown = () => this.scene.pause();
     } else {
       const onPointerUp = (pointer: Phaser.Input.Pointer) => {
-        const tapped =
+        const isInGameArea =
           pointer.downY <
           this.cameras.main.height - this.uiDimensions.kbdHeight;
-        if (tapped) this.scene.pause();
+        const isFastEnough = pointer.time - this.lastPauseTapTime < 300;
+        if (!isInGameArea) return;
+        if (!isFastEnough) {
+          this.lastPauseTapTime = pointer.time;
+          return;
+        }
+        this.scene.pause();
       };
       this.input.on("pointerup", onPointerUp);
     }
