@@ -4,7 +4,7 @@ import { FONTS } from "./assets";
 import MainScene, { InputStatus } from "./main_scene";
 import Spear from "./spear";
 
-import { STEPS as P1_STEPS } from "./tutorial/p1";
+import { STEPS } from "./tutorial_steps";
 import { nthFibonacci } from "./utils";
 
 const BUTTON_HIGHLIGHT_COLOR = "darkorange";
@@ -42,7 +42,7 @@ export default class TutorialScene extends MainScene {
 
   constructor() {
     super("tutorial");
-    this.steps = P1_STEPS;
+    this.steps = STEPS;
   }
 
   async beforeGameStart() {

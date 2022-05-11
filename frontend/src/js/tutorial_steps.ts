@@ -1,9 +1,9 @@
 import "phaser";
 
-import TutorialScene, { TutorialStep } from "../tutorial_scene";
-import Critter from "../critter";
-import Spear from "../spear";
-import Foe from "../foe";
+import TutorialScene, { TutorialStep } from "./tutorial_scene";
+import Critter from "./critter";
+import Spear from "./spear";
+import Foe from "./foe";
 
 interface TrialRoundOptions {
   scene: TutorialScene;
