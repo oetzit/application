@@ -40,7 +40,19 @@ const TEXT_STYLE: {
       testString: GERMAN_ALPHABET,
     };
   },
-  NEWSPAPER: (height) => {
+  MONO_NEWSPAPER: (height) => {
+    return {
+      fontSize: `${height * 1.4}px`,
+      fontFamily: FONTS.MONO,
+      color: "#333333",
+      stroke: "#666666",
+      strokeThickness: 4,
+      testString: GERMAN_ALPHABET,
+      backgroundColor: "#aaaaaa",
+      padding: { x: 8 },
+    };
+  },
+  FRAK_NEWSPAPER: (height) => {
     return {
       fontSize: `${height * 1.4}px`,
       fontFamily: FONTS.FRAK,
@@ -61,7 +73,7 @@ export class TextCluePayload
   baseHeight: number;
 
   constructor(scene: FightScene, baseHeight: number) {
-    super(scene, 0, 0, "", TEXT_STYLE.TYPEWRITER(baseHeight));
+    super(scene, 0, 0, "", TEXT_STYLE.FRAK_NEWSPAPER(baseHeight));
     this.setAlpha(0);
     this.baseHeight = baseHeight;
   }
