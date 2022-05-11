@@ -2,18 +2,17 @@ import "phaser";
 import { FONTS } from "./assets";
 
 export default class PauseScene extends Phaser.Scene {
-  pausedScene!: string;
+  manual = false;
 
   constructor() {
     super("pause");
   }
 
-  create(data: { pausedScene: string }) {
-    this.pausedScene = data.pausedScene;
+  create() {
     this.drawShade();
     this.drawTitle();
     this.drawCTA();
-    this.bindResumeShortcut();
+    this.bindManualResume();
   }
 
   drawShade() {
@@ -48,9 +47,12 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   drawCTA() {
-    const text = this.game.device.os.desktop
-      ? "  TAKE A BREATH\nESC key to resume"
-      : "TAKE A BREATH\ntap to resume";
+    const verb = !this.manual
+      ? "focus"
+      : this.game.device.os.desktop
+      ? "ESC"
+      : "tap";
+    const text = `TAKE A BREATH\n${verb} to resume`;
     const title = this.add.text(0, 0, text, {
       fontFamily: FONTS.MONO,
       fontSize: "32px",
@@ -59,6 +61,7 @@ export default class PauseScene extends Phaser.Scene {
       stroke: "black",
       strokeThickness: 4,
       testString: text,
+      align: "center",
     });
     title.setOrigin(0.5, 0);
     title.setPosition(
@@ -67,18 +70,35 @@ export default class PauseScene extends Phaser.Scene {
     );
   }
 
-  bindResumeShortcut() {
+  focusPause(manual: boolean) {
+    this.manual ||= manual;
+    if (this.scene.isActive()) return;
+    this.game.scene
+      .getScenes(false)
+      .filter((scene) => scene.scene.isVisible())
+      .forEach((scene) => scene.scene.pause());
+    this.scene.start();
+  }
+
+  focusResume(manual: boolean) {
+    if (this.manual && !manual) return;
+    if (!this.scene.isActive()) return;
+    this.manual = false;
+    this.game.scene
+      .getScenes(false)
+      .filter((scene) => scene.scene.isVisible())
+      .forEach((scene) => scene.scene.resume());
+    this.scene.stop();
+  }
+
+  bindManualResume() {
     if (this.game.device.os.desktop) {
       const escBinding = this.input.keyboard.addKey(
         Phaser.Input.Keyboard.KeyCodes.ESC,
       );
-      escBinding.onDown = () => this.resumePausedScene();
+      escBinding.onDown = () => this.focusResume(true);
     } else {
-      this.input.on("pointerup", () => this.resumePausedScene());
+      this.input.on("pointerup", () => this.focusResume(true));
     }
-  }
-
-  resumePausedScene() {
-    this.scene.resume(this.pausedScene);
   }
 }

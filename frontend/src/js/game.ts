@@ -40,18 +40,13 @@ export default class Game extends Phaser.Game {
     this.bindFocusEvents();
   }
 
-  pauseFight() {
-    if (this.scene.isActive("fight")) this.scene.pause("fight");
-  }
-
-  resumeFight() {
-    if (this.scene.isPaused("fight")) this.scene.resume("fight");
-  }
-
   bindFocusEvents() {
-    this.events.on(Phaser.Core.Events.BLUR, this.pauseFight.bind(this));
-    this.events.on(Phaser.Core.Events.HIDDEN, this.pauseFight.bind(this));
-    this.events.on(Phaser.Core.Events.FOCUS, this.resumeFight.bind(this));
-    this.events.on(Phaser.Core.Events.VISIBLE, this.resumeFight.bind(this));
+    const getScene = () => this.scene.getScene("pause") as PauseScene;
+    const pause = () => getScene().focusPause(false);
+    const resume = () => getScene().focusResume(false);
+    this.events.on(Phaser.Core.Events.BLUR, pause);
+    this.events.on(Phaser.Core.Events.HIDDEN, pause);
+    this.events.on(Phaser.Core.Events.FOCUS, resume);
+    this.events.on(Phaser.Core.Events.VISIBLE, resume);
   }
 }

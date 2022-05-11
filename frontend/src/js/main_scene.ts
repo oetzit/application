@@ -5,6 +5,7 @@ import Foe from "./foe";
 import HUD from "./hud";
 import Player from "./player";
 import Typewriter from "./typewriter";
+import PauseScene from "./pause_scene";
 
 export interface InputStatus {
   began_at: string;
@@ -28,9 +29,11 @@ interface UIDimensions {
 }
 
 export default class MainScene extends Phaser.Scene {
+  tapoutEnabled!: boolean;
+  lastTapoutTimestamp = 0;
+
   music!: Phaser.Sound.BaseSound;
   player!: Player;
-  lastPauseTapTime = 0;
 
   async create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
@@ -171,7 +174,6 @@ export default class MainScene extends Phaser.Scene {
     this.concealClues();
     this.typewriter.setActive(false);
     this.music.pause();
-    this.scene.launch("pause", { pausedScene: this.scene.key });
   }
 
   concealClues() {
@@ -182,7 +184,6 @@ export default class MainScene extends Phaser.Scene {
     this.uncoverClues();
     this.typewriter.setActive(true);
     this.music.play();
-    this.scene.stop("pause");
   }
 
   uncoverClues() {
@@ -194,19 +195,19 @@ export default class MainScene extends Phaser.Scene {
       const escBinding = this.input.keyboard.addKey(
         Phaser.Input.Keyboard.KeyCodes.ESC,
       );
-      escBinding.onDown = () => this.scene.pause();
+      escBinding.onDown = () => {
+        if (!this.tapoutEnabled) return;
+        (this.scene.get("pause") as PauseScene).focusPause(true);
+      };
     } else {
       const onPointerUp = (pointer: Phaser.Input.Pointer) => {
-        const isInGameArea =
-          pointer.downY <
-          this.cameras.main.height - this.uiDimensions.kbdHeight;
-        const isFastEnough = pointer.time - this.lastPauseTapTime < 300;
-        if (!isInGameArea) return;
-        if (!isFastEnough) {
-          this.lastPauseTapTime = pointer.time;
-          return;
+        if (!this.tapoutEnabled) return;
+        const isFastEnough = pointer.time - this.lastTapoutTimestamp < 300;
+        if (isFastEnough) {
+          (this.scene.get("pause") as PauseScene).focusPause(true);
+        } else {
+          this.lastTapoutTimestamp = pointer.time;
         }
-        this.scene.pause();
       };
       this.input.on("pointerup", onPointerUp);
     }
@@ -381,7 +382,7 @@ export default class MainScene extends Phaser.Scene {
 
   createAndBindTypewriter() {
     this.typewriter ??= new Typewriter(this.game.device.os.desktop);
-    this.typewriter.setActive(true);
+    this.typewriter.setActive(false); // safety
     this.typewriter.getGameTime = this.getGameTime.bind(this);
     this.typewriter.onSubmit = async (inputStatus) => {
       if (inputStatus.began_at === null) return;

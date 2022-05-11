@@ -35,6 +35,8 @@ interface CreateTextOptions {
 }
 
 export default class TutorialScene extends MainScene {
+  tapoutEnabled = false;
+
   currentStep!: number;
   bucket: Phaser.GameObjects.GameObject[] = [];
   steps: TutorialStep[];

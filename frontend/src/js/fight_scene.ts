@@ -16,6 +16,8 @@ import {
 const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
 export default class FightScene extends MainScene {
+  tapoutEnabled = true;
+
   beDevice: Types.Device;
   beGame: Types.Game;
   spawner: Phaser.Time.TimerEvent;
