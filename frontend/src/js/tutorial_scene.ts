@@ -32,6 +32,7 @@ interface CreateTextOptions {
   positionY?: number;
   originX?: number;
   originY?: number;
+  interactive?: boolean;
 }
 
 export default class TutorialScene extends MainScene {
@@ -83,15 +84,18 @@ export default class TutorialScene extends MainScene {
         },
       )
       .setOrigin(options.originX ?? 0.5, options.originY ?? 0.5)
-      .setPadding(16)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        text.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
-      )
-      .on("pointerout", () =>
-        text.setStyle({ stroke: TEXT_STYLE.TUTORIAL.stroke }),
-      )
-      .on("pointerup", () => this.nextStep());
+      .setPadding(16);
+
+    if (options.interactive ?? true)
+      text
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () =>
+          text.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        )
+        .on("pointerout", () =>
+          text.setStyle({ stroke: TEXT_STYLE.TUTORIAL.stroke }),
+        )
+        .on("pointerup", () => this.nextStep());
     return text;
   }
 

@@ -21,6 +21,7 @@ function trialRound({
   wordsDelay,
   fixedDuration,
 }: TrialRoundOptions) {
+  scene.updateHealth(100 - scene.health);
   scene.acceptedWords = 0;
   scene.submitTranscription = scene.trialSubmitTranscription;
   const completionWatcher = scene.time.addEvent({
@@ -187,10 +188,12 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
+      scene.setTypewriterEnabled(true);
       const verb = scene.game.device.os.desktop ? "hit" : "tap";
       const text = scene.createText({
         text: `Try! Type your name\nthen ${verb} ENTER ↩🔨`,
         positionY: scene.uiDimensions.cluesBounds.centerY,
+        interactive: false,
       });
       scene.bucket.push(text);
 
@@ -200,7 +203,12 @@ export const STEPS: TutorialStep[] = [
         scene.submitTranscription = () => {};
       };
     },
-    teardown: (scene) => scene.emptyBucket(),
+    teardown: (scene) => {
+      scene.emptyBucket();
+      scene.setTypewriterEnabled(false);
+      scene.typewriter.resetInputStatus();
+      scene.hud.setInput("");
+    },
   },
   {
     setup: (scene) => {
@@ -214,6 +222,7 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
+      scene.setTypewriterEnabled(true);
       trialRound({
         scene: scene,
         words: ["i", "am", scene.userName],
@@ -222,7 +231,12 @@ export const STEPS: TutorialStep[] = [
         fixedDuration: 4000,
       });
     },
-    teardown: (scene) => scene.emptyBucket(),
+    teardown: (scene) => {
+      scene.emptyBucket();
+      scene.setTypewriterEnabled(false);
+      scene.typewriter.resetInputStatus();
+      scene.hud.setInput("");
+    },
   },
   {
     setup: (scene) => {
@@ -246,6 +260,7 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
+      scene.setTypewriterEnabled(true);
       trialRound({
         scene: scene,
         words: "no way you will catch all of these lol".split(" "),
@@ -254,7 +269,12 @@ export const STEPS: TutorialStep[] = [
         fixedDuration: 1000,
       });
     },
-    teardown: (scene) => scene.emptyBucket(),
+    teardown: (scene) => {
+      scene.emptyBucket();
+      scene.setTypewriterEnabled(false);
+      scene.typewriter.resetInputStatus();
+      scene.hud.setInput("");
+    },
   },
   {
     setup: (scene) => {
@@ -364,6 +384,19 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
+      const verb = scene.game.device.os.desktop ? "hit ESC" : "tap twice";
+      const text = scene.createText({
+        text: `Oh! And remember:\n${verb} to pause\n🙏⏸️`,
+        positionY: scene.uiDimensions.cluesBounds.centerY,
+      });
+      scene.bucket.push(text);
+    },
+    teardown: (scene) => scene.emptyBucket(),
+  },
+  {
+    setup: (scene) => {
+      scene.setTypewriterEnabled(true);
+      scene.tapoutEnabled = true;
       trialRound({
         scene: scene,
         words: "Üben von Xylophon und Querflöte ist ja zweckmäßig".split(" "),
@@ -371,7 +404,13 @@ export const STEPS: TutorialStep[] = [
         wordsDelay: 5000,
       });
     },
-    teardown: (scene) => scene.emptyBucket(),
+    teardown: (scene) => {
+      scene.emptyBucket();
+      scene.tapoutEnabled = false;
+      scene.setTypewriterEnabled(false);
+      scene.typewriter.resetInputStatus();
+      scene.hud.setInput("");
+    },
   },
   {
     setup: (scene) => {
