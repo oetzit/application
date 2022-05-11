@@ -1,17 +1,17 @@
 import "phaser";
-import FightScene from "./fight_scene";
+import MainScene from "./main_scene";
 
 import * as Types from "../../../backend/src/types";
 import { SpriteCluePayload, TextCluePayload } from "./clue_payloads";
 
 const CONCEAL_TINT = 0xaaaaaa;
 class Clue {
-  scene: FightScene;
+  scene: MainScene;
   word: Types.Word;
   duration: number;
   payload: SpriteCluePayload | TextCluePayload;
 
-  constructor(scene: FightScene, word: Types.Word, duration: number) {
+  constructor(scene: MainScene, word: Types.Word, duration: number) {
     this.scene = scene;
     this.word = word;
     this.duration = duration;
