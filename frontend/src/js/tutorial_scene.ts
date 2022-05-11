@@ -2,6 +2,7 @@ import "phaser";
 
 import { FONTS } from "./assets";
 import MainScene from "./main_scene";
+import Spear from "./spear";
 
 import { STEPS as P1_STEPS } from "./tutorial/p1";
 
@@ -24,10 +25,19 @@ export interface TutorialStep {
   teardown: (scene: TutorialScene) => void;
 }
 
+interface CreateTextOptions {
+  text: string;
+  positionX?: number;
+  positionY?: number;
+  originX?: number;
+  originY?: number;
+}
+
 export default class TutorialScene extends MainScene {
   currentStep!: number;
   bucket: Phaser.GameObjects.GameObject[] = [];
   steps: TutorialStep[];
+  userName = "";
 
   constructor() {
     super("tutorial");
@@ -52,20 +62,23 @@ export default class TutorialScene extends MainScene {
     }
   }
 
-  createText(options: {
-    text: string;
-    positionX?: number;
-    positionY?: number;
-    originX?: number;
-    originY?: number;
-  }) {
+  createSimpleText(text: string) {
+    return this.createText({ text });
+  }
+
+  createText(options: CreateTextOptions) {
     const text = this.add
-      .text(options.positionX || 0, options.positionY || 0, options.text, {
-        ...TEXT_STYLE.TUTORIAL,
-        fontSize: `${Math.min(this.cameras.main.width * 0.125, 32)}px`,
-        align: "center",
-      })
-      .setOrigin(options.originX, options.originY)
+      .text(
+        options.positionX ?? this.cameras.main.centerX,
+        options.positionY ?? this.cameras.main.centerY,
+        options.text,
+        {
+          ...TEXT_STYLE.TUTORIAL,
+          fontSize: `${Math.min(this.cameras.main.width * 0.125, 32)}px`,
+          align: "center",
+        },
+      )
+      .setOrigin(options.originX ?? 0.5, options.originY ?? 0.5)
       .setPadding(16)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
@@ -77,4 +90,59 @@ export default class TutorialScene extends MainScene {
       .on("pointerup", () => this.nextStep());
     return text;
   }
+
+  trialSubmitTranscription = (inputStatus: InputStatus) => {
+    const similarityThreshold = 0.9;
+    // NOTE: this ain't async to avoid any UX delay
+    const { similarity, match } = this.findMatchingFoe(inputStatus.final);
+
+    let score = 0;
+    if (match === null) {
+      score = 0;
+    } else if (similarity < similarityThreshold) {
+      score = -1;
+    } else {
+      const lengthScore = this.nthFibonacci(
+        1 + match.beWord.ocr_transcript.length,
+      );
+      const accuracyBonus = similarity;
+      const speedBonus =
+        2 -
+        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
+          (match.duration * 1000);
+      score = Math.round(lengthScore * accuracyBonus * speedBonus);
+    }
+
+    // backend.createShot(this.beGame.id, {
+    //   clue_id: match?.beClue?.id || null,
+    //   similarity: similarity,
+    //   score: score,
+    //   ...inputStatus,
+    // });
+
+    if (match === null) {
+      // NOOP
+      this.sound.play("sfx_md_beep");
+      this.hud.showSubmitFeedback("white", inputStatus.final);
+    } else if (similarity < similarityThreshold) {
+      // TODO: visual near misses based on score
+      this.sound.play("sfx_lo_beep");
+      this.updateScore(score);
+      match.handleFailure();
+      this.hud.showSubmitFeedback("red", inputStatus.final);
+      new Spear(this, this.player, undefined);
+    } else {
+      this.acceptedWords += 1;
+      this.sound.play("sfx_hi_beep");
+      // backend.updateClue(match.beClue.id, {
+      //   ended_at: new Date().toISOString(),
+      //   ended_at_gmtm: this.getGameTime(),
+      // });
+      this.updateScore(score);
+      this.popFoe(match);
+      match.handleSuccess();
+      this.hud.showSubmitFeedback("green", inputStatus.final);
+      new Spear(this, this.player, match.critter);
+    }
+  };
 }
