@@ -24,11 +24,11 @@ class Clue {
         ? new TextCluePayload(this.scene, baseHeight)
         : new SpriteCluePayload(this.scene, baseHeight);
 
-    this.payload.once("addedtoscene", this.showTexture.bind(this));
+    this.payload.once("addedtoscene", this.showPayload.bind(this));
     this.payload.loadWord(word);
   }
 
-  showTexture() {
+  showPayload() {
     if (!this.scene.scene.isActive()) return;
     this.scene.physics.add.existing(this.payload);
     this.scene.cluesGroup.add(this.payload);
