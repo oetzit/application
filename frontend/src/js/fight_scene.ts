@@ -5,6 +5,13 @@ import Spear from "./spear";
 import backend from "./backend";
 import BackgroundScene from "./background_scene";
 import * as Types from "../../../backend/src/types";
+import {
+  clamp,
+  nthFibonacci,
+  randomExponential,
+  randomPareto,
+  sawtoothRamp,
+} from "./utils";
 
 const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
@@ -116,10 +123,6 @@ export default class FightScene extends MainScene {
 
   //=[ Game loop ]==============================================================
 
-  nthFibonacci(n: number) {
-    return Math.round(Math.pow((1 + Math.sqrt(5)) / 2, n) / Math.sqrt(5));
-  }
-
   submitTranscription = (inputStatus: InputStatus) => {
     const similarityThreshold = 0.9;
     // NOTE: this ain't async to avoid any UX delay
@@ -131,9 +134,7 @@ export default class FightScene extends MainScene {
     } else if (similarity < similarityThreshold) {
       score = -1;
     } else {
-      const lengthScore = this.nthFibonacci(
-        1 + match.beWord.ocr_transcript.length,
-      );
+      const lengthScore = nthFibonacci(1 + match.beWord.ocr_transcript.length);
       const accuracyBonus = similarity;
       const speedBonus =
         2 -
@@ -175,36 +176,11 @@ export default class FightScene extends MainScene {
     }
   };
 
-  clamp(num: number, min: number, max: number) {
-    return Math.min(Math.max(num, min), max);
-  }
-
-  randomExponential(rate = 1) {
-    // http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
-    return -Math.log(Math.random()) / rate;
-  }
-
-  randomPareto(scale = 1, shape = 1) {
-    // https://en.wikipedia.org/wiki/Pareto_distribution#Random_sample_generation
-    return scale / Math.pow(Math.random(), 1 / shape);
-  }
-
-  sawtoothRamp(t: number, peaksCount = 5, dipsHeight = 0.2, midwayAt = 0.3) {
-    // https://www.desmos.com/calculator/7zcb6p8qeu
-    // NOTE: this always maps [0;1] ↦ [0;1]
-    const ramp = t * (peaksCount * dipsHeight + 1);
-    const dips =
-      (-Math.floor(t * peaksCount) * (peaksCount * dipsHeight)) /
-      (peaksCount - 1);
-    const bend = Math.log(0.5) / Math.log(midwayAt);
-    return Math.pow(ramp + dips, bend);
-  }
-
   getDifficulty(t: number, plateausAt = 15 * 60000) {
     // NOTE: c'mon... 15 minutes?
     // NOTE: this maps [0;∞] ↦ [0;1]
     if (t >= plateausAt) return 1;
-    return this.sawtoothRamp(t / plateausAt);
+    return sawtoothRamp(t / plateausAt);
   }
 
   async spawnFoes() {
@@ -218,8 +194,7 @@ export default class FightScene extends MainScene {
     const expDelay = maxDelay + (minDelay - maxDelay) * difficulty;
     const rate = 1 / expDelay;
 
-    const delay =
-      this.clamp(this.randomExponential(rate), minDelay, maxDelay) * 1000;
+    const delay = clamp(randomExponential(rate), minDelay, maxDelay) * 1000;
 
     const AVG_CPM = 200; // corresponds to AVG_WPM and AVG_CPW = 5
     // const minLength = 1;
@@ -232,8 +207,8 @@ export default class FightScene extends MainScene {
     const scale = minLength;
     const shape = expLength / (expLength - scale);
 
-    const length = this.clamp(
-      Math.round(this.randomPareto(scale, shape)),
+    const length = clamp(
+      Math.round(randomPareto(scale, shape)),
       minLength,
       maxLength,
     );

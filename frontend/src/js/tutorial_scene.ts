@@ -1,10 +1,11 @@
 import "phaser";
 
 import { FONTS } from "./assets";
-import MainScene from "./main_scene";
+import MainScene, { InputStatus } from "./main_scene";
 import Spear from "./spear";
 
 import { STEPS as P1_STEPS } from "./tutorial/p1";
+import { nthFibonacci } from "./utils";
 
 const BUTTON_HIGHLIGHT_COLOR = "darkorange";
 
@@ -102,9 +103,7 @@ export default class TutorialScene extends MainScene {
     } else if (similarity < similarityThreshold) {
       score = -1;
     } else {
-      const lengthScore = this.nthFibonacci(
-        1 + match.beWord.ocr_transcript.length,
-      );
+      const lengthScore = nthFibonacci(1 + match.beWord.ocr_transcript.length);
       const accuracyBonus = similarity;
       const speedBonus =
         2 -
