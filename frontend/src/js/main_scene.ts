@@ -405,8 +405,11 @@ export default class MainScene extends Phaser.Scene {
       const casefullMatchImproved =
         casefullLevenshtein.similarity > result.casefullLevenshtein.similarity;
 
-      if (!caselessMatchImproved) return;
-      if (!casefullMatchImproved) return;
+      //  CL/CF - = +
+      //      -     ?  -> CL-/CF+ should be impossible
+      //      =     Y  -> CL=/CF+ means improved casing
+      //      + Y Y Y  -> CL+ means more correct letters
+      if (!caselessMatchImproved && !casefullMatchImproved) return;
 
       result = { match: foe, casefullLevenshtein, caselessLevenshtein };
     });
