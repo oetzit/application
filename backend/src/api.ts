@@ -84,6 +84,43 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
   });
 
   fastify.route<{
+    Body: Types.LeaderboardQuery;
+    Reply: Types.LeaderboardView;
+  }>({
+    method: "POST",
+    url: "/devices/leaderboard",
+    schema: {
+      body: Schemas.LeaderboardQuery,
+      response: {
+        200: Schemas.LeaderboardView,
+      },
+    },
+    handler: async (request, reply) => {
+      const leaderboardView: Types.LeaderboardView = await connection
+        .select(
+          connection.raw(
+            "ROW_NUMBER() OVER(ORDER BY MAX(score) DESC) AS place, device_id, max(score) AS game_score",
+          ),
+        )
+        .from("games")
+        .whereNotNull("score")
+        .groupBy<Types.LeaderboardView>("device_id")
+        .orderBy("game_score", "DESC");
+
+      const deviceIndex = leaderboardView.findIndex(
+        ({ device_id }) => device_id == request.body.device_id,
+      );
+
+      const filteredLeaderboardView = leaderboardView.filter(
+        ({ place }, index) => place < 4 || Math.abs(deviceIndex - index) < 2,
+      );
+
+      reply.code(200).send(filteredLeaderboardView);
+    },
+  });
+
+  fastify.route<{
+    Body: Types.LeaderboardView;
     Reply: Types.Device;
   }>({
     method: "POST",

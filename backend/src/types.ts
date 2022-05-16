@@ -15,3 +15,7 @@ export type ClueUpdate = Static<typeof Schemas.ClueUpdate>;
 export type ShotCreate = Static<typeof Schemas.ShotCreate>;
 
 export type WordChoice = Static<typeof Schemas.WordChoice>;
+
+export type LeaderboardQuery = Static<typeof Schemas.LeaderboardQuery>;
+export type LeaderboardItem = Static<typeof Schemas.LeaderboardItem>;
+export type LeaderboardView = Static<typeof Schemas.LeaderboardView>;

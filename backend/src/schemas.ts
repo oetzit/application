@@ -84,3 +84,15 @@ export const WordChoice = Type.Object({
   ocr_transcript_length_min: Type.Integer({ minimum: 1, default: 1 }),
   ocr_transcript_length_max: Type.Integer({ minimum: 1, default: 20 }),
 });
+
+export const LeaderboardQuery = Type.Object({
+  device_id: Type.Optional(Type.String({ format: "uuid" })),
+});
+
+export const LeaderboardItem = Type.Object({
+  place: Type.Integer({ minimum: 1 }),
+  device_id: Type.String({ format: "uuid" }),
+  game_score: Type.Integer(),
+});
+
+export const LeaderboardView = Type.Array(LeaderboardItem);
