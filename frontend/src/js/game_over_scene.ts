@@ -3,8 +3,24 @@ import { FONTS } from "./assets";
 import BackgroundScene from "./background_scene";
 import { formatTime, ICONS, THIN_SPACE } from "./hud";
 
+const BUTTON_HIGHLIGHT_COLOR = "darkorange";
+
+const TEXT_STYLE: {
+  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
+} = {
+  BUTTON: {
+    fontFamily: FONTS.MONO,
+    fontStyle: "bold",
+    color: "white",
+    stroke: "black",
+    strokeThickness: 8,
+    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  },
+};
+
 export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
+  continueButton!: Phaser.GameObjects.Text;
 
   constructor() {
     super("game_over");
@@ -95,26 +111,29 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   drawCTA() {
-    const text = "press to continue";
-    const cta = this.add.text(0, 0, text, {
-      fontSize: "32px",
-      fontFamily: FONTS.MONO,
-      fontStyle: "bold",
-      color: "#ffffff",
-    });
-    cta.setOrigin(0.5, 0);
-    cta.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.8,
-    );
+    const verb = this.game.device.os.desktop ? "Click" : "Tap";
+    const text = `${verb} to continue`;
+    this.continueButton = this.add
+      .text(this.cameras.main.centerX, this.cameras.main.height * 0.8, text, {
+        ...TEXT_STYLE.BUTTON,
+        fontSize: "32px",
+      })
+      .setOrigin(0.5, 0)
+      .setPadding(4)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerover", () =>
+        this.continueButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+      )
+      .on("pointerout", () =>
+        this.continueButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+      );
   }
 
   bindEvents() {
-    this.input.keyboard.once("keyup", this.startFight.bind(this));
-    this.input.once("pointerup", this.startFight.bind(this));
+    this.continueButton.on("pointerup", this.backToWelcome.bind(this));
   }
 
-  startFight() {
+  backToWelcome() {
     (this.scene.get("background") as BackgroundScene).liftCurtain();
     this.scene.start("welcome", { music: this.music });
   }
