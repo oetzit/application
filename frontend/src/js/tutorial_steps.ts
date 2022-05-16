@@ -65,14 +65,14 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const verb = scene.game.device.os.desktop ? "Click" : "Tap";
-      const text = scene.createSimpleText(`Welcome! 👋🧔\n${verb} to start`);
+      const text = scene.createSimpleText(`Welcome! 👋🧔\n${verb} to start\n`);
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createSimpleText("That's Ötzi,\nthe Iceman\n❄️😎 🢆");
+      const text = scene.createSimpleText("That's Ötzi,\nthe Iceman\n❄️😎 ↘️");
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -89,7 +89,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: async (scene) => {
       const text = scene.createSimpleText(
-        "That's a mob of\nangry bunnies\n🢇 🐰💢",
+        "That's a mob of\nangry bunnies\n↙️ 🐰💢",
       );
       scene.bucket.push(text);
 
@@ -121,7 +121,9 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
-      const text = scene.createSimpleText("😭💔 🢅\nHis health!\nThey hurt him");
+      const text = scene.createSimpleText(
+        "😭💔 ↗️\nHis health!\nThey hurt him",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -172,7 +174,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const text = scene.createSimpleText(
-        "You can help him!\nHow? Typing along\n🤝⌨️",
+        "You can help him!\nHow? By typing along\n🤝⌨️",
       );
       scene.bucket.push(text);
     },
@@ -243,7 +245,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const text = scene.createText({
-        text: `🡼 💪🏅\nGreat! You scored\n${scene.score} points`,
+        text: `↖️ 💪🏅\nGreat! You scored\n${scene.score} points`,
         positionY: scene.uiDimensions.cluesBounds.centerY,
       });
       scene.bucket.push(text);
@@ -302,7 +304,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const text = scene.createText({
-        text: "⏲️ 🢁 ⚠️\nAlso, as time passes,\nthings will get harder",
+        text: "⏲️ ⬆️ ⚠️\nAlso, as time passes,\nthings will get harder",
         positionY: scene.uiDimensions.cluesBounds.centerY,
       });
       scene.bucket.push(text);
