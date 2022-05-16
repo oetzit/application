@@ -129,26 +129,28 @@ export default class FightScene extends MainScene {
   submitTranscription = (inputStatus: InputStatus) => {
     const similarityThreshold = 0.9;
     // NOTE: this ain't async to avoid any UX delay
-    const { similarity, match } = this.findMatchingFoe(inputStatus.final);
+    const { match, casefullLevenshtein, caselessLevenshtein } =
+      this.findMatchingFoe(inputStatus.final);
 
     let score = 0;
     if (match === null) {
       score = 0;
-    } else if (similarity < similarityThreshold) {
+    } else if (caselessLevenshtein.similarity < similarityThreshold) {
       score = -1;
     } else {
       const lengthScore = nthFibonacci(1 + match.beWord.ocr_transcript.length);
-      const accuracyBonus = similarity;
+      const accuracyMalus =
+        (casefullLevenshtein.similarity + caselessLevenshtein.similarity) / 2;
       const speedBonus =
         2 -
         (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
           (match.duration * 1000);
-      score = Math.round(lengthScore * accuracyBonus * speedBonus);
+      score = Math.round(lengthScore * accuracyMalus * speedBonus);
     }
 
     backend.createShot(this.beGame.id, {
       clue_id: match?.beClue?.id || null,
-      similarity: similarity,
+      similarity: casefullLevenshtein.similarity,
       score: score,
       ...inputStatus,
     });
@@ -157,7 +159,7 @@ export default class FightScene extends MainScene {
       // NOOP
       this.sound.play("sfx_md_beep");
       this.hud.showSubmitFeedback("white", inputStatus.final);
-    } else if (similarity < similarityThreshold) {
+    } else if (caselessLevenshtein.similarity < similarityThreshold) {
       // TODO: visual near misses based on score
       this.sound.play("sfx_lo_beep");
       this.updateScore(score);

@@ -1,5 +1,5 @@
 import "phaser";
-import levenshtein from "damerau-levenshtein";
+import levenshtein, { LevenshteinDistance } from "damerau-levenshtein";
 
 import Foe from "./foe";
 import HUD from "./hud";
@@ -363,22 +363,53 @@ export default class MainScene extends Phaser.Scene {
   //=[ Matching logic ]=========================================================
 
   findMatchingFoe(transcription: string) {
-    let result: { similarity: number; match: Foe | null } = {
-      similarity: -1,
+    let result: {
+      casefullLevenshtein: LevenshteinDistance;
+      caselessLevenshtein: LevenshteinDistance;
+      match: Foe | null;
+    } = {
       match: null,
+      casefullLevenshtein: {
+        steps: NaN,
+        relative: Infinity,
+        similarity: -Infinity,
+      },
+      caselessLevenshtein: {
+        steps: NaN,
+        relative: Infinity,
+        similarity: -Infinity,
+      },
     };
-    if (this.foes.length < 1) return result;
+
+    // NOTE: we iterate in order, so older words are preferred
     this.foes.forEach((foe) => {
-      // TODO: accept case insensitive match w/ penalty?
-      const similarity = levenshtein(
+      // NOTE: case insensitive match is done by lowercasing because
+      // "ẞ".toLowerCase() == 'ß' (square and fair)
+      // "ß".toUpperCase() == 'SS' (weird)
+      const caselessLevenshtein = levenshtein(
+        transcription.toLowerCase(),
+        foe.beWord.ocr_transcript.toLowerCase(),
+      );
+
+      const casefullLevenshtein = levenshtein(
         transcription,
         foe.beWord.ocr_transcript,
-      ).similarity;
-      if (similarity < result.similarity) return;
-      result = { similarity: similarity, match: foe };
+      );
+
+      // NOTE: bare minimum threshold for match
+      if (caselessLevenshtein.similarity < 0.5) return;
+
+      // NOTE: caselessLevenshtein.similarity >= casefullLevenshtein.similarity
+      const caselessMatchImproved =
+        caselessLevenshtein.similarity > result.caselessLevenshtein.similarity;
+      const casefullMatchImproved =
+        casefullLevenshtein.similarity > result.casefullLevenshtein.similarity;
+
+      if (!caselessMatchImproved) return;
+      if (!casefullMatchImproved) return;
+
+      result = { match: foe, casefullLevenshtein, caselessLevenshtein };
     });
-    // match ??= scene.foes[0]; // TODO: remove this
-    // console.log(similarity, match.beWord.ocr_transcript);
     return result;
   }
 
