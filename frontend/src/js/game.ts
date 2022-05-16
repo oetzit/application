@@ -29,8 +29,8 @@ const CONFIG = {
     WelcomeScene,
     TutorialScene,
     FightScene,
-    PauseScene,
     GameOverScene,
+    PauseScene, // NOTE: keep this as last for overlaying
   ],
 };
 
