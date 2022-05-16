@@ -7,6 +7,7 @@ import FightScene from "./fight_scene";
 import GameOverScene from "./game_over_scene";
 import PauseScene from "./pause_scene";
 import TutorialScene from "./tutorial_scene";
+import LeaderboardScene from "./leaderboard_scene";
 
 export const GRAVITY_Y = 200;
 
@@ -30,6 +31,7 @@ const CONFIG = {
     TutorialScene,
     FightScene,
     GameOverScene,
+    LeaderboardScene,
     PauseScene, // NOTE: keep this as last for overlaying
   ],
 };

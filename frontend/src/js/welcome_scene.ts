@@ -35,6 +35,7 @@ export default class WelcomeScene extends Phaser.Scene {
   titleText!: Phaser.GameObjects.Text;
   helpButton!: Phaser.GameObjects.Text;
   playButton!: Phaser.GameObjects.Text;
+  leadButton!: Phaser.GameObjects.Text;
   versionText!: Phaser.GameObjects.Text;
 
   constructor() {
@@ -58,47 +59,36 @@ export default class WelcomeScene extends Phaser.Scene {
     );
 
     this.createTitleText();
-    this.createHelpButton();
-    this.createPlayButton();
+    this.helpButton = this.createMainButton("Tutorial", 0);
+    this.playButton = this.createMainButton("Play", 1);
+    this.leadButton = this.createMainButton("Leaderboard", 2);
     this.createVersionText();
 
     this.bindEvents();
   }
 
-  createHelpButton() {
-    const text = "Tutorial";
-    this.helpButton = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.6, text, {
-        ...TEXT_STYLE.BUTTON,
-        fontSize: `${Math.min(this.cameras.main.width * 0.125, 48)}px`,
-      })
-      .setOrigin(0.5, 1)
+  createMainButton(text: string, index: number) {
+    const size = Math.min(this.cameras.main.width * 0.125, 48);
+    const button = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + index * size * 1.4,
+        text,
+        {
+          ...TEXT_STYLE.BUTTON,
+          fontSize: `${size}px`,
+        },
+      )
+      .setOrigin(0.5, 0.5)
       .setPadding(4)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.helpButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        button.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
       )
       .on("pointerout", () =>
-        this.helpButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        button.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
       );
-  }
-
-  createPlayButton() {
-    const text = "Play";
-    this.playButton = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.6, text, {
-        ...TEXT_STYLE.BUTTON,
-        fontSize: `${Math.min(this.cameras.main.width * 0.125, 48)}px`,
-      })
-      .setOrigin(0.5, 0)
-      .setPadding(4)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.playButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
-      )
-      .on("pointerout", () =>
-        this.playButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
-      );
+    return button;
   }
 
   createTitleText() {
@@ -125,6 +115,7 @@ export default class WelcomeScene extends Phaser.Scene {
   bindEvents() {
     this.helpButton.on("pointerup", this.startTutorial.bind(this));
     this.playButton.on("pointerup", this.startFight.bind(this));
+    this.leadButton.on("pointerup", this.startLeaderboard.bind(this));
   }
 
   startTutorial() {
@@ -133,5 +124,9 @@ export default class WelcomeScene extends Phaser.Scene {
 
   startFight() {
     this.scene.start("fight", { music: this.music });
+  }
+
+  startLeaderboard() {
+    this.scene.start("leaderboard", { music: this.music });
   }
 }

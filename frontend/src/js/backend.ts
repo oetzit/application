@@ -18,6 +18,8 @@ export default {
   createDevice: () => backend.post<Types.Device>("/api/devices"),
   getDevice: (deviceId: string) =>
     backend.get<Types.Device>(`/api/devices/${deviceId}`),
+  createLeaderboardView: (data: Types.LeaderboardQuery) =>
+    backend.post<Types.LeaderboardItem[]>("/api/devices/leaderboard", data),
   createWordChoice: (data: Types.WordChoice) =>
     backend.post<Types.Word>("/api/words/choice", data),
   createGame: (deviceId: string, data: Types.GameCreate) =>
