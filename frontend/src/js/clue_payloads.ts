@@ -75,6 +75,7 @@ export class TextCluePayload
   constructor(scene: Phaser.Scene, baseHeight: number) {
     super(scene, 0, 0, "", TextCluePayload.prototype.textStyle(baseHeight));
     this.setAlpha(0);
+    this.setOrigin(0.5, 0.5);
     this.baseHeight = baseHeight;
   }
 
