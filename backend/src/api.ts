@@ -142,6 +142,29 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
 
   fastify.route<{
     Params: IdInParamsType;
+    Body: Types.DeviceUpdate;
+    Reply: Types.Device;
+  }>({
+    method: "PATCH",
+    url: "/devices/:id",
+    schema: {
+      params: IdInParamsSchema,
+      body: Schemas.DeviceUpdate,
+      response: {
+        200: Schemas.Device,
+      },
+    },
+    handler: async (request, reply) => {
+      const devices = await connection<Types.Device>("devices")
+        .where("id", request.params.id)
+        .update(request.body)
+        .returning("*");
+      reply.code(200).send(devices[0]);
+    },
+  });
+
+  fastify.route<{
+    Params: IdInParamsType;
     Reply: Types.Game;
   }>({
     method: "GET",

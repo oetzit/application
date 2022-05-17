@@ -13,7 +13,9 @@ export const Word = Type.Object({
 
 export const Device = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
+  email: Nullable(Type.String({ format: "email" })),
 });
+export const DeviceUpdate = Type.Partial(Type.Pick(Device, ["email"]));
 
 export const Game = Type.Object({
   id: Type.Readonly(Type.String({ format: "uuid" })),
