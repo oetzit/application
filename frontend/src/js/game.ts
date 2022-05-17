@@ -51,23 +51,13 @@ export default class Game extends Phaser.Game {
   }
 
   async initBeDevice() {
-    const deviceId = this.getDeviceId();
+    const deviceId = sessionStorage.getItem(DEVICE_ID_KEY);
     if (deviceId === null) {
       this.beDevice = (await backend.createDevice()).data;
     } else {
       this.beDevice = (await backend.getDevice(deviceId)).data;
     }
-    this.setDeviceId(this.beDevice.id);
-  }
-
-  setDeviceId(deviceId: string) {
-    sessionStorage.setItem(DEVICE_ID_KEY, deviceId);
-  }
-
-  getDeviceId(): string {
-    const deviceId = sessionStorage.getItem(DEVICE_ID_KEY);
-    if (deviceId !== null) return deviceId;
-    throw new Error("getDeviceId was called before initBeDevice");
+    sessionStorage.setItem(DEVICE_ID_KEY, this.beDevice.id);
   }
 
   bindFocusEvents() {

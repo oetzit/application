@@ -69,14 +69,15 @@ export default class LeaderboardScene extends Phaser.Scene {
   async fetchLeaderboardView() {
     return (
       await backend.createLeaderboardView({
-        device_id: this.game.getDeviceId() ?? undefined,
+        device_id: this.game.beDevice.id ?? undefined,
       })
     ).data;
   }
 
   calculateCurrentDeviceIndex() {
-    const uuid = this.game.getDeviceId();
-    return this.leaderboardView.findIndex(({ device_id }) => device_id == uuid);
+    return this.leaderboardView.findIndex(
+      ({ device_id }) => device_id == this.game.beDevice.id,
+    );
   }
 
   async createRankings() {
@@ -106,7 +107,7 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     // Find and mark current device
     const myIndex = leaderboardItems.findIndex(
-      ({ device_id }) => device_id == this.game.getDeviceId(),
+      ({ device_id }) => device_id == this.game.beDevice.id,
     );
     if (myIndex > -1) output[myIndex][1] = "> YOU <";
 

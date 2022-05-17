@@ -104,9 +104,8 @@ export default class FightScene extends MainScene {
   //=[ BE initialization ]======================================================
 
   async initBeGame() {
-    const deviceId = this.game.getDeviceId();
     this.beGame = (
-      await backend.createGame(deviceId, {
+      await backend.createGame(this.game.beDevice.id, {
         began_at: new Date().toISOString(),
         began_at_gmtm: this.getGameTime(),
       })
