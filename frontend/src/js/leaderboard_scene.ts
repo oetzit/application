@@ -4,9 +4,9 @@ import { FONTS } from "./assets";
 import { uniqueNamesGenerator, names } from "unique-names-generator";
 import backend from "./backend";
 import { LeaderboardItem, LeaderboardView } from "../../../backend/src/types";
+import Game from "./game";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
-const DEVICE_KEY = "OETZIT/DEVICE_ID";
 
 const BUTTON_HIGHLIGHT_COLOR = "darkorange";
 
@@ -42,6 +42,7 @@ const TEXT_STYLE: {
 };
 
 export default class LeaderboardScene extends Phaser.Scene {
+  game!: Game;
   music!: Phaser.Sound.BaseSound;
   rankings!: Phaser.GameObjects.Text;
   message!: Phaser.GameObjects.Text;
@@ -68,18 +69,14 @@ export default class LeaderboardScene extends Phaser.Scene {
   async fetchLeaderboardView() {
     return (
       await backend.createLeaderboardView({
-        device_id: this.getDeviceUUID() ?? undefined,
+        device_id: this.game.getDeviceId() ?? undefined,
       })
     ).data;
   }
 
   calculateCurrentDeviceIndex() {
-    const uuid = this.getDeviceUUID();
+    const uuid = this.game.getDeviceId();
     return this.leaderboardView.findIndex(({ device_id }) => device_id == uuid);
-  }
-
-  getDeviceUUID() {
-    return sessionStorage.getItem(DEVICE_KEY);
   }
 
   async createRankings() {
@@ -109,7 +106,7 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     // Find and mark current device
     const myIndex = leaderboardItems.findIndex(
-      ({ device_id }) => device_id == this.getDeviceUUID(),
+      ({ device_id }) => device_id == this.game.getDeviceId(),
     );
     if (myIndex > -1) output[myIndex][1] = "> YOU <";
 

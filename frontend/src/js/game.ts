@@ -9,6 +9,11 @@ import PauseScene from "./pause_scene";
 import TutorialScene from "./tutorial_scene";
 import LeaderboardScene from "./leaderboard_scene";
 
+import * as Types from "../../../backend/src/types";
+import backend from "./backend";
+
+const DEVICE_ID_KEY = "OETZIT/DEVICE_ID";
+
 export const GRAVITY_Y = 200;
 
 const CONFIG = {
@@ -37,9 +42,32 @@ const CONFIG = {
 };
 
 export default class Game extends Phaser.Game {
+  beDevice!: Types.Device;
+
   constructor() {
     super(CONFIG);
     this.bindFocusEvents();
+    this.events.on(Phaser.Core.Events.READY, this.initBeDevice.bind(this));
+  }
+
+  async initBeDevice() {
+    const deviceId = this.getDeviceId();
+    if (deviceId === null) {
+      this.beDevice = (await backend.createDevice()).data;
+    } else {
+      this.beDevice = (await backend.getDevice(deviceId)).data;
+    }
+    this.setDeviceId(this.beDevice.id);
+  }
+
+  setDeviceId(deviceId: string) {
+    sessionStorage.setItem(DEVICE_ID_KEY, deviceId);
+  }
+
+  getDeviceId(): string {
+    const deviceId = sessionStorage.getItem(DEVICE_ID_KEY);
+    if (deviceId !== null) return deviceId;
+    throw new Error("getDeviceId was called before initBeDevice");
   }
 
   bindFocusEvents() {

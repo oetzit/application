@@ -1,6 +1,7 @@
 import MainScene, { InputStatus } from "./main_scene";
 
 import Foe from "./foe";
+import Game from "./game";
 import Spear from "./spear";
 import backend from "./backend";
 import BackgroundScene from "./background_scene";
@@ -13,13 +14,11 @@ import {
   sawtoothRamp,
 } from "./utils";
 
-const DEVICE_KEY = "OETZIT/DEVICE_ID";
-
 export default class FightScene extends MainScene {
+  game!: Game;
   tapoutEnabled = true;
   typewriterEnabled = true;
 
-  beDevice: Types.Device;
   beGame: Types.Game;
   spawner: Phaser.Time.TimerEvent;
 
@@ -32,7 +31,6 @@ export default class FightScene extends MainScene {
     this.planMusicChanges();
     this.planWaveAnnouncements();
 
-    await this.initBeDevice();
     await this.initBeGame();
 
     this.spawnFoes();
@@ -105,19 +103,10 @@ export default class FightScene extends MainScene {
 
   //=[ BE initialization ]======================================================
 
-  async initBeDevice() {
-    const deviceId = sessionStorage.getItem(DEVICE_KEY);
-    if (deviceId === null) {
-      this.beDevice = (await backend.createDevice()).data;
-    } else {
-      this.beDevice = (await backend.getDevice(deviceId)).data;
-    }
-    sessionStorage.setItem(DEVICE_KEY, this.beDevice.id);
-  }
-
   async initBeGame() {
+    const deviceId = this.game.getDeviceId();
     this.beGame = (
-      await backend.createGame(this.beDevice.id, {
+      await backend.createGame(deviceId, {
         began_at: new Date().toISOString(),
         began_at_gmtm: this.getGameTime(),
       })
