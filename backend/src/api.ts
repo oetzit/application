@@ -6,6 +6,7 @@ import { connection } from "./db";
 
 import * as Types from "./types";
 import * as Schemas from "./schemas";
+import * as Crypto from "crypto";
 
 // NOTE: refer to https://cloud.google.com/apis/design/
 // NOTE: see https://www.npmjs.com/package/fastify-plugin for TS plugin definition
@@ -85,14 +86,14 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
 
   fastify.route<{
     Body: Types.LeaderboardQuery;
-    Reply: Types.LeaderboardView;
+    Reply: Types.LeaderboardSafeView;
   }>({
     method: "POST",
     url: "/devices/leaderboard",
     schema: {
       body: Schemas.LeaderboardQuery,
       response: {
-        200: Schemas.LeaderboardView,
+        200: Schemas.LeaderboardSafeView,
       },
     },
     handler: async (request, reply) => {
@@ -115,7 +116,18 @@ const apiPlugin: FastifyPluginCallback = (fastify, options, next) => {
         ({ place }, index) => place < 4 || Math.abs(deviceIndex - index) < 2,
       );
 
-      reply.code(200).send(filteredLeaderboardView);
+      const hashedLeaderboardView: Types.LeaderboardSafeView =
+        filteredLeaderboardView.map((item) => {
+          return {
+            place: item.place,
+            game_score: item.game_score,
+            device_hash: Crypto.createHash("sha256")
+              .update(item.device_id)
+              .digest("hex"),
+          };
+        });
+
+      reply.code(200).send(hashedLeaderboardView);
     },
   });
 

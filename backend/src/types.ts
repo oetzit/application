@@ -22,3 +22,5 @@ export type WordChoice = Static<typeof Schemas.WordChoice>;
 export type LeaderboardQuery = Static<typeof Schemas.LeaderboardQuery>;
 export type LeaderboardItem = Static<typeof Schemas.LeaderboardItem>;
 export type LeaderboardView = Static<typeof Schemas.LeaderboardView>;
+export type LeaderboardSafeItem = Static<typeof Schemas.LeaderboardSafeItem>;
+export type LeaderboardSafeView = Static<typeof Schemas.LeaderboardSafeView>;

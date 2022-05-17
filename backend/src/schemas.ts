@@ -98,3 +98,11 @@ export const LeaderboardItem = Type.Object({
 });
 
 export const LeaderboardView = Type.Array(LeaderboardItem);
+
+export const LeaderboardSafeItem = Type.Object({
+  place: Type.Integer({ minimum: 1 }),
+  device_hash: Type.String({ pattern: "^[0-9a-z]{64}$" }),
+  game_score: Type.Integer(),
+});
+
+export const LeaderboardSafeView = Type.Array(LeaderboardSafeItem);

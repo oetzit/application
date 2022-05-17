@@ -3,8 +3,12 @@ import { FONTS } from "./assets";
 
 import { uniqueNamesGenerator, names } from "unique-names-generator";
 import backend from "./backend";
-import { LeaderboardItem, LeaderboardView } from "../../../backend/src/types";
+import {
+  LeaderboardSafeItem,
+  LeaderboardSafeView,
+} from "../../../backend/src/types";
 import Game from "./game";
+import { sha256 } from "./utils";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -47,7 +51,7 @@ export default class LeaderboardScene extends Phaser.Scene {
   rankings!: Phaser.GameObjects.Text;
   message!: Phaser.GameObjects.Text;
   backBtn!: Phaser.GameObjects.Text;
-  leaderboardView!: LeaderboardView;
+  leaderboardView!: LeaderboardSafeView;
   currentDeviceIndex!: number;
 
   constructor() {
@@ -58,7 +62,7 @@ export default class LeaderboardScene extends Phaser.Scene {
     this.music = data.music;
 
     this.leaderboardView = await this.fetchLeaderboardView();
-    this.currentDeviceIndex = this.calculateCurrentDeviceIndex();
+    this.currentDeviceIndex = await this.calculateCurrentDeviceIndex();
 
     this.createRankings();
     this.createMessage();
@@ -74,9 +78,10 @@ export default class LeaderboardScene extends Phaser.Scene {
     ).data;
   }
 
-  calculateCurrentDeviceIndex() {
+  async calculateCurrentDeviceIndex() {
+    const deviceHash = await sha256(this.game.beDevice.id);
     return this.leaderboardView.findIndex(
-      ({ device_id }) => device_id == this.game.beDevice.id,
+      ({ device_hash }) => device_hash == deviceHash,
     );
   }
 
@@ -92,24 +97,22 @@ export default class LeaderboardScene extends Phaser.Scene {
       .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.1);
   }
 
-  renderRankings(leaderboardItems: LeaderboardItem[]) {
+  renderRankings(leaderboardItems: LeaderboardSafeItem[]) {
     const output: [string, string, string, string][] = [];
 
     // Render basic properties
     leaderboardItems.forEach((entry) => {
       output.push([
         entry.place.toString(),
-        this.deterministicNameFromUUID(entry.device_id),
+        this.deterministicNameFromHash(entry.device_hash),
         entry.game_score.toString(),
         entry.place < 4 ? MEDALS[entry.place - 1] : "",
       ]);
     });
 
     // Find and mark current device
-    const myIndex = leaderboardItems.findIndex(
-      ({ device_id }) => device_id == this.game.beDevice.id,
-    );
-    if (myIndex > -1) output[myIndex][1] = "> YOU <";
+    if (this.currentDeviceIndex > -1)
+      output[this.currentDeviceIndex][1] = "> YOU <";
 
     // Add spacers
     for (let i = leaderboardItems.length - 1; i > 1; i--) {
@@ -139,10 +142,11 @@ export default class LeaderboardScene extends Phaser.Scene {
     renderedItems.forEach((c) => (c[2] = c[2].padStart(maxWidth[2], " ")));
   }
 
-  deterministicNameFromUUID(uuid: string) {
+  deterministicNameFromHash(hash: string) {
+    //TODO
     return uniqueNamesGenerator({
       dictionaries: [names],
-      seed: parseInt(uuid.slice(-12), 16),
+      seed: parseInt(hash.slice(-12), 16),
     });
   }
 
