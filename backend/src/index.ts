@@ -1,4 +1,6 @@
 import fastify from "fastify";
+import fastifyAuth from "@fastify/auth";
+import fastifyBasicAuth from "@fastify/basic-auth";
 import fastifyCors from "fastify-cors";
 import fastifySwagger from "fastify-swagger";
 import fastifyRollbar from "./rollbar_plugin";
@@ -42,6 +44,18 @@ server.register(fastifySwagger, {
     //     in: "header",
     //   },
     // },
+  },
+});
+
+server.register(fastifyAuth);
+server.register(fastifyBasicAuth, {
+  authenticate: true,
+  validate: async function (username, password) {
+    const user = process.env.DASHBOARD_USERNAME;
+    const pass = process.env.DASHBOARD_PASSWORD;
+    const userKo = !user || user !== username;
+    const passKo = !pass || pass !== password;
+    if (userKo || passKo) return new Error("Unauthorized");
   },
 });
 

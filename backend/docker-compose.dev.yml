@@ -17,6 +17,8 @@ services:
       - PORT=8080
       - DATABASE_URL=postgres://db_user:db_pass@database/db_name
       - APP_VERSION=development
+      - DASHBOARD_USERNAME=admin
+      - DASHBOARD_PASSWORD=admin
     command: npm run serve
   cli:
     # docker-compose -f docker-compose.dev.yml run cli

@@ -11,6 +11,7 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
   fastify.route({
     method: "GET",
     url: "/",
+    preHandler: fastify.auth([fastify.basicAuth]),
     handler: async (request, reply) => {
       // reply.code(200).send("Hello, World!");
 
