@@ -121,6 +121,32 @@ server.get("/", async (request, reply) => {
     .groupBy("bucket")
     .orderBy("bucket");
 
+  const bestWeeklyScoresByDevice = connection
+    .table("games")
+    .select(
+      connection.raw(
+        "device_id, DATE_PART('week', ended_at) as week, MAX(score) as best_score",
+      ),
+    )
+    .whereNotNull("score")
+    .groupBy("device_id", "week");
+
+  const rankedWeeklyScoresByDevice = connection
+    .select(
+      connection.raw(
+        "*, RANK() OVER(PARTITION BY week ORDER BY best_score DESC) as week_rank",
+      ),
+    )
+    .from(bestWeeklyScoresByDevice.as("g"));
+
+  const topWeeklyPlayers = await connection
+    .select("ranked.*", "devices.email")
+    .from(rankedWeeklyScoresByDevice.as("ranked"))
+    .join("devices", "devices.id", "ranked.device_id")
+    .where("week_rank", "<=", 3)
+    .orderBy("week", "desc")
+    .orderBy("week_rank", "asc");
+
   reply.view("/templates/dashboard.ejs", {
     appVersion: process.env.APP_VERSION || "unknown",
     devicesCount,
@@ -132,6 +158,7 @@ server.get("/", async (request, reply) => {
     shotsByDuration,
     devicesBehaviour,
     wordsPerformance,
+    topWeeklyPlayers,
   });
 });
 

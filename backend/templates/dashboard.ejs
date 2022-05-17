@@ -99,6 +99,47 @@
                 <script id="wordsPerformanceData"
                     type="application/json"><%- JSON.stringify(wordsPerformance) %></script>
                 <canvas id="wordsPerformanceChart"></canvas>
+
+                <h1>Top weekly players</h1>
+                <table class="table table-sm table-borderless table-striped">
+                    <tbody>
+                        <colgroup>
+                            <col style="width:8%">
+                            <col style="width:8%">
+                            <col style="width:14%">
+                            <col style="width:70%">
+                        </colgroup>
+
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-end">Week</th>
+                                <th scope="col" class="text-end">Rank</th>
+                                <th scope="col" class="text-end">Score</th>
+                                <th scope="col">Player email</th>
+                            </tr>
+                        </thead>
+
+                        <% for(var i=0; i < topWeeklyPlayers.length; i++) { %>
+                            <tr
+                                style="<%= topWeeklyPlayers[i].week != topWeeklyPlayers[i-1]?.week ? 'border-top: 2px solid black' : '' %>">
+                                <th scope="row" class="text-end">
+                                    <%= topWeeklyPlayers[i].week %>
+                                </th>
+                                <td class="text-end">
+                                    <%= topWeeklyPlayers[i].week_rank %>
+                                </td>
+                                <td class="text-end">
+                                    <%= topWeeklyPlayers[i].best_score %>
+                                </td>
+                                <td>
+                                    <span title="<%= topWeeklyPlayers[i].device_id %>">
+                                        <%= topWeeklyPlayers[i].email ?? "N/A" %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
             </main>
         </div>
     </div>
