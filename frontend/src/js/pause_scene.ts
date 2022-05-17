@@ -2,6 +2,7 @@ import "phaser";
 import { FONTS } from "./assets";
 
 export default class PauseScene extends Phaser.Scene {
+  enabled = true;
   manual = false;
 
   constructor() {
@@ -71,6 +72,7 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   focusPause(manual: boolean) {
+    if (!this.enabled) return;
     this.manual ||= manual;
     if (this.scene.isActive()) return;
     this.game.scene
@@ -81,6 +83,7 @@ export default class PauseScene extends Phaser.Scene {
   }
 
   focusResume(manual: boolean) {
+    if (!this.enabled) return;
     if (this.manual && !manual) return;
     if (!this.scene.isActive()) return;
     this.manual = false;

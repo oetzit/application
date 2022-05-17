@@ -3,6 +3,7 @@ import { FONTS } from "./assets";
 
 import backend from "./backend";
 import Game from "./game";
+import PauseScene from "./pause_scene";
 
 const BUTTON_HIGHLIGHT_COLOR = "darkorange";
 
@@ -52,6 +53,8 @@ export default class RewardsScene extends Phaser.Scene {
     this.createMailBox();
     this.createBackBtn();
     this.bindEvents();
+
+    this.setPauseEnabled(false);
   }
 
   createExplanation() {
@@ -139,6 +142,12 @@ export default class RewardsScene extends Phaser.Scene {
   }
 
   backToWelcome() {
+    this.setPauseEnabled(true);
     this.scene.start("welcome", { music: this.music });
+  }
+
+  setPauseEnabled(enabled: boolean) {
+    // NOTE: we need to enable/disable pausing because modals quirk the focus
+    (this.scene.get("pause") as PauseScene).enabled = enabled;
   }
 }
