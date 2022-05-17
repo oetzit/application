@@ -36,6 +36,7 @@ export default class WelcomeScene extends Phaser.Scene {
   helpButton!: Phaser.GameObjects.Text;
   playButton!: Phaser.GameObjects.Text;
   leadButton!: Phaser.GameObjects.Text;
+  rewardsButton!: Phaser.GameObjects.Text;
   versionText!: Phaser.GameObjects.Text;
 
   constructor() {
@@ -62,6 +63,7 @@ export default class WelcomeScene extends Phaser.Scene {
     this.helpButton = this.createMainButton("Tutorial", 0);
     this.playButton = this.createMainButton("Play", 1);
     this.leadButton = this.createMainButton("Leaderboard", 2);
+    this.rewardsButton = this.createMainButton("Rewards", 3);
     this.createVersionText();
 
     this.bindEvents();
@@ -116,6 +118,7 @@ export default class WelcomeScene extends Phaser.Scene {
     this.helpButton.on("pointerup", this.startTutorial.bind(this));
     this.playButton.on("pointerup", this.startFight.bind(this));
     this.leadButton.on("pointerup", this.startLeaderboard.bind(this));
+    this.rewardsButton.on("pointerup", this.startRewards.bind(this));
   }
 
   startTutorial() {
@@ -128,5 +131,9 @@ export default class WelcomeScene extends Phaser.Scene {
 
   startLeaderboard() {
     this.scene.start("leaderboard", { music: this.music });
+  }
+
+  startRewards() {
+    this.scene.start("rewards", { music: this.music });
   }
 }

@@ -8,6 +8,7 @@ import GameOverScene from "./game_over_scene";
 import PauseScene from "./pause_scene";
 import TutorialScene from "./tutorial_scene";
 import LeaderboardScene from "./leaderboard_scene";
+import RewardsScene from "./rewards_scene";
 
 import * as Types from "../../../backend/src/types";
 import backend from "./backend";
@@ -37,6 +38,7 @@ const CONFIG = {
     FightScene,
     GameOverScene,
     LeaderboardScene,
+    RewardsScene,
     PauseScene, // NOTE: keep this as last for overlaying
   ],
 };
