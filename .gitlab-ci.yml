@@ -159,7 +159,7 @@ build-be-job:
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://gitlab.inf.unibz.it:4567
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
   script:
     - >
       docker build
