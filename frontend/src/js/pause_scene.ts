@@ -1,5 +1,5 @@
 import "phaser";
-import { FONTS } from "./assets";
+import TEXT_STYLES from "./text_styles";
 
 export default class PauseScene extends Phaser.Scene {
   enabled = true;
@@ -31,20 +31,15 @@ export default class PauseScene extends Phaser.Scene {
 
   drawTitle() {
     const text = "PAUSED";
-    const title = this.add.text(0, 0, text, {
-      fontFamily: FONTS.MONO,
-      fontSize: "64px",
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 4,
-      testString: text,
-    });
-    title.setOrigin(0.5, 1);
-    title.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.475,
-    );
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 64);
+    this.add
+      .text(0, 0, text, TEXT_STYLES.BASE)
+      .setFontSize(fontSize)
+      .setOrigin(0.5, 1)
+      .setPosition(
+        this.cameras.main.width * 0.5,
+        this.cameras.main.height * 0.475,
+      );
   }
 
   drawCTA() {
@@ -54,21 +49,15 @@ export default class PauseScene extends Phaser.Scene {
       ? "ESC"
       : "tap";
     const text = `TAKE A BREATH\n${verb} to resume`;
-    const title = this.add.text(0, 0, text, {
-      fontFamily: FONTS.MONO,
-      fontSize: "32px",
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 4,
-      testString: text,
-      align: "center",
-    });
-    title.setOrigin(0.5, 0);
-    title.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.525,
-    );
+    const fontSize = Math.min(this.cameras.main.height * 0.125, 32);
+    this.add
+      .text(0, 0, text, TEXT_STYLES.BASE)
+      .setFontSize(fontSize)
+      .setOrigin(0.5, 0)
+      .setPosition(
+        this.cameras.main.width * 0.5,
+        this.cameras.main.height * 0.525,
+      );
   }
 
   focusPause(manual: boolean) {

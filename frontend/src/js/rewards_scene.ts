@@ -1,39 +1,14 @@
 import "phaser";
-import { FONTS } from "./assets";
 
 import backend from "./backend";
 import Game from "./game";
 import PauseScene from "./pause_scene";
-
-const BUTTON_HIGHLIGHT_COLOR = "darkorange";
+import TEXT_STYLES from "./text_styles";
 
 // NOTE: see https://stackoverflow.com/a/26989421
 const RFC_5322 = new RegExp(
   /^([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])$/,
 );
-
-const TEXT_STYLE: {
-  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
-} = {
-  MESSAGE: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "#ffffff",
-    fontSize: "32px",
-    testString:
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890",
-    align: "center",
-  },
-  BUTTON: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    fontSize: "32px",
-  },
-};
 
 export default class RewardsScene extends Phaser.Scene {
   game!: Game;
@@ -60,73 +35,75 @@ export default class RewardsScene extends Phaser.Scene {
   }
 
   createExplanation() {
-    const text = "We reward top players weekly! Enter your email to compete:";
+    const text = "We reward top players weekly!\nEnter your email to compete:";
+    const fontSize = Math.min(this.cameras.main.height * 0.125, 24);
     this.explanation = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.1, text, {
-        ...TEXT_STYLE.MESSAGE,
-        testString: text,
-        wordWrap: { width: this.cameras.main.width * 0.6 },
-      })
-      .setOrigin(0.5, 0);
+      .text(0, 0, text, TEXT_STYLES.BASE)
+      .setFontSize(fontSize)
+      .setOrigin(0.5, 0)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.05);
   }
 
   createMailBox() {
     this.mailBox = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.centerY, "", {
-        ...TEXT_STYLE.BUTTON,
-        padding: { x: 16, y: 16 },
-      })
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY,
+        "",
+        TEXT_STYLES.BUTTON,
+      )
       .setOrigin(0.5, 1)
+      .setPadding(16)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.mailBox.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        this.mailBox.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
       )
       .on("pointerout", () =>
-        this.mailBox.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        this.mailBox.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
     this.refreshMailBox();
   }
 
   createPrivacyNotice() {
     const text =
-      "By filling the input you agree to our privacy policy. You can read it HERE 🖋️🤓";
+      "By filling the input you agree to our privacy policy.\nYou can read it HERE 🖋️🤓";
+    const fontSize = Math.min(this.cameras.main.height * 0.125, 16);
     this.privacy = this.add
       .text(
         this.cameras.main.centerX,
         this.mailBox.getBounds().bottom + 16,
         text,
         {
-          ...TEXT_STYLE.BUTTON,
-          fontSize: "24px",
+          ...TEXT_STYLES.BUTTON,
           testString: text,
-          wordWrap: { width: this.cameras.main.width * 0.6 },
           align: "center",
         },
       )
+      .setFontSize(fontSize)
       .setOrigin(0.5, 0)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.privacy.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        this.privacy.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
       )
       .on("pointerout", () =>
-        this.privacy.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        this.privacy.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
   }
 
   createBackBtn() {
     const text = "Back to menu";
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 32);
     this.backBtn = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.9, text, {
-        ...TEXT_STYLE.BUTTON,
-      })
+      .text(0, 0, text, TEXT_STYLES.BUTTON)
+      .setFontSize(fontSize)
       .setOrigin(0.5, 1)
-      .setPadding(4)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.backBtn.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
       )
       .on("pointerout", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
   }
 

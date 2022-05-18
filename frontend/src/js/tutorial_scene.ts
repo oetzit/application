@@ -1,25 +1,11 @@
 import "phaser";
 
-import { FONTS } from "./assets";
 import MainScene, { InputStatus } from "./main_scene";
 import Spear from "./spear";
+import TEXT_STYLES from "./text_styles";
 
 import { STEPS } from "./tutorial_steps";
 import { nthFibonacci } from "./utils";
-
-const BUTTON_HIGHLIGHT_COLOR = "darkorange";
-
-const TEXT_STYLE: {
-  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
-} = {
-  TUTORIAL: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-  },
-};
 
 export interface TutorialStep {
   setup: (scene: TutorialScene) => void;
@@ -72,17 +58,15 @@ export default class TutorialScene extends MainScene {
   }
 
   createText(options: CreateTextOptions) {
+    const fontSize = Math.min(this.cameras.main.width * 0.125, 32);
     const text = this.add
       .text(
         options.positionX ?? this.cameras.main.centerX,
         options.positionY ?? this.cameras.main.centerY,
         options.text,
-        {
-          ...TEXT_STYLE.TUTORIAL,
-          fontSize: `${Math.min(this.cameras.main.width * 0.125, 32)}px`,
-          align: "center",
-        },
+        TEXT_STYLES.BASE,
       )
+      .setFontSize(fontSize)
       .setOrigin(options.originX ?? 0.5, options.originY ?? 0.5)
       .setPadding(16);
 
@@ -90,10 +74,10 @@ export default class TutorialScene extends MainScene {
       text
         .setInteractive({ useHandCursor: true })
         .on("pointerover", () =>
-          text.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+          text.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
         )
         .on("pointerout", () =>
-          text.setStyle({ stroke: TEXT_STYLE.TUTORIAL.stroke }),
+          text.setStyle({ stroke: TEXT_STYLES.BASE.stroke }),
         )
         .on("pointerup", () => this.nextStep());
     return text;

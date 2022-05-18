@@ -4,8 +4,8 @@ import TutorialScene, { TutorialStep } from "./tutorial_scene";
 import Critter from "./critter";
 import Spear from "./spear";
 import Foe from "./foe";
-import { FONTS } from "./assets";
-import { TextCluePayload, TEXT_STYLE } from "./clue_payloads";
+import { TextCluePayload } from "./clue_payloads";
+import TEXT_STYLES from "./text_styles";
 
 interface TrialRoundOptions {
   scene: TutorialScene;
@@ -215,10 +215,9 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: `Nice job ${scene.userName}! 👑👍\nNow, the real thing...`,
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        `Nice job ${scene.userName}! 👑👍\nNow, the real thing...`,
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -226,7 +225,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
-      TextCluePayload.prototype.textStyle = TEXT_STYLE.MONO_NEWSPAPER;
+      TextCluePayload.prototype.textStyle = TEXT_STYLES.CLUE_NEWSPAPER_MONO;
       trialRound({
         scene: scene,
         words: ["i", "am", scene.userName],
@@ -244,20 +243,18 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: `↖️ 💪🏅\nGreat! You scored\n${scene.score} points`,
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        `↖️ 💪🏅\nGreat! You scored\n${scene.score} points`,
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "Speed and good\nCapiTaliZation\nare worth more",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "Speed and good\nCapiTaliZation\nare worth more",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -265,7 +262,7 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
-      TextCluePayload.prototype.textStyle = TEXT_STYLE.MONO_NEWSPAPER;
+      TextCluePayload.prototype.textStyle = TEXT_STYLES.CLUE_NEWSPAPER_MONO;
       trialRound({
         scene: scene,
         words: "no way you will catch all of these lol".split(" "),
@@ -283,40 +280,36 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "Words glow red when\nÖtzi is in danger\n🅰️⚠️",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "Words glow red when\nÖtzi is in danger\n🅰️⚠️",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "Longer words are worth\n(and will hurt) more\n🐘⚠️",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "Longer words are worth\n(and will hurt) more\n🐘⚠️",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "⏲️ ⬆️ ⚠️\nAlso, as time passes,\nthings will get harder",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "⏲️ ⬆️ ⚠️\nAlso, as time passes,\nthings will get harder",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "By the way, we'll\nuse Fraktur script!\n😖❓",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "By the way, we'll\nuse Fraktur script!\n😖❓",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -363,12 +356,9 @@ export const STEPS: TutorialStep[] = [
             (p + h) * j + p + h * 0.5,
             letter + letter.toLocaleLowerCase(),
             {
-              fontFamily: FONTS.FRAK,
+              ...TEXT_STYLES.CHEATSHEET,
               fontSize: `${h / 1.4}px`,
               testString: alphabet + alphabet.toLowerCase(),
-              color: "#ffffff",
-              stroke: "black",
-              strokeThickness: 4,
             },
           )
           .setOrigin(0.5, 0.5);
@@ -379,10 +369,9 @@ export const STEPS: TutorialStep[] = [
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: "Yup, that's a handful.\nBrace yourself...\n😅😱",
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        "Yup, that's a handful.\nBrace yourself...\n😅😱",
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -390,10 +379,9 @@ export const STEPS: TutorialStep[] = [
   {
     setup: (scene) => {
       const verb = scene.game.device.os.desktop ? "hit ESC" : "tap twice";
-      const text = scene.createText({
-        text: `Oh! And remember:\n${verb} to pause\n🙏⏸️`,
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        `Oh! And remember:\n${verb} to pause\n🙏⏸️`,
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
@@ -402,7 +390,7 @@ export const STEPS: TutorialStep[] = [
     setup: (scene) => {
       scene.setTypewriterEnabled(true);
       scene.tapoutEnabled = true;
-      TextCluePayload.prototype.textStyle = TEXT_STYLE.FRAK_NEWSPAPER;
+      TextCluePayload.prototype.textStyle = TEXT_STYLES.CLUE_NEWSPAPER_FRAK;
       trialRound({
         scene: scene,
         words: "Üben von Xylophon und Querflöte ist ja zweckmäßig".split(" "),
@@ -425,20 +413,18 @@ export const STEPS: TutorialStep[] = [
         "Pretty good!\n😊🥈", // 3 4 5
         "Very impressive!\n🤩🥇", // 6 7 8
       ][Math.floor((3 * scene.acceptedWords) / (8 + 1))];
-      const text = scene.createText({
-        text: `You got ${scene.acceptedWords} out of 8.\n${comment}`,
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        `You got ${scene.acceptedWords} out of 8.\n${comment}`,
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),
   },
   {
     setup: (scene) => {
-      const text = scene.createText({
-        text: `That's it, ${scene.userName}.\nTime to play!\n😋🕹️`,
-        positionY: scene.uiDimensions.cluesBounds.centerY,
-      });
+      const text = scene.createSimpleText(
+        `That's it, ${scene.userName}.\nTime to play!\n😋🕹️`,
+      );
       scene.bucket.push(text);
     },
     teardown: (scene) => scene.emptyBucket(),

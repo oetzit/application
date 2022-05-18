@@ -1,4 +1,4 @@
-import { FONTS } from "./assets";
+import TEXT_STYLES from "./text_styles";
 
 export const ICONS = {
   SCORE: "️⭐️",
@@ -7,22 +7,6 @@ export const ICONS = {
 };
 
 export const THIN_SPACE = "\u2009";
-
-const STATS_BASE_TEXT_STYLE = {
-  fontFamily: FONTS.MONO,
-  fontStyle: "bold",
-  color: "white",
-  testString: `${Object.values(ICONS).join("")}1234567890:.`,
-  stroke: "black",
-  strokeThickness: 4,
-} as Phaser.Types.GameObjects.Text.TextStyle;
-
-const INPUT_BASE_TEXT_STYLE = {
-  fontFamily: FONTS.MONO,
-  fontStyle: "bold",
-  color: "white",
-  testString: `ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖẞabcdefghijklmnopqrstuvwxyzäüöß `,
-} as Phaser.Types.GameObjects.Text.TextStyle;
 
 interface HudOptions {
   statsPadding: number;
@@ -81,7 +65,8 @@ export default class HUD {
 
   inputTextStyle(): Phaser.Types.GameObjects.Text.TextStyle {
     return {
-      ...INPUT_BASE_TEXT_STYLE,
+      ...TEXT_STYLES.HUD_INPUT,
+      testString: `ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖẞabcdefghijklmnopqrstuvwxyzäüöß`,
       fontSize: this.options.inputFontSize,
       padding: {
         x: this.options.inputPadding,
@@ -92,7 +77,8 @@ export default class HUD {
 
   statsTextStyle(): Phaser.Types.GameObjects.Text.TextStyle {
     return {
-      ...STATS_BASE_TEXT_STYLE,
+      ...TEXT_STYLES.HUD_STAT,
+      testString: `${Object.values(ICONS).join("")}1234567890:.`,
       fontSize: this.options.statsFontSize,
       padding: {
         x: this.options.statsPadding,

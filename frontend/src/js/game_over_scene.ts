@@ -1,27 +1,12 @@
 import "phaser";
-import { FONTS } from "./assets";
 import BackgroundScene from "./background_scene";
 import { formatTime, ICONS } from "./hud";
-
-const BUTTON_HIGHLIGHT_COLOR = "darkorange";
+import TEXT_STYLES from "./text_styles";
 
 const SS_KEYS = {
   BEST_WORDS: "OETZIT/BEST_WORDS",
   BEST_SCORE: "OETZIT/BEST_SCORE",
   BEST_TIMER: "OETZIT/BEST_TIMER",
-};
-
-const TEXT_STYLE: {
-  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
-} = {
-  BUTTON: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  },
 };
 
 export default class GameOverScene extends Phaser.Scene {
@@ -87,10 +72,10 @@ export default class GameOverScene extends Phaser.Scene {
   drawTitle() {
     const text = "GAME OVER";
     const title = this.add.text(0, 0, text, {
+      ...TEXT_STYLES.BASE,
       fontSize: "48px",
-      fontFamily: FONTS.MONO,
-      fontStyle: "bold",
       color: "#ff0000",
+      testString: text,
     });
     title.setOrigin(0.5, 0);
     title.setPosition(
@@ -102,11 +87,9 @@ export default class GameOverScene extends Phaser.Scene {
   drawSubtitle() {
     const text = `You contributed\n${ICONS.HEALTH} to our research! ${ICONS.HEALTH}\nThank you!`; //
     const subtitle = this.add.text(0, 0, text, {
+      ...TEXT_STYLES.BASE,
       fontSize: "28px",
-      fontFamily: FONTS.MONO,
-      fontStyle: "bold",
       color: "#aaff00",
-      align: "center",
       testString: text,
     });
     subtitle.setOrigin(0.5, 0);
@@ -141,10 +124,8 @@ export default class GameOverScene extends Phaser.Scene {
   ) {
     const text = this.formatResult(words, score, time);
     const title = this.add.text(0, 0, text, {
+      ...TEXT_STYLES.BASE,
       fontSize: "28px",
-      fontFamily: FONTS.MONO,
-      fontStyle: "bold",
-      color: "#ffffff",
       testString: text,
     });
     title.setOrigin(0.5, 0);
@@ -154,10 +135,8 @@ export default class GameOverScene extends Phaser.Scene {
     );
     if (this.beatScore || this.beatTimer || this.beatWords) {
       const newPB = this.add.text(0, 0, "You set new records!", {
+        ...TEXT_STYLES.BASE,
         fontSize: "28px",
-        fontFamily: FONTS.MONO,
-        fontStyle: "bold",
-        color: "#ffffff",
         testString: text,
       });
       newPB.setOrigin(0.5, 0);
@@ -173,17 +152,19 @@ export default class GameOverScene extends Phaser.Scene {
     const text = `${verb} to continue`;
     this.continueButton = this.add
       .text(this.cameras.main.centerX, this.cameras.main.height * 0.9, text, {
-        ...TEXT_STYLE.BUTTON,
+        ...TEXT_STYLES.BUTTON,
         fontSize: "32px",
       })
       .setOrigin(0.5, 1)
       .setPadding(4)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.continueButton.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        this.continueButton.setStyle({
+          stroke: TEXT_STYLES.BUTTON_HOVER.stroke,
+        }),
       )
       .on("pointerout", () =>
-        this.continueButton.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        this.continueButton.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
   }
 

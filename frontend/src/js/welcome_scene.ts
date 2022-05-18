@@ -1,34 +1,5 @@
 import "phaser";
-import { FONTS } from "./assets";
-
-const BUTTON_HIGHLIGHT_COLOR = "darkorange";
-
-const TEXT_STYLE: {
-  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
-} = {
-  TITLE: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-  },
-  BUTTON: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  },
-  VERSION: {
-    fontFamily: FONTS.MONO,
-    fontSize: "16px",
-    fontStyle: "bold",
-    color: "#888888",
-    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.",
-  },
-};
+import TEXT_STYLES from "./text_styles";
 
 export default class WelcomeScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -70,37 +41,35 @@ export default class WelcomeScene extends Phaser.Scene {
   }
 
   createMainButton(text: string, index: number) {
-    const size = Math.min(this.cameras.main.width * 0.125, 48);
+    const fontSize = Math.min((this.cameras.main.height * 0.5) / 4 / 1.4, 48);
     const button = this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY + index * size * 1.4,
+        this.cameras.main.centerY + index * fontSize * 1.4,
         text,
-        {
-          ...TEXT_STYLE.BUTTON,
-          fontSize: `${size}px`,
-        },
+        TEXT_STYLES.BUTTON,
       )
-      .setOrigin(0.5, 0.5)
-      .setPadding(4)
+      .setFontSize(fontSize)
+      .setOrigin(0.5, 1)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        button.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        button.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
       )
       .on("pointerout", () =>
-        button.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        button.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
     return button;
   }
 
   createTitleText() {
     const text = "ÖTZIT!";
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 128);
     this.titleText = this.add
       .text(0, 0, text, {
-        ...TEXT_STYLE.TITLE,
-        fontSize: `${Math.min(this.cameras.main.width * 0.125, 128)}px`,
+        ...TEXT_STYLES.BASE,
         testString: text,
       })
+      .setFontSize(fontSize)
       .setOrigin(0.5, 1)
       .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.3);
   }
@@ -108,9 +77,8 @@ export default class WelcomeScene extends Phaser.Scene {
   createVersionText() {
     const text = process.env.APP_VERSION || "unknown";
     this.versionText = this.add
-      .text(0, 0, text.toUpperCase(), TEXT_STYLE.VERSION)
+      .text(0, 0, text.toUpperCase(), TEXT_STYLES.VERSION_TAG)
       .setOrigin(0.5, 1)
-      .setPadding(8)
       .setPosition(this.cameras.main.centerX, this.cameras.main.height);
   }
 

@@ -1,13 +1,13 @@
 import "phaser";
 import {
   BackgroundImages,
-  FONTS,
   MusicEffects,
   RexWebFontLoaderConfig,
   RexWebFontLoaderPluginFileConfig,
   SoundEffects,
   SpriteSheets,
 } from "./assets";
+import TEXT_STYLES from "./text_styles";
 
 export default class LoadingScene extends Phaser.Scene {
   progressBar!: Phaser.GameObjects.Graphics;
@@ -71,12 +71,7 @@ export default class LoadingScene extends Phaser.Scene {
       origin: 0.5,
       text: "LOADING: 0%",
       style: {
-        fontFamily: FONTS.MONO,
-        fontStyle: "bold",
-        fontSize: "32px",
-        color: "white",
-        stroke: "black",
-        strokeThickness: 4,
+        ...TEXT_STYLES.LOADING,
         testString: "LOADING: 0123456789%",
       },
     });

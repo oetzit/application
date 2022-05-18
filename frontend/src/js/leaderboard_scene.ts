@@ -1,5 +1,4 @@
 import "phaser";
-import { FONTS } from "./assets";
 
 import { uniqueNamesGenerator, names } from "unique-names-generator";
 import backend from "./backend";
@@ -9,41 +8,9 @@ import {
 } from "../../../backend/src/types";
 import Game from "./game";
 import { sha256 } from "./utils";
+import TEXT_STYLES from "./text_styles";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
-
-const BUTTON_HIGHLIGHT_COLOR = "darkorange";
-
-const TEXT_STYLE: {
-  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
-} = {
-  LIST: {
-    fontSize: "28px",
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "#ffffff",
-    stroke: "black",
-    strokeThickness: 4,
-  },
-  MESSAGE: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "#ffffff",
-    fontSize: "32px",
-    testString:
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890",
-    align: "center",
-  },
-  BUTTON: {
-    fontFamily: FONTS.MONO,
-    fontStyle: "bold",
-    color: "white",
-    stroke: "black",
-    strokeThickness: 8,
-    testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    fontSize: "32px",
-  },
-};
 
 export default class LeaderboardScene extends Phaser.Scene {
   game!: Game;
@@ -87,12 +54,13 @@ export default class LeaderboardScene extends Phaser.Scene {
 
   async createRankings() {
     const renderedRankings = this.renderRankings(this.leaderboardView);
-
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 24);
     this.rankings = this.add
       .text(0, 0, renderedRankings, {
-        ...TEXT_STYLE.LIST,
+        ...TEXT_STYLES.BASE,
         testString: renderedRankings,
       })
+      .setFontSize(fontSize)
       .setOrigin(0.5, 0)
       .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.1);
   }
@@ -152,14 +120,15 @@ export default class LeaderboardScene extends Phaser.Scene {
 
   createMessage() {
     const renderedMessage = this.renderMessage();
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 24);
     this.message = this.add
-      .text(
+      .text(0, 0, renderedMessage, TEXT_STYLES.BASE)
+      .setOrigin(0.5, 0)
+      .setFontSize(fontSize)
+      .setPosition(
         this.cameras.main.centerX,
         this.rankings.getBounds().bottom + 32,
-        renderedMessage,
-        TEXT_STYLE.MESSAGE,
-      )
-      .setOrigin(0.5, 0);
+      );
   }
 
   renderMessage() {
@@ -171,20 +140,19 @@ export default class LeaderboardScene extends Phaser.Scene {
   }
 
   createBackBtn() {
-    const verb = this.game.device.os.desktop ? "Click" : "Tap";
-    const text = `${verb} to continue`;
+    const text = "Back to menu";
+    const fontSize = Math.min(this.cameras.main.height * 0.25, 32);
     this.backBtn = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.9, text, {
-        ...TEXT_STYLE.BUTTON,
-      })
+      .text(0, 0, text, TEXT_STYLES.BUTTON)
       .setOrigin(0.5, 1)
-      .setPadding(4)
+      .setFontSize(fontSize)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
-        this.backBtn.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
       )
       .on("pointerout", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
       );
   }
 
