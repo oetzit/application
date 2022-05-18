@@ -39,6 +39,7 @@ export default class RewardsScene extends Phaser.Scene {
   game!: Game;
   music!: Phaser.Sound.BaseSound;
   explanation!: Phaser.GameObjects.Text;
+  privacy!: Phaser.GameObjects.Text;
   mailBox!: Phaser.GameObjects.Text;
   backBtn!: Phaser.GameObjects.Text;
 
@@ -51,6 +52,7 @@ export default class RewardsScene extends Phaser.Scene {
 
     this.createExplanation();
     this.createMailBox();
+    this.createPrivacyNotice();
     this.createBackBtn();
     this.bindEvents();
 
@@ -74,7 +76,7 @@ export default class RewardsScene extends Phaser.Scene {
         ...TEXT_STYLE.BUTTON,
         padding: { x: 16, y: 16 },
       })
-      .setOrigin(0.5, 0.5)
+      .setOrigin(0.5, 1)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () =>
         this.mailBox.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
@@ -83,6 +85,32 @@ export default class RewardsScene extends Phaser.Scene {
         this.mailBox.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
       );
     this.refreshMailBox();
+  }
+
+  createPrivacyNotice() {
+    const text =
+      "By filling the input you agree to our privacy policy. You can read it HERE 🖋️🤓";
+    this.privacy = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.mailBox.getBounds().bottom + 16,
+        text,
+        {
+          ...TEXT_STYLE.BUTTON,
+          fontSize: "24px",
+          testString: text,
+          wordWrap: { width: this.cameras.main.width * 0.6 },
+          align: "center",
+        },
+      )
+      .setOrigin(0.5, 0)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerover", () =>
+        this.privacy.setStyle({ stroke: BUTTON_HIGHLIGHT_COLOR }),
+      )
+      .on("pointerout", () =>
+        this.privacy.setStyle({ stroke: TEXT_STYLE.BUTTON.stroke }),
+      );
   }
 
   createBackBtn() {
@@ -105,6 +133,7 @@ export default class RewardsScene extends Phaser.Scene {
   bindEvents() {
     this.mailBox.on("pointerup", this.changeEmail.bind(this));
     this.backBtn.on("pointerup", this.backToWelcome.bind(this));
+    this.privacy.on("pointerup", this.openPrivacyPolicy.bind(this));
   }
 
   async changeEmail() {
@@ -149,5 +178,10 @@ export default class RewardsScene extends Phaser.Scene {
   setPauseEnabled(enabled: boolean) {
     // NOTE: we need to enable/disable pausing because modals quirk the focus
     (this.scene.get("pause") as PauseScene).enabled = enabled;
+  }
+
+  openPrivacyPolicy() {
+    const url = "https://www.eurac.edu/en/static/privacy-policy-website";
+    window.open(url, "_blank");
   }
 }
