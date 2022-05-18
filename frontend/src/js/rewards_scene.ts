@@ -3,7 +3,7 @@ import "phaser";
 import backend from "./backend";
 import Game from "./game";
 import PauseScene from "./pause_scene";
-import TEXT_STYLES from "./text_styles";
+import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 // NOTE: see https://stackoverflow.com/a/26989421
 const RFC_5322 = new RegExp(
@@ -53,14 +53,8 @@ export default class RewardsScene extends Phaser.Scene {
         TEXT_STYLES.BUTTON,
       )
       .setOrigin(0.5, 1)
-      .setPadding(16)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.mailBox.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-      )
-      .on("pointerout", () =>
-        this.mailBox.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setPadding(16);
+    makeButtonHoverable(this.mailBox);
     this.refreshMailBox();
   }
 
@@ -80,14 +74,8 @@ export default class RewardsScene extends Phaser.Scene {
         },
       )
       .setFontSize(fontSize)
-      .setOrigin(0.5, 0)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.privacy.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-      )
-      .on("pointerout", () =>
-        this.privacy.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setOrigin(0.5, 0);
+    makeButtonHoverable(this.privacy);
   }
 
   createBackBtn() {
@@ -97,14 +85,8 @@ export default class RewardsScene extends Phaser.Scene {
       .text(0, 0, text, TEXT_STYLES.BUTTON)
       .setFontSize(fontSize)
       .setOrigin(0.5, 1)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-      )
-      .on("pointerout", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95);
+    makeButtonHoverable(this.backBtn);
   }
 
   bindEvents() {

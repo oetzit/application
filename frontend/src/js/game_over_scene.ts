@@ -1,7 +1,7 @@
 import "phaser";
 import BackgroundScene from "./background_scene";
 import { formatTime, ICONS } from "./hud";
-import TEXT_STYLES from "./text_styles";
+import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 const SS_KEYS = {
   BEST_WORDS: "OETZIT/BEST_WORDS",
@@ -156,16 +156,8 @@ export default class GameOverScene extends Phaser.Scene {
         fontSize: "32px",
       })
       .setOrigin(0.5, 1)
-      .setPadding(4)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.continueButton.setStyle({
-          stroke: TEXT_STYLES.BUTTON_HOVER.stroke,
-        }),
-      )
-      .on("pointerout", () =>
-        this.continueButton.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setPadding(4);
+    makeButtonHoverable(this.continueButton);
   }
 
   bindEvents() {

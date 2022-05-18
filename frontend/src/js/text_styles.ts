@@ -92,4 +92,15 @@ const TEXT_STYLES: {
   },
 };
 
+export const makeButtonHoverable = (text: Phaser.GameObjects.Text) => {
+  text
+    .setInteractive({ useHandCursor: true })
+    .on("pointerover", () =>
+      text.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
+    )
+    .on("pointerout", () =>
+      text.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
+    );
+};
+
 export default TEXT_STYLES;

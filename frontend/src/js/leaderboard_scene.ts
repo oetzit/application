@@ -8,7 +8,7 @@ import {
 } from "../../../backend/src/types";
 import Game from "./game";
 import { sha256 } from "./utils";
-import TEXT_STYLES from "./text_styles";
+import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -146,14 +146,8 @@ export default class LeaderboardScene extends Phaser.Scene {
       .text(0, 0, text, TEXT_STYLES.BUTTON)
       .setOrigin(0.5, 1)
       .setFontSize(fontSize)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-      )
-      .on("pointerout", () =>
-        this.backBtn.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95);
+    makeButtonHoverable(this.backBtn);
   }
 
   bindEvents() {

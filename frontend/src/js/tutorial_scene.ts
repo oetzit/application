@@ -2,7 +2,7 @@ import "phaser";
 
 import MainScene, { InputStatus } from "./main_scene";
 import Spear from "./spear";
-import TEXT_STYLES from "./text_styles";
+import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 import { STEPS } from "./tutorial_steps";
 import { nthFibonacci } from "./utils";
@@ -70,16 +70,10 @@ export default class TutorialScene extends MainScene {
       .setOrigin(options.originX ?? 0.5, options.originY ?? 0.5)
       .setPadding(16);
 
-    if (options.interactive ?? true)
-      text
-        .setInteractive({ useHandCursor: true })
-        .on("pointerover", () =>
-          text.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-        )
-        .on("pointerout", () =>
-          text.setStyle({ stroke: TEXT_STYLES.BASE.stroke }),
-        )
-        .on("pointerup", () => this.nextStep());
+    if (options.interactive ?? true) {
+      makeButtonHoverable(text);
+      text.on("pointerup", () => this.nextStep());
+    }
     return text;
   }
 

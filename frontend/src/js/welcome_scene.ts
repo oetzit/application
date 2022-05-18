@@ -1,5 +1,5 @@
 import "phaser";
-import TEXT_STYLES from "./text_styles";
+import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 export default class WelcomeScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
@@ -50,14 +50,8 @@ export default class WelcomeScene extends Phaser.Scene {
         TEXT_STYLES.BUTTON,
       )
       .setFontSize(fontSize)
-      .setOrigin(0.5, 1)
-      .setInteractive({ useHandCursor: true })
-      .on("pointerover", () =>
-        button.setStyle({ stroke: TEXT_STYLES.BUTTON_HOVER.stroke }),
-      )
-      .on("pointerout", () =>
-        button.setStyle({ stroke: TEXT_STYLES.BUTTON.stroke }),
-      );
+      .setOrigin(0.5, 1);
+    makeButtonHoverable(button);
     return button;
   }
 
