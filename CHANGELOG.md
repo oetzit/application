@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2022-05-18
+
+### Added
+
+- `BE` Leaderboard endpoint (ensure no device id escept the user's is publicly circulating).
+- `FE` Leaderboard scene with top players (everyone's id is hashed and anonymized, names are generated deterministically).
+- `BE` Added email to devices.
+- `FE` Added reward scene to input email.
+- `BE` Top weekly players in dashboard.
+- `BE` Dashboard is now password protected.
+- `FE` Track personal best words/time/score.
+- `FE` Notify when personal best is beaten upon game over.
+- `FE` Link to privacy policy in rewards scene, abiding to GDPR.
+
+### Changed
+
+- `FE` Wrong casing is now accepted, halving the points of the wrong letters.
+- `FE` Device handling is simplified and bubbled up to the `Game` instance itself.
+- `FE` Refactor text style handling.
+- `FE` Refactor button interaction handling.
+
+### Fixed
+
+- `FE` Fix english in tutorial.
+- `FE` Fix text alignment in tutorial.
+- `FE` Fix arrows emoji for mobile in tutorial.
+- `FE` Fix wonky clue positioning in tutorial.
+- `FE` Fix pause overlay when in game over screen.
+- `FE` Disable focus pausing in reward scene, as prompts are tricky.
+
 ## [1.2.0] - 2022-05-11
 
 ### Added
