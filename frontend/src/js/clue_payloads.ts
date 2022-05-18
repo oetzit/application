@@ -16,52 +16,40 @@ const GERMAN_ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ" + "abcdefghijklmnopqrstuvwxyzäöüß";
 
 export const TEXT_STYLE: {
-  [key: string]: (height: number) => Phaser.Types.GameObjects.Text.TextStyle;
+  [key: string]: Phaser.Types.GameObjects.Text.TextStyle;
 } = {
-  TYPEWRITER: (height) => {
-    return {
-      fontSize: `${height * 1.4}px`,
-      fontFamily: FONTS.MONO,
-      fontStyle: "bold",
-      color: "white",
-      stroke: "black",
-      strokeThickness: 8,
-      testString: GERMAN_ALPHABET,
-    };
+  TYPEWRITER: {
+    fontFamily: FONTS.MONO,
+    fontStyle: "bold",
+    color: "white",
+    stroke: "black",
+    strokeThickness: 8,
+    testString: GERMAN_ALPHABET,
   },
-  TRAINING: (height) => {
-    return {
-      fontSize: `${height * 1.4}px`,
-      fontFamily: FONTS.FRAK,
-      color: "white",
-      stroke: "black",
-      strokeThickness: 8,
-      testString: GERMAN_ALPHABET,
-    };
+  TRAINING: {
+    fontFamily: FONTS.FRAK,
+    color: "white",
+    stroke: "black",
+    strokeThickness: 8,
+    testString: GERMAN_ALPHABET,
   },
-  MONO_NEWSPAPER: (height) => {
-    return {
-      fontSize: `${height * 1.4}px`,
-      fontFamily: FONTS.MONO,
-      color: "#333333",
-      stroke: "#666666",
-      strokeThickness: 4,
-      testString: GERMAN_ALPHABET,
-      backgroundColor: "#aaaaaa",
-      padding: { x: 8 },
-    };
+  MONO_NEWSPAPER: {
+    fontFamily: FONTS.MONO,
+    color: "#333333",
+    stroke: "#666666",
+    strokeThickness: 4,
+    testString: GERMAN_ALPHABET,
+    backgroundColor: "#aaaaaa",
+    padding: { x: 8 },
   },
-  FRAK_NEWSPAPER: (height) => {
-    return {
-      fontSize: `${height * 1.4}px`,
-      fontFamily: FONTS.FRAK,
-      color: "#333333",
-      stroke: "#666666",
-      strokeThickness: 4,
-      testString: GERMAN_ALPHABET,
-      backgroundColor: "#aaaaaa",
-      padding: { x: 8 },
-    };
+  FRAK_NEWSPAPER: {
+    fontFamily: FONTS.FRAK,
+    color: "#333333",
+    stroke: "#666666",
+    strokeThickness: 4,
+    testString: GERMAN_ALPHABET,
+    backgroundColor: "#aaaaaa",
+    padding: { x: 8 },
   },
 };
 
@@ -73,7 +61,8 @@ export class TextCluePayload
   textStyle = TEXT_STYLE.TYPEWRITER;
 
   constructor(scene: Phaser.Scene, baseHeight: number) {
-    super(scene, 0, 0, "", TextCluePayload.prototype.textStyle(baseHeight));
+    super(scene, 0, 0, "", TextCluePayload.prototype.textStyle);
+    this.setFontSize(baseHeight * 1.4);
     this.setAlpha(0);
     this.setOrigin(0.5, 0.5);
     this.baseHeight = baseHeight;
