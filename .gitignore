@@ -2,3 +2,11 @@
 !*.secret
 backend/k8s/overlays/stg/database.secrets.env
 backend/k8s/overlays/prd/database.secrets.env
+
+butler
+butler.zip
+7z.so
+libc7zip.so
+
+Makefile.env
+kubeconfig.yml
