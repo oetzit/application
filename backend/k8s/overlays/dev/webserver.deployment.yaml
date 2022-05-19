@@ -14,3 +14,13 @@ spec:
                 secretKeyRef:
                   name: oetzit-database-credentials
                   key: url
+            - name: DASHBOARD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-dashboard-credentials
+                  key: username
+            - name: DASHBOARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-dashboard-credentials
+                  key: password

@@ -23,3 +23,8 @@ secretGenerator:
       - url=postgres://db_user:db_pass@oetzit-database-service/db_name
     name: oetzit-database-credentials
     type: Opaque
+  - literals:
+      - username=admin
+      - password=admin
+    name: oetzit-dashboard-credentials
+    type: Opaque

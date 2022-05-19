@@ -20,3 +20,7 @@ secretGenerator:
       - database.secrets.env
     name: oetzit-database-credentials
     type: Opaque
+  - envs:
+      - dashboard.secrets.env
+    name: oetzit-dashboard-credentials
+    type: Opaque
