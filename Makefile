@@ -28,7 +28,7 @@ docker-push:
 build-be-job: docker-login docker-build docker-push
 
 stg-be-deploy-job:
-	kubectl set image
+	kubectl set image \
 		deployment/${K8S_DEPLOYMENT} \
 		oetzit=${IMAGE_NAME}:${CI_COMMIT_SHA} \
 		--namespace=kommul-dev
