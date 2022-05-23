@@ -65,7 +65,7 @@ cache-be-node-job:
 app-tagger-job:
   stage: setup
   variables:
-    GIT_DEPTH: 0
+    GIT_DEPTH: 1000
   # before_script:
   #   - git fetch --unshallow --all
   script:
