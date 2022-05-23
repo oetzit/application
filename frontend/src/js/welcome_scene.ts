@@ -14,21 +14,13 @@ export default class WelcomeScene extends Phaser.Scene {
     super("welcome");
   }
 
-  musicHardReplace(
-    nextMusic: Phaser.Sound.BaseSound,
-    prevMusic?: Phaser.Sound.BaseSound,
-  ) {
-    prevMusic?.stop();
-    prevMusic?.destroy();
-    this.music = nextMusic;
-    this.music.play();
-  }
-
   create(data: { music?: Phaser.Sound.BaseSound }) {
-    this.musicHardReplace(
-      this.sound.add("bkg_buildup", { loop: true }),
-      data.music,
-    );
+    if (data.music) {
+      this.music = data.music;
+    } else {
+      this.music = this.sound.add("bkg_buildup", { loop: true });
+      this.music.play();
+    }
 
     this.createTitleText();
     this.helpButton = this.createMainButton("Tutorial", 0);

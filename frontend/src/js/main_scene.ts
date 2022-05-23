@@ -184,7 +184,7 @@ export default class MainScene extends Phaser.Scene {
   onResume() {
     this.uncoverClues();
     this.typewriter.setActive(this.typewriterEnabled);
-    this.music.play();
+    this.music.resume();
   }
 
   uncoverClues() {

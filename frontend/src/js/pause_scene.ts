@@ -2,6 +2,7 @@ import "phaser";
 import TEXT_STYLES from "./text_styles";
 
 export default class PauseScene extends Phaser.Scene {
+  music!: Phaser.Sound.BaseSound;
   enabled = true;
   manual = false;
 
@@ -9,7 +10,8 @@ export default class PauseScene extends Phaser.Scene {
     super("pause");
   }
 
-  create() {
+  create(data: { music: Phaser.Sound.BaseSound }) {
+    this.music = data.music;
     this.drawShade();
     this.drawTitle();
     this.drawCTA();

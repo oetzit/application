@@ -21,30 +21,13 @@ export default class GameOverScene extends Phaser.Scene {
     super("game_over");
   }
 
-  musicHardReplace(
-    nextMusic: Phaser.Sound.BaseSound,
-    prevMusic?: Phaser.Sound.BaseSound,
-  ) {
-    prevMusic?.stop();
-    prevMusic?.destroy();
-    this.music = nextMusic;
-    this.music.play();
-  }
-
-  create(data: {
-    music?: Phaser.Sound.BaseSound;
-    words: number;
-    score: number;
-    time: number;
-  }) {
+  create(data: { words: number; score: number; time: number }) {
     (this.scene.get("background") as BackgroundScene).dropCurtain();
     (this.scene.get("background") as BackgroundScene).atmosphere
       .stop()
       .restart();
-    this.musicHardReplace(
-      this.sound.add("bkg_failure", { loop: false }),
-      data.music,
-    );
+    this.music = this.sound.add("bkg_failure", { loop: false });
+    this.music.play();
 
     this.processRecords(data.score, data.time, data.words);
 
@@ -164,6 +147,6 @@ export default class GameOverScene extends Phaser.Scene {
 
   backToWelcome() {
     (this.scene.get("background") as BackgroundScene).liftCurtain();
-    this.scene.start("welcome", { music: this.music });
+    this.scene.start("welcome");
   }
 }

@@ -47,8 +47,9 @@ export default class FightScene extends MainScene {
 
     this.spawner.remove();
 
+    this.music.stop();
+    this.music.destroy();
     this.scene.start("game_over", {
-      music: this.music,
       words: this.acceptedWords,
       score: this.beGame.score,
       time: this.beGame.ended_at_gmtm,

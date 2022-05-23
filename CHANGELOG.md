@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `FE` Caps lock now works properly on desktop.
 
+### Fixed
+
+- `FE` Removed music jumps at scene changes.
+
 ## [1.3.0] - 2022-05-18
 
 ### Added
