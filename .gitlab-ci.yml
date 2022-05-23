@@ -144,8 +144,6 @@ prd-build-fe-node-job:
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
     - npm run build -- --dist-dir dist/prd
-  needs:
-    - app-tagger-job
   artifacts:
     paths:
       - frontend/dist/prd
@@ -161,8 +159,6 @@ stg-build-fe-node-job:
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
     - npm run build -- --dist-dir dist/stg
-  needs:
-    - app-tagger-job
   artifacts:
     paths:
       - frontend/dist/stg
@@ -196,8 +192,6 @@ build-be-job:
       --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION}
       --build-arg APP_VERSION=$APP_VERSION
       --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
-  needs:
-    - app-tagger-job
   only:
     - tags
     - development
