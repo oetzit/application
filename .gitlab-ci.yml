@@ -62,26 +62,24 @@ cache-be-node-job:
 
 #--[ Cetera ]-------------------------------------------------------------------
 
-version-tag-job:
+app-tagger-job:
   stage: setup
   before_script:
     - git fetch --unshallow --all
   script:
-    - echo "APP_VERSION=value_from_build_job" >> build.env
+    - APP_BRANCH=${CI_COMMIT_TAG:+main}
+    - APP_BRANCH=${APP_BRANCH:-${CI_COMMIT_REF_NAME}}
+    - echo Detected app branch ${APP_BRANCH}
+    - echo "APP_VERSION=$APP_BRANCH" >> build.env
+    - APP_VERSION=$(git describe --tags)
+    - echo Detected app version ${APP_VERSION}
+    - echo "APP_VERSION=$APP_VERSION" >> build.env
   artifacts:
     reports:
       dotenv: build.env
   only:
-    - pushes
-
-version-tag-test-job:
-  stage: setup
-  script:
-    - echo $APP_VERSION
-  only:
-    - pushes
-  needs:
-    - version-tag-job
+    - tags
+    - development
 
 #==[ CHECK STAGE ]==============================================================
 
@@ -144,8 +142,9 @@ prd-build-fe-node-job:
     NODE_ENV: production
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
-    - APP_VERSION=$(git describe --tags)
     - npm run build -- --dist-dir dist/prd
+  needs:
+    - app-tagger-job
   artifacts:
     paths:
       - frontend/dist/prd
@@ -160,8 +159,9 @@ stg-build-fe-node-job:
     NODE_ENV: staging
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
-    - APP_VERSION=$(git describe --tags)
     - npm run build -- --dist-dir dist/stg
+  needs:
+    - app-tagger-job
   artifacts:
     paths:
       - frontend/dist/stg
@@ -184,19 +184,19 @@ build-be-job:
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - BRANCH_TAG=${CI_COMMIT_TAG:+main}
-    - BRANCH_TAG=${BRANCH_TAG:-${CI_COMMIT_REF_NAME}}
-    - APP_VERSION=$(git describe --tags)
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}/backend"
       --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
       --target production
+      --destination ${CI_REGISTRY_IMAGE}/backend:latest
       --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
-      --destination ${CI_REGISTRY_IMAGE}/backend:${BRANCH_TAG}
-      --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_TAG:-latest}
+      --destination ${CI_REGISTRY_IMAGE}/backend:${APP_BRANCH}
+      --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION}
       --build-arg APP_VERSION=$APP_VERSION
       --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
+  needs:
+    - app-tagger-job
   only:
     - tags
     - development
@@ -218,11 +218,12 @@ build-be-job:
       butler push
       $DIST_PATH
       eurac/$GAME_NAME:html5
-      --userversion ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+      --userversion ${USER_VERSION}
 
 prd-fe-deploy-job:
   extends: .fe-deploy-job
   needs:
+    - app-tagger-job
     - job: prd-build-fe-node-job
       artifacts: true
   environment:
@@ -232,12 +233,14 @@ prd-fe-deploy-job:
   variables:
     GAME_NAME: oetzit
     DIST_PATH: frontend/dist/prd
+    USER_VERSION: ${APP_VERSION}
   only:
     - tags
 
 stg-fe-deploy-job:
   extends: .fe-deploy-job
   needs:
+    - app-tagger-job
     - job: stg-build-fe-node-job
       artifacts: true
   environment:
@@ -247,6 +250,7 @@ stg-fe-deploy-job:
   variables:
     GAME_NAME: oetzit-staging
     DIST_PATH: frontend/dist/stg
+    USER_VERSION: ${APP_VERSION}
   only:
     - development
 
@@ -256,6 +260,7 @@ stg-fe-deploy-job:
   image: alpine:latest
   stage: deploy
   needs:
+    - app-tagger-job
     - job: build-be-job
       artifacts: false
   # tags:
@@ -265,7 +270,7 @@ stg-fe-deploy-job:
   before_script:
     - ./ci/install-kubectl-on-alpine.sh
   script:
-    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzit=${IMAGE_NAME}:${CI_COMMIT_SHA} --namespace=${K8S_NAMESPACE}
+    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzit=${IMAGE_NAME}:${APP_VERSION} --namespace=${K8S_NAMESPACE}
 
 prd-be-deploy-job:
   extends: .be-deploy-job
