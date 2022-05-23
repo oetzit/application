@@ -7,6 +7,7 @@ import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 // NOTE: see https://stackoverflow.com/a/26989421
 const RFC_5322 = new RegExp(
+  // eslint-disable-next-line no-empty-character-class
   /^([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])$/,
 );
 

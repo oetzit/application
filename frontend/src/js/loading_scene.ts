@@ -84,7 +84,7 @@ export default class LoadingScene extends Phaser.Scene {
     );
   }
 
-  onLoadFileProgress(file: Phaser.Loader.File, percentComplete: number) {
+  onLoadFileProgress(file: Phaser.Loader.File, _percentComplete: number) {
     console.debug("Preloading", file.type, "asset", file.key, "from", file.url);
   }
 

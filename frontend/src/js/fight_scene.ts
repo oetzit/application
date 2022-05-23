@@ -189,7 +189,7 @@ export default class FightScene extends MainScene {
 
     const delay = clamp(randomExponential(rate), minDelay, maxDelay) * 1000;
 
-    const AVG_CPM = 200; // corresponds to AVG_WPM and AVG_CPW = 5
+    // const AVG_CPM = 200; // corresponds to AVG_WPM and AVG_CPW = 5
     // const minLength = 1;
     const minLength = Math.round(1 + (3 - 1) * difficulty);
     // const maxLength = 12;

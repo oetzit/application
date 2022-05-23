@@ -31,7 +31,7 @@ function trialRound({
     repeat: -1,
     callback: () => {
       if (scene.foes.length > 0) return;
-      scene.submitTranscription = () => {};
+      scene.submitTranscription = () => undefined;
       scene.nextStep();
       completionWatcher.destroy();
     },
@@ -203,7 +203,7 @@ export const STEPS: TutorialStep[] = [
       scene.submitTranscription = (inputStatus) => {
         scene.userName = inputStatus.final;
         scene.nextStep();
-        scene.submitTranscription = () => {};
+        scene.submitTranscription = () => undefined;
       };
     },
     teardown: (scene) => {

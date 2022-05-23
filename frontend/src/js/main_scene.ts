@@ -448,5 +448,6 @@ export default class MainScene extends Phaser.Scene {
 
   submitTranscription(_inputStatus: InputStatus) {
     console.error("submitTranscription not implemented");
+    return undefined;
   }
 }

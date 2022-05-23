@@ -21,8 +21,6 @@ export default class GameOverScene extends Phaser.Scene {
     super("game_over");
   }
 
-  preload() {}
-
   musicHardReplace(
     nextMusic: Phaser.Sound.BaseSound,
     prevMusic?: Phaser.Sound.BaseSound,

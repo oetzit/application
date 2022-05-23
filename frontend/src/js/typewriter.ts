@@ -1,5 +1,6 @@
 import Keyboard from "simple-keyboard";
 import { KeyboardOptions } from "simple-keyboard/build/interfaces";
+import PhysicalKeyboard from "simple-keyboard/build/services/PhysicalKeyboard";
 
 interface InputStatus {
   began_at: Date | null;
@@ -81,7 +82,10 @@ enum Key {
 // NOTE: this is a hack to get onKeyReleased to work with physical keyboards, stealing from the following points
 // https://github.com/hodgef/simple-keyboard/blob/ed2c5ce81d7149b07cb3b11f4b629a63034be8ce/src/lib/services/PhysicalKeyboard.ts#L27-L64
 // https://github.com/hodgef/simple-keyboard/blob/ed2c5ce81d7149b07cb3b11f4b629a63034be8ce/src/lib/components/Keyboard.ts#L1757-L1812
-const hackPhysicalKeyboardKeyUp = function (event: KeyboardEvent) {
+const hackPhysicalKeyboardKeyUp = function (
+  this: PhysicalKeyboard,
+  event: KeyboardEvent,
+): void {
   const buttonPressed = this.getSimpleKeyboardLayoutKey(event);
 
   this.dispatch((instance: any) => {
@@ -121,8 +125,8 @@ class Typewriter {
   getGameTime: () => number; // NOTE: sigh.
 
   constructor(desktop: boolean) {
-    this.onChange = () => {};
-    this.onSubmit = () => {};
+    this.onChange = () => undefined;
+    this.onSubmit = () => undefined;
 
     this.desktop = desktop;
     this.inputStatus = {
