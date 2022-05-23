@@ -13,8 +13,8 @@ stages:
 
 .node-job: &node-job
   image: node:16-alpine
-  tags:
-    - shared
+  # tags:
+  #   - shared
   only:
     - pushes
 
@@ -46,7 +46,7 @@ stages:
 
 #--[ Frontend ]-----------------------------------------------------------------
 
-.cache-fe-node-job:
+cache-fe-node-job:
   extends: .fe-node-job
   stage: setup
   script:
@@ -54,7 +54,7 @@ stages:
 
 #--[ Backend ]------------------------------------------------------------------
 
-.cache-be-node-job:
+cache-be-node-job:
   extends: .be-node-job
   stage: setup
   script:
@@ -71,17 +71,17 @@ stages:
     - cache-fe-node-job
   allow_failure: true # TODO: disallow!
 
-.format-fe-node-job:
+format-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run format:check
 
-.lint-fe-node-job:
+lint-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run lint:check
 
-.test-fe-node-job:
+test-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run test
@@ -95,17 +95,17 @@ stages:
     - cache-be-node-job
   allow_failure: true # TODO: disallow!
 
-.format-be-node-job:
+format-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run format:check
 
-.lint-be-node-job:
+lint-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run lint:check
 
-.test-be-node-job:
+test-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run test
@@ -153,9 +153,9 @@ build-be-job:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
-  tags:
-    - shared
-    # - commul # NOTE: we need commul (not shared) because of credentials in environment
+  # tags:
+  #   - shared
+  #   - commul # NOTE: we used to need commul (not shared) because of credentials in environment
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   script:
@@ -182,9 +182,9 @@ build-be-job:
 .fe-deploy-job:
   image: alpine:latest
   stage: deploy
-  tags:
-    - shared
-    # - commul # NOTE: we can't use shared because extended seccomp policies are needed
+  # tags:
+  #   - shared
+  #   - commul # NOTE: we used to require commul because extended seccomp policies are needed
   before_script:
     - ./ci/install-butler-on-alpine.sh
   script:
@@ -221,8 +221,8 @@ stg-fe-deploy-job:
   variables:
     GAME_NAME: oetzit-staging
     DIST_PATH: frontend/dist/stg
-  # only:
-  #   - development
+  only:
+    - development
 
 #--[ Backend ]------------------------------------------------------------------
 
@@ -232,8 +232,8 @@ stg-fe-deploy-job:
   needs:
     - job: build-be-job
       artifacts: false
-  tags:
-    - shared
+  # tags:
+  #   - shared
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
