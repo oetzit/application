@@ -119,9 +119,9 @@ prd-build-fe-node-job:
   stage: build
   variables:
     NODE_ENV: production
-    APP_VERSION: ${CI_COMMIT_TAG}
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
+    - APP_VERSION=$(git describe --tags)
     - npm run build -- --dist-dir dist/prd
   artifacts:
     paths:
@@ -135,9 +135,9 @@ stg-build-fe-node-job:
   stage: build
   variables:
     NODE_ENV: staging
-    APP_VERSION: ${CI_COMMIT_SHORT_SHA}
     ROLLBAR_ACCESS_TOKEN: $POST_CLIENT_ITEM_ROLLBAR_ACCESS_TOKEN
   script:
+    - APP_VERSION=$(git describe --tags)
     - npm run build -- --dist-dir dist/stg
   artifacts:
     paths:
@@ -161,15 +161,18 @@ build-be-job:
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - BRANCH_TAG=${CI_COMMIT_TAG:+main}
+    - BRANCH_TAG=${BRANCH_TAG:-${CI_COMMIT_REF_NAME}}
+    - APP_VERSION=$(git describe --tags)
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}/backend"
       --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
       --target production
       --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
-      --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_REF_NAME}
+      --destination ${CI_REGISTRY_IMAGE}/backend:${BRANCH_TAG}
       --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_TAG:-latest}
-      --build-arg APP_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+      --build-arg APP_VERSION=$APP_VERSION
       --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
   only:
     - tags
