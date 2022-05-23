@@ -60,6 +60,27 @@ cache-be-node-job:
   script:
     - echo "Done!"
 
+#--[ Cetera ]-------------------------------------------------------------------
+
+version-tag-job:
+  before_script:
+    - git fetch --unshallow --all
+  script:
+    - echo "APP_VERSION=value_from_build_job" >> build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+  only:
+    - pushes
+
+version-tag-test-job:
+  script:
+    - echo $APP_VERSION
+  only:
+    - pushes
+  needs:
+    - version-tag-job
+
 #==[ CHECK STAGE ]==============================================================
 
 #--[ Frontend ]-----------------------------------------------------------------
