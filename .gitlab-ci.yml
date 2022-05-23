@@ -64,8 +64,10 @@ cache-be-node-job:
 
 app-tagger-job:
   stage: setup
-  before_script:
-    - git fetch --unshallow --all
+  variables:
+    GIT_DEPTH: 0
+  # before_script:
+  #   - git fetch --unshallow --all
   script:
     - APP_BRANCH=${CI_COMMIT_TAG:+main}
     - APP_BRANCH=${APP_BRANCH:-${CI_COMMIT_REF_NAME}}
