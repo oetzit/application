@@ -39,7 +39,9 @@ $key-width: 8vw; // 100/12 ~ 8.3
     }
     &:nth-child(3) {
       grid-template-columns: 2.333 * $key-width repeat(8, $key-width) 1fr;
-      & > :first-child { display: none; }
+      & > :first-child {
+        display: none;
+      }
     }
   }
 
