@@ -1,7 +1,7 @@
 .gitsecret/keys/random_seed
 !*.secret
-backend/k8s/overlays/stg/database.secrets.env
-backend/k8s/overlays/prd/database.secrets.env
+backend/k8s/overlays/stg/*.secrets.env
+backend/k8s/overlays/prd/*.secrets.env
 
 butler
 butler.zip
@@ -10,4 +10,3 @@ libc7zip.so
 
 Makefile.env
 kubeconfig.yml
-backend/k8s/overlays/prd/dashboard.secrets.envbackend/k8s/overlays/stg/dashboard.secrets.env
