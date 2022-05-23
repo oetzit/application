@@ -150,31 +150,42 @@ stg-build-fe-node-job:
 
 # TODO: cache docker layers
 build-be-job:
-  image: docker:20.10.12
+  # image: docker:20.10.12
   stage: build
-  tags:
-    - commul # NOTE: we need commul (not shared) because of credentials in environment
-  services:
-    - docker:dind
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  # tags:
+  #   - commul # NOTE: we need commul (not shared) because of credentials in environment
+  # services:
+  #   - docker:dind
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
+  # before_script:
+  #   - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN https://$CI_REGISTRY
+  # script:
+  #   - >
+  #     docker build
+  #     --rm --no-cache
+  #     --target production
+  #     --tag=$IMAGE_NAME:${CI_COMMIT_SHA}
+  #     --tag=$IMAGE_NAME:${CI_COMMIT_REF_NAME}
+  #     --tag=$IMAGE_NAME:${CI_COMMIT_TAG:-latest}
+  #     --build-arg APP_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+  #     --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
+  #     backend
+  #   - docker image push --all-tags $IMAGE_NAME
   script:
-    - >
-      docker build
-      --rm --no-cache
-      --target production
-      --tag=$IMAGE_NAME:${CI_COMMIT_SHA}
-      --tag=$IMAGE_NAME:${CI_COMMIT_REF_NAME}
-      --tag=$IMAGE_NAME:${CI_COMMIT_TAG:-latest}
-      --build-arg APP_VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
-      --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
-      backend
-    - docker image push --all-tags $IMAGE_NAME
-  only:
-    - tags
-    - development
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_TAG}"
+  # only:
+  #   - tags
+  #   - development
 
 #==[ DEPLOY STAGE ]=============================================================
 
