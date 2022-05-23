@@ -63,6 +63,7 @@ cache-be-node-job:
 #--[ Cetera ]-------------------------------------------------------------------
 
 version-tag-job:
+  stage: setup
   before_script:
     - git fetch --unshallow --all
   script:
@@ -74,6 +75,7 @@ version-tag-job:
     - pushes
 
 version-tag-test-job:
+  stage: setup
   script:
     - echo $APP_VERSION
   only:
