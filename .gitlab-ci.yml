@@ -182,7 +182,8 @@ build-be-job:
   image: alpine:latest
   stage: deploy
   tags:
-    - commul # NOTE: we can't use shared because extended seccomp policies are needed
+    - shared
+    # - commul # NOTE: we can't use shared because extended seccomp policies are needed
   before_script:
     - ./ci/install-butler-on-alpine.sh
   script:
@@ -219,8 +220,8 @@ stg-fe-deploy-job:
   variables:
     GAME_NAME: oetzit-staging
     DIST_PATH: frontend/dist/stg
-  only:
-    - development
+  # only:
+  #   - development
 
 #--[ Backend ]------------------------------------------------------------------
 
