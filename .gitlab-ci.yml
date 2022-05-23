@@ -46,7 +46,7 @@ stages:
 
 #--[ Frontend ]-----------------------------------------------------------------
 
-cache-fe-node-job:
+.cache-fe-node-job:
   extends: .fe-node-job
   stage: setup
   script:
@@ -54,7 +54,7 @@ cache-fe-node-job:
 
 #--[ Backend ]------------------------------------------------------------------
 
-cache-be-node-job:
+.cache-be-node-job:
   extends: .be-node-job
   stage: setup
   script:
@@ -71,17 +71,17 @@ cache-be-node-job:
     - cache-fe-node-job
   allow_failure: true # TODO: disallow!
 
-format-fe-node-job:
+.format-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run format:check
 
-lint-fe-node-job:
+.lint-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run lint:check
 
-test-fe-node-job:
+.test-fe-node-job:
   <<: *check-fe-node-job
   script:
     - npm run test
@@ -95,17 +95,17 @@ test-fe-node-job:
     - cache-be-node-job
   allow_failure: true # TODO: disallow!
 
-format-be-node-job:
+.format-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run format:check
 
-lint-be-node-job:
+.lint-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run lint:check
 
-test-be-node-job:
+.test-be-node-job:
   <<: *check-be-node-job
   script:
     - npm run test
@@ -180,7 +180,7 @@ build-be-job:
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
     - >-
       /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
+      --context "${CI_PROJECT_DIR}/backend"
       --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_TAG}"
   # only:
