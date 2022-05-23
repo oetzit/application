@@ -15,6 +15,7 @@ enum Key {
   Space = "{space}",
   Enter = "{enter}",
   Backspace = "{backspace}",
+  CapsLock = "{capslock}",
   ShiftLeft = "{shiftleft}",
   ShiftRight = "{shiftright}",
   a = "a",
@@ -150,18 +151,19 @@ class Typewriter {
         default: [
           `q w e r t z u i o p ü ${Key.Backspace}`,
           `a s d f g h j k l ö ä`,
-          `${Key.ShiftLeft} ${Key.ShiftRight} y x c v b n m ß ${Key.Enter}`,
+          `${Key.CapsLock} ${Key.ShiftLeft} ${Key.ShiftRight} y x c v b n m ß ${Key.Enter}`,
         ],
         shifted: [
           `Q W E R T Z U I O P Ü ${Key.Backspace}`,
           `A S D F G H J K L Ö Ä`,
-          `${Key.ShiftLeft} ${Key.ShiftRight} Y X C V B N M ẞ ${Key.Enter}`,
+          `${Key.CapsLock} ${Key.ShiftLeft} ${Key.ShiftRight} Y X C V B N M ẞ ${Key.Enter}`,
         ],
       },
       display: {
         [Key.Backspace]: "⟵", // "⌫⟵",
         [Key.Enter]: "↩", // "⏎↩↵⏎",
         [Key.Space]: " ", // "␣",
+        [Key.CapsLock]: "⇩",
         [Key.ShiftLeft]: "⇧",
         [Key.ShiftRight]: "⇧",
       },
@@ -255,16 +257,26 @@ class Typewriter {
     // NOTE: this is not really disabled at event level, but events can't be triggered
   }
 
+  toggleLayoutShift() {
+    const oldLayout = this.keyboard.options.layoutName;
+    const newLayout = oldLayout === "default" ? "shifted" : "default";
+    this.keyboard.setOptions({ layoutName: newLayout });
+  }
+
   setShiftModeHoldable() {
     this.keyboard.setOptions({
       onKeyPress: (key: string) => {
-        if (Key.ShiftLeft == key || Key.ShiftRight == key) {
-          this.keyboard.setOptions({ layoutName: "shifted" });
+        if (
+          Key.ShiftLeft == key ||
+          Key.ShiftRight == key ||
+          Key.CapsLock == key
+        ) {
+          this.toggleLayoutShift();
         }
       },
       onKeyReleased: (key: string) => {
         if (Key.ShiftLeft == key || Key.ShiftRight == key) {
-          this.keyboard.setOptions({ layoutName: "default" });
+          this.toggleLayoutShift();
         }
       },
     });
