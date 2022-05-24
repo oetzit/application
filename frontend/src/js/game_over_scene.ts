@@ -13,9 +13,9 @@ export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
   continueButton!: Phaser.GameObjects.Text;
 
-  beatScore!: boolean;
-  beatTimer!: boolean;
-  beatWords!: boolean;
+  bestScore!: boolean;
+  bestTimer!: boolean;
+  bestWords!: boolean;
 
   constructor() {
     super("game_over");
@@ -42,9 +42,9 @@ export default class GameOverScene extends Phaser.Scene {
     const bestScore = sessionStorage.getItem(SS_KEYS.BEST_SCORE);
     const bestTimer = sessionStorage.getItem(SS_KEYS.BEST_TIMER);
     const bestWords = sessionStorage.getItem(SS_KEYS.BEST_WORDS);
-    this.beatScore = bestScore === null || parseInt(bestScore) < score;
-    this.beatTimer = bestTimer === null || parseInt(bestTimer) < timer;
-    this.beatWords = bestWords === null || parseInt(bestWords) < words;
+    this.bestScore = bestScore === null || parseInt(bestScore) < score;
+    this.bestTimer = bestTimer === null || parseInt(bestTimer) < timer;
+    this.bestWords = bestWords === null || parseInt(bestWords) < words;
     sessionStorage.setItem(SS_KEYS.BEST_SCORE, score.toString());
     sessionStorage.setItem(SS_KEYS.BEST_TIMER, timer.toString());
     sessionStorage.setItem(SS_KEYS.BEST_WORDS, words.toString());
@@ -92,9 +92,9 @@ export default class GameOverScene extends Phaser.Scene {
     wordsLabel = wordsLabel.padStart(labelWidth, " ") + " 🔤";
     scoreLabel = scoreLabel.padStart(labelWidth, " ") + " " + ICONS.SCORE;
     timerLabel = timerLabel.padStart(labelWidth, " ") + " " + ICONS.CLOCK;
-    if (this.beatScore) scoreLabel += " 🏅";
-    if (this.beatTimer) timerLabel += " 🏅";
-    if (this.beatWords) wordsLabel += " 🏅";
+    if (this.bestScore) scoreLabel += " 🏅";
+    if (this.bestTimer) timerLabel += " 🏅";
+    if (this.bestWords) wordsLabel += " 🏅";
     return [wordsLabel, scoreLabel, timerLabel].join("\n");
   }
 
@@ -114,7 +114,7 @@ export default class GameOverScene extends Phaser.Scene {
       this.cameras.main.width * 0.5,
       this.cameras.main.height * 0.5,
     );
-    if (this.beatScore || this.beatTimer || this.beatWords) {
+    if (this.bestScore || this.bestTimer || this.bestWords) {
       const newPB = this.add.text(0, 0, "You set new records!", {
         ...TEXT_STYLES.BASE,
         fontSize: "28px",
