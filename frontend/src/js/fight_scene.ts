@@ -13,6 +13,7 @@ import {
   randomPareto,
   sawtoothRamp,
 } from "./utils";
+import { FightOutcome } from "./game_over_scene";
 
 export default class FightScene extends MainScene {
   game!: Game;
@@ -52,8 +53,8 @@ export default class FightScene extends MainScene {
     this.scene.start("game_over", {
       words: this.acceptedWords,
       score: this.beGame.score,
-      time: this.beGame.ended_at_gmtm,
-    });
+      timer: this.beGame.ended_at_gmtm,
+    } as FightOutcome);
   }
 
   //=[ Ambient transitions ]====================================================

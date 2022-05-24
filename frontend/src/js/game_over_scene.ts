@@ -3,6 +3,12 @@ import BackgroundScene from "./background_scene";
 import { formatTime, ICONS } from "./hud";
 import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
+export interface FightOutcome {
+  words: number;
+  score: number;
+  timer: number;
+}
+
 const SS_KEYS = {
   BEST_WORDS: "OETZIT/BEST_WORDS",
   BEST_SCORE: "OETZIT/BEST_SCORE",
@@ -21,7 +27,7 @@ export default class GameOverScene extends Phaser.Scene {
     super("game_over");
   }
 
-  create(data: { words: number; score: number; time: number }) {
+  create(data: FightOutcome) {
     (this.scene.get("background") as BackgroundScene).dropCurtain();
     (this.scene.get("background") as BackgroundScene).atmosphere
       .stop()
@@ -29,16 +35,16 @@ export default class GameOverScene extends Phaser.Scene {
     this.music = this.sound.add("bkg_failure", { loop: false });
     this.music.play();
 
-    this.processRecords(data.score, data.time, data.words);
+    this.processRecords(data);
 
     this.drawTitle();
     this.drawSubtitle();
-    this.drawResult(data.words, data.score, data.time);
+    this.drawResult(data);
     this.drawCTA();
     this.bindEvents();
   }
 
-  processRecords(score: number, timer: number, words: number) {
+  processRecords({ score, timer, words }: FightOutcome) {
     const bestScore = sessionStorage.getItem(SS_KEYS.BEST_SCORE);
     const bestTimer = sessionStorage.getItem(SS_KEYS.BEST_TIMER);
     const bestWords = sessionStorage.getItem(SS_KEYS.BEST_WORDS);
@@ -80,10 +86,10 @@ export default class GameOverScene extends Phaser.Scene {
     );
   }
 
-  formatResult(words: number, score: number, time: number) {
+  formatResult({ score, timer, words }: FightOutcome) {
     let wordsLabel = words.toString();
     let scoreLabel = score.toString();
-    let timerLabel = formatTime(time);
+    let timerLabel = formatTime(timer);
     const labelWidth = Math.max(
       wordsLabel.length,
       scoreLabel.length,
@@ -98,12 +104,8 @@ export default class GameOverScene extends Phaser.Scene {
     return [wordsLabel, scoreLabel, timerLabel].join("\n");
   }
 
-  drawResult(
-    words = 1234,
-    score = 12345678,
-    time = 12 * 60 * 1000 + 34 * 1000 + 56 * 10,
-  ) {
-    const text = this.formatResult(words, score, time);
+  drawResult(outcome: FightOutcome) {
+    const text = this.formatResult(outcome);
     const title = this.add.text(0, 0, text, {
       ...TEXT_STYLES.BASE,
       fontSize: "28px",
