@@ -1,33 +1,20 @@
 import "phaser";
 import BackgroundScene from "./background_scene";
+import Game from "./game";
 import { formatTime, ICONS } from "./hud";
+import { FightOutcome } from "./records";
 import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
-export interface FightOutcome {
-  words: number;
-  score: number;
-  timer: number;
-}
-
-const SS_KEYS = {
-  BEST_WORDS: "OETZIT/BEST_WORDS",
-  BEST_SCORE: "OETZIT/BEST_SCORE",
-  BEST_TIMER: "OETZIT/BEST_TIMER",
-};
-
 export default class GameOverScene extends Phaser.Scene {
+  game!: Game;
   music!: Phaser.Sound.BaseSound;
   continueButton!: Phaser.GameObjects.Text;
-
-  bestScore!: boolean;
-  bestTimer!: boolean;
-  bestWords!: boolean;
 
   constructor() {
     super("game_over");
   }
 
-  create(data: FightOutcome) {
+  create() {
     (this.scene.get("background") as BackgroundScene).dropCurtain();
     (this.scene.get("background") as BackgroundScene).atmosphere
       .stop()
@@ -35,25 +22,11 @@ export default class GameOverScene extends Phaser.Scene {
     this.music = this.sound.add("bkg_failure", { loop: false });
     this.music.play();
 
-    this.processRecords(data);
-
     this.drawTitle();
     this.drawSubtitle();
-    this.drawResult(data);
+    this.drawResult();
     this.drawCTA();
     this.bindEvents();
-  }
-
-  processRecords({ score, timer, words }: FightOutcome) {
-    const bestScore = sessionStorage.getItem(SS_KEYS.BEST_SCORE);
-    const bestTimer = sessionStorage.getItem(SS_KEYS.BEST_TIMER);
-    const bestWords = sessionStorage.getItem(SS_KEYS.BEST_WORDS);
-    this.bestScore = bestScore === null || parseInt(bestScore) < score;
-    this.bestTimer = bestTimer === null || parseInt(bestTimer) < timer;
-    this.bestWords = bestWords === null || parseInt(bestWords) < words;
-    sessionStorage.setItem(SS_KEYS.BEST_SCORE, score.toString());
-    sessionStorage.setItem(SS_KEYS.BEST_TIMER, timer.toString());
-    sessionStorage.setItem(SS_KEYS.BEST_WORDS, words.toString());
   }
 
   drawTitle() {
@@ -98,14 +71,14 @@ export default class GameOverScene extends Phaser.Scene {
     wordsLabel = wordsLabel.padStart(labelWidth, " ") + " 🔤";
     scoreLabel = scoreLabel.padStart(labelWidth, " ") + " " + ICONS.SCORE;
     timerLabel = timerLabel.padStart(labelWidth, " ") + " " + ICONS.CLOCK;
-    if (this.bestScore) scoreLabel += " 🏅";
-    if (this.bestTimer) timerLabel += " 🏅";
-    if (this.bestWords) wordsLabel += " 🏅";
+    if (this.game.records.improved.score) scoreLabel += " 🏅";
+    if (this.game.records.improved.timer) timerLabel += " 🏅";
+    if (this.game.records.improved.words) wordsLabel += " 🏅";
     return [wordsLabel, scoreLabel, timerLabel].join("\n");
   }
 
-  drawResult(outcome: FightOutcome) {
-    const text = this.formatResult(outcome);
+  drawResult() {
+    const text = this.formatResult(this.game.records.last);
     const title = this.add.text(0, 0, text, {
       ...TEXT_STYLES.BASE,
       fontSize: "28px",
@@ -116,7 +89,11 @@ export default class GameOverScene extends Phaser.Scene {
       this.cameras.main.width * 0.5,
       this.cameras.main.height * 0.5,
     );
-    if (this.bestScore || this.bestTimer || this.bestWords) {
+    if (
+      this.game.records.improved.score ||
+      this.game.records.improved.timer ||
+      this.game.records.improved.words
+    ) {
       const newPB = this.add.text(0, 0, "You set new records!", {
         ...TEXT_STYLES.BASE,
         fontSize: "28px",

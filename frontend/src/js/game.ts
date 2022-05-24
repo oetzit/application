@@ -12,6 +12,7 @@ import RewardsScene from "./rewards_scene";
 
 import * as Types from "../../../backend/src/types";
 import backend from "./backend";
+import Records from "./records";
 
 const DEVICE_ID_KEY = "OETZIT/DEVICE_ID";
 
@@ -45,6 +46,7 @@ const CONFIG = {
 
 export default class Game extends Phaser.Game {
   beDevice!: Types.Device;
+  records = new Records();
 
   constructor() {
     super(CONFIG);

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `FE` Caps lock now works properly on desktop.
+- `FE` Track best level.
 
 ### Fixed
 

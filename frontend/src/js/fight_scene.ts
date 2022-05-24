@@ -50,11 +50,15 @@ export default class FightScene extends MainScene {
 
     this.music.stop();
     this.music.destroy();
-    this.scene.start("game_over", {
+
+    this.game.records.updateLast({
+      level: this.getDifficulty(this.beGame.ended_at_gmtm ?? 0),
       words: this.acceptedWords,
-      score: this.beGame.score,
-      timer: this.beGame.ended_at_gmtm,
-    } as FightOutcome);
+      score: this.beGame.score ?? 0,
+      timer: this.beGame.ended_at_gmtm ?? 0,
+    });
+
+    this.scene.start("game_over");
   }
 
   //=[ Ambient transitions ]====================================================
