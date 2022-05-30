@@ -68,9 +68,9 @@ app-tagger-job:
     GIT_STRATEGY: clone
     GIT_DEPTH: 0
   script:
-    - APP_VERSION=$(git describe --tags)
-    - echo Detected app version ${APP_VERSION}
-    - echo "APP_VERSION=$APP_VERSION" >> build.env
+    - GIT_DESCRIPTOR=$(git describe --tags --always)
+    - echo Detected app version ${GIT_DESCRIPTOR}
+    - echo "APP_VERSION=${GIT_DESCRIPTOR#v}" >> build.env
   artifacts:
     reports:
       dotenv: build.env
