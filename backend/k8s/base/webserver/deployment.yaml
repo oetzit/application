@@ -14,7 +14,13 @@ spec:
             - name: http
               containerPort: 80
           command: ["npm", "run", "serve"]
-          env:
+          env: &env
             - name: PORT
               value: "80"
             - name: DATABASE_URL
+      initContainers:
+        - name: oetzit-migrator
+          image: oetzit-webserver-image
+          resources: {}
+          command: ["npm", "exec", "knex", "migrate:latest"]
+          env: *env # TODO: use configMap?

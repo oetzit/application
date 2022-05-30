@@ -8,7 +8,7 @@ spec:
       containers:
         - name: oetzit
           imagePullPolicy: Never
-          env:
+          env: &env
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -24,3 +24,7 @@ spec:
                 secretKeyRef:
                   name: oetzit-dashboard-credentials
                   key: password
+      initContainers: # TODO: use job?
+        - name: oetzit-migrator
+          imagePullPolicy: Always
+          env: *env # TODO: use configMap?
