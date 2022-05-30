@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2022-05-30
+
 ### Added
 
 - `FE` Caps lock now works properly on desktop.
 - `FE` Track best level.
+- `FE` Best (and last) level, score, time and word count are all tracked in `Record` component.
+
+### Changed
+
+- `BE` Migrations now run in an `initContainer` automatically upon deployment.
+- `BE`/`FE` Improved tagging and deployment strategies.
 
 ### Fixed
 
@@ -250,7 +258,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.2.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.4.0...development
+[1.4.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.3.0...1.4.0
+[1.3.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.2.0...1.3.0
 [1.2.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.1.0...1.2.0
 [1.1.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.0.0...1.1.0
 [1.0.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/0.7.0...1.0.0
