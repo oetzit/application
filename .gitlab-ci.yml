@@ -68,10 +68,6 @@ app-tagger-job:
     GIT_STRATEGY: clone
     GIT_DEPTH: 0
   script:
-    - APP_BRANCH=${CI_COMMIT_TAG:+main}
-    - APP_BRANCH=${APP_BRANCH:-${CI_COMMIT_REF_NAME}}
-    - echo Detected app branch ${APP_BRANCH}
-    - echo "APP_VERSION=$APP_BRANCH" >> build.env
     - APP_VERSION=$(git describe --tags)
     - echo Detected app version ${APP_VERSION}
     - echo "APP_VERSION=$APP_VERSION" >> build.env
@@ -168,32 +164,49 @@ stg-fe-build-job:
 
 #--[ Backend ]------------------------------------------------------------------
 
-be-build-job:
+.be-build-job:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
-  # tags:
-  #   - shared
-  #   - commul # NOTE: we used to need commul (not shared) because of credentials in environment
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
-  script:
+  before_script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - >-
-      /kaniko/executor
-      --context "${CI_PROJECT_DIR}/backend"
-      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
-      --target production
-      --destination ${CI_REGISTRY_IMAGE}/backend:latest
-      --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
-      --destination ${CI_REGISTRY_IMAGE}/backend:${APP_BRANCH}
-      --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION}
-      --build-arg APP_VERSION=$APP_VERSION
-      --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
+
+prd-be-build-job:
+  extends: .be-build-job
+  stage: build
+  script: >-
+    /kaniko/executor
+    --context "${CI_PROJECT_DIR}/backend"
+    --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+    --target production
+    --destination ${CI_REGISTRY_IMAGE}/backend:latest
+    --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION}
+    --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION%.*}
+    --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION%%.*}
+    --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
+    --build-arg APP_VERSION=$APP_VERSION
+    --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
   only:
     - tags
+
+stg-be-build-job:
+  extends: .be-build-job
+  stage: build
+  script: >-
+    /kaniko/executor
+    --context "${CI_PROJECT_DIR}/backend"
+    --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+    --target production
+    --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_REF_NAME}
+    --destination ${CI_REGISTRY_IMAGE}/backend:${APP_VERSION}
+    --destination ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
+    --build-arg APP_VERSION=$APP_VERSION
+    --build-arg ROLLBAR_ACCESS_TOKEN=$POST_SERVER_ITEM_ROLLBAR_ACCESS_TOKEN
+  only:
     - development
 
 #==[ DEPLOY STAGE ]=============================================================
