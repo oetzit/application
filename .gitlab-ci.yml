@@ -267,12 +267,6 @@ stg-fe-deploy-job:
 .be-deploy-job:
   image: alpine:latest
   stage: deploy
-  needs:
-    - app-tagger-job
-    - job: be-build-job
-      artifacts: false
-  # tags:
-  #   - shared
   variables:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
   before_script:
@@ -282,6 +276,10 @@ stg-fe-deploy-job:
 
 prd-be-deploy-job:
   extends: .be-deploy-job
+  needs:
+    - app-tagger-job
+    - job: prd-be-build-job
+      artifacts: false
   environment:
     name: production/backend
     deployment_tier: production
@@ -294,6 +292,10 @@ prd-be-deploy-job:
 
 stg-be-deploy-job:
   extends: .be-deploy-job
+  needs:
+    - app-tagger-job
+    - job: stg-be-build-job
+      artifacts: false
   environment:
     name: staging/backend
     deployment_tier: staging
