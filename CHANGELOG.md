@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2022-05-30
+
+### Fixed
+
+- `FE` Always install all deps in CI.
+
 ## [1.4.0] - 2022-05-30
 
 ### Added
@@ -258,7 +264,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.4.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.4.1...development
+[1.4.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.4.0...1.4.1
 [1.4.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.3.0...1.4.0
 [1.3.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.2.0...1.3.0
 [1.2.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/1.1.0...1.2.0
