@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ./database
   - ./webserver
+  - ./storage
 # namespace: kommul-dev
 namePrefix: oetzit-
 commonLabels:

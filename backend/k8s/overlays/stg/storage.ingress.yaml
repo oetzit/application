@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oetzit-storage-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: kommul-dev.eurac.edu
+      http:
+        paths:
+          - path: /oetzit-storage-api/
+            backend:
+              serviceName: oetzit-storage-service
+              servicePort: 9000
+          - path: /oetzit-storage-console/
+            backend:
+              serviceName: oetzit-storage-service
+              servicePort: 9001

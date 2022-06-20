@@ -1,0 +1,1 @@
+# NOTE: the k8s is so old that patching the ingress doesn't make sense; dev and stg/prd are just maintained separately in the overlays. The situation will change once we update the cluster.

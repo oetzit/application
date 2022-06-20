@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  strategy:
+    type: Recreate # trivially avoids multi-mount error on persistent volumes in exchange for some downtime
+  template:
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          ports:
+            - name: api
+              containerPort: 9000
+            - name: console
+              containerPort: 9001
+          volumeMounts:
+            - name: miniodata
+              mountPath: /data
+          env:
+            - name: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+            - name: MINIO_BROWSER_REDIRECT_URL
+          resources: {}
+          args:
+            - "server"
+            - "/data"
+            - "--console-address"
+            - ":9001"
+      volumes:
+        - name: miniodata
+          persistentVolumeClaim:
+            claimName: pvc
