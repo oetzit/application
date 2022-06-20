@@ -9,9 +9,15 @@ import * as Types from "../../../backend/src/types";
 
 // TODO: raise an error if env var is missing
 const BACKEND_URL = new URL(process.env.BACKEND_URL ?? "");
+const STORAGE_URL = new URL(process.env.STORAGE_URL ?? "");
 
 const backend = axios.create({
   baseURL: BACKEND_URL.toString(),
+});
+
+const storage = axios.create({
+  baseURL: STORAGE_URL.toString(),
+  responseType: "arraybuffer",
 });
 
 export default {
@@ -34,4 +40,6 @@ export default {
     backend.patch<Types.Clue>(`/api/clues/${clueId}`, data),
   createShot: (gameId: string, data: Types.ShotCreate) =>
     backend.post<Types.Shot>(`/api/games/${gameId}/shots`, data),
+  getWordImage: (pageId: string, wordId: string) =>
+    storage.get(`/${pageId}/${wordId}.png`),
 };

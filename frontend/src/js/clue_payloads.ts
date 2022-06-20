@@ -1,6 +1,7 @@
 import "phaser";
 
 import { Word } from "../../../backend/src/types";
+import backend from "./backend";
 import TEXT_STYLES from "./text_styles";
 
 interface CluePayload {
@@ -54,10 +55,23 @@ export class SpriteCluePayload
     this.baseHeight = baseHeight;
   }
 
-  loadWord(word: { id: string; image: string; ocr_transcript: string }) {
+  loadWord(word: {
+    id: string;
+    page_id: string;
+    word_id: string;
+    ocr_transcript: string;
+  }) {
     // NOTE: this is a throwaway key, we're not leveraging cache
     const textureKey = `${word.id}-${Date.now()}`;
-    this.scene.textures.addBase64(textureKey, word.image);
+
+    backend.getWordImage(word.page_id, word.word_id).then((response) => {
+      const data = Buffer.from(response.data, "binary").toString("base64");
+      this.scene.textures.addBase64(
+        textureKey,
+        `data:image/png;base64,${data}`,
+      );
+    });
+
     this.scene.textures.once("addtexture", () => {
       this.setTexture(textureKey);
       this.adjustTextureScale(word);
