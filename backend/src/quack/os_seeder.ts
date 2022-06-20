@@ -6,14 +6,13 @@ import sharp from "sharp";
 import { getPagesBaseUrl } from "./scraper";
 import { pad, progress, msg } from "./util";
 
-// TODO: configure this form ENV
-const BUCKET_NAME = "oetzit";
+const BUCKET_NAME = process.env.STORAGE_BUCKET!;
 const minioClient = new Client({
-  endPoint: "minio",
-  accessKey: "Ilzy1c8s0eig76m4",
-  secretKey: "x4YDvLSLKi6jScWv1wTSZwPW1BnL6nhg",
-  port: 9000,
-  useSSL: false,
+  accessKey: process.env.STORAGE_ACCESS_KEY!,
+  secretKey: process.env.STORAGE_SECRET_KEY!,
+  endPoint: process.env.STORAGE_ENDPOINT!,
+  // port: 9000,
+  // useSSL: false,
 });
 
 interface processingCallback {
