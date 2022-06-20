@@ -25,6 +25,17 @@ The webserver will be abailable at `http://localhost:8080`.
 
 **NOTE:** currently we have `k8s 1.10.11` on cluster. This causes quite a few problems in reproducing the environment easily, mostly due to the fact that `1.10.11` schemas aren't around anymore and early versions of `minikube` are not easy to get.
 
+### Seeding
+
+```bash
+# database (transcriptions)
+npm exec knex seed:run
+# object storage (images)
+npm exec ts-node src/quack/os_seeder.ts
+```
+
+You can also use an env var like `PAGE_FILTER=^ARBEI_1919` to filter issues.
+
 ### `dev`
 
 First you get the latest `minikube` up and running:
