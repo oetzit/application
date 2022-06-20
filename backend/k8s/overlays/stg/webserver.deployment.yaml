@@ -39,6 +39,11 @@ spec:
                 secretKeyRef:
                   name: oetzit-storage-credentials
                   key: STORAGE_ENDPOINT
+            - name: STORAGE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-storage-credentials
+                  key: STORAGE_PORT
             - name: STORAGE_BUCKET
               valueFrom:
                 secretKeyRef:
