@@ -24,6 +24,26 @@ spec:
                 secretKeyRef:
                   name: oetzit-dashboard-credentials
                   key: password
+            - name: STORAGE_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-storage-credentials
+                  key: STORAGE_ACCESS_KEY
+            - name: STORAGE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-storage-credentials
+                  key: STORAGE_SECRET_KEY
+            - name: STORAGE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-storage-credentials
+                  key: STORAGE_ENDPOINT
+            - name: STORAGE_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: oetzit-storage-credentials
+                  key: STORAGE_BUCKET
       initContainers: # TODO: use job?
         - name: oetzit-migrator
           imagePullPolicy: Always

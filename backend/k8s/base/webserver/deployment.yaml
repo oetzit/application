@@ -18,6 +18,10 @@ spec:
             - name: PORT
               value: "80"
             - name: DATABASE_URL
+            - name: STORAGE_ACCESS_KEY
+            - name: STORAGE_SECRET_KEY
+            - name: STORAGE_ENDPOINT
+            - name: STORAGE_BUCKET
       initContainers:
         - name: oetzit-migrator
           image: oetzit-webserver-image
