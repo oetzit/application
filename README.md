@@ -36,6 +36,8 @@ npm exec ts-node src/quack/os_seeder.ts
 
 You can also use an env var like `PAGE_FILTER=^ARBEI_1919` to filter issues.
 
+Note that after this you need to use Minio console to create a public bucket and a service account and put them into encrypted credentials.
+
 ### `dev`
 
 First you get the latest `minikube` up and running:
