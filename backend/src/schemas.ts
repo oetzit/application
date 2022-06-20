@@ -6,7 +6,8 @@ function Nullable<T extends TSchema>(schema: T): TUnion<[T, TNull]> {
 
 export const Word = Type.Object({
   id: Type.String({ format: "uuid" }),
-  image: Type.String(),
+  page_id: Type.String(),
+  word_id: Type.String(),
   ocr_confidence: Type.Number({ minimum: 0, maximum: 1 }),
   ocr_transcript: Type.String(),
 });
