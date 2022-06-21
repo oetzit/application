@@ -9,7 +9,7 @@ spec:
     - host: kommul.eurac.edu
       http:
         paths:
-          - path: /oetzit
+          - path: /oetzit/
             backend:
               serviceName: oetzit-webserver-service
               servicePort: 80

@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../../base
   - webserver.ingress.yaml
+  - storage.ingress.yaml
 namespace: kommul
 commonLabels:
   eurac.edu/environment: prd
@@ -11,6 +12,7 @@ commonLabels:
 patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
+  - storage.deployment.yaml
 images:
   - name: oetzit-webserver-image
     newName: gitlab.inf.unibz.it:4567/commul/oetzit/backend
@@ -23,4 +25,8 @@ secretGenerator:
   - envs:
       - dashboard.secrets.env
     name: oetzit-dashboard-credentials
+    type: Opaque
+  - envs:
+      - storage.secrets.env
+    name: oetzit-storage-credentials
     type: Opaque
