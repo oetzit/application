@@ -47,7 +47,7 @@ This repo contains
 - `/frontend/`: the code for the `frontend`
 - `/backend/`: the code for the `backend`
 - `/backend/docker-compose.yml`: a Docker Compose blueprint to run all components (except `frontend`) in development;
-- `/backend/k8s/`: a collection of Kubernetes manifests to provision the architecture for staging and production;
+- `/k8s/`: a collection of Kubernetes manifests to provision the architecture for staging and production;
 - `/itch/`: the contents for the Itch.io page where the `frontend` is deployed;
 - `/.gitlab-ci.yml`: the configuration file for out GitLab instance providing continuous builds and deployment.
 
@@ -127,9 +127,9 @@ Whether you're deploying to staging or producton (with the `stg` or the `prd` ov
 
 ```bash
 # Please validate before deploying (1.11.0 is the closest available schema version)
-kustomize build backend/k8s/overlays/ENV/ | kubeval --kubernetes-version 1.11.0
+kustomize build k8s/overlays/ENV/ | kubeval --kubernetes-version 1.11.0
 # We're on an old version and there's no -k flag:
-kustomize build backend/k8s/overlays/ENV/ | kubectl apply -f -
+kustomize build k8s/overlays/ENV/ | kubectl apply -f -
 ```
 
 Keep in mind there's a bit of back-and-forth to be done:
@@ -158,7 +158,7 @@ minikube start
 docker build -t oetzit:latest backend/
 minikube image load oetzit:latest
 # Finally you apply the `dev` manifest and open a tunnel:
-minikube kubectl -- apply -k backend/k8s/overlays/dev/
+minikube kubectl -- apply -k k8s/overlays/dev/
 # For your sanity, remember to open a tunnel and ensure the `ingress` is enabled:
 minikube addons enable ingress
 minikube tunnel
@@ -187,7 +187,7 @@ Finally, we can deploy:
 
 ```bash
 # NOTE: we're using an updated kubectl on the host machine to run kustomize...
-kubectl kustomize backend/k8s/overlays/dev | minikube kubectl -- apply -f -
+kubectl kustomize k8s/overlays/dev | minikube kubectl -- apply -f -
 # NOTE: ... a modern version would afford us this instead
 #   minikube kubectl -- apply -k dev
 ```
