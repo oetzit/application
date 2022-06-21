@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2022-06-21
+
+### Added
+
+- Implemented scraping/seeding script to fill database with transcriptions from Quack.
+- Implemented scraping/seeding script to fill storage with images from Quack.
+- MinIO setup for object storage in local development environment and k8s manifests.
+
+### Changed
+
+- Images are now fetched from object storage instead of database (via API).
+- Clean up tag generation in CI/CD.
+- Improve setup for local development.
+- `word_id` is now a padded string instead of a number.
+
 ## [1.4.1] - 2022-05-30
 
 ### Fixed
@@ -264,7 +279,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.1...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.5.0...development
+[1.5.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.1...v1.5.0
 [1.4.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.0...v1.4.1
 [1.4.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.3.0...v1.4.0
 [1.3.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.2.0...v1.3.0
