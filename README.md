@@ -24,21 +24,27 @@ Its name is
 
 ## Quickstart
 
+**NOTE:** Docker is (the only) prerequisite.
+
 This will let you run everything locally in ~5m:
 
 ```bash
-# install docker (and docker compose) if you don't have it
 docker-compose up -d
 docker-compose run --rm cli
 > npm exec knex migrate:latest
 > PAGE_FILTER=ARBEI_19190109_001 npm exec knex seed:run
-# go to http://localhost:9001, log as minioadmin/minioadmin and create a PUBLIC bucket named `words`
+# now go to http://localhost:9001, log in as `minioadmin`/`minioadmin` and create a PUBLIC bucket named `words`
 > PAGE_FILTER=ARBEI_19190109_001 npm exec ts-node src/quack/os_seeder.ts
 > exit
-# go to http://localhost:1234 to play game
-# go to http://localhost:8080 and log as admin/admin to use dashboard
-# go to http://localhost:8080/api/doc to inspect API docs
+docker-compose logs --follow
 ```
+
+Now you can:
+
+- go to http://localhost:1234 to play game
+- go to http://localhost:8080 and log in as `admin`/`admin` to use the dashboard
+- go to http://localhost:8080/api/doc to inspect API docs
+- go to http://localhost:9001 and log in as `minioadmin`/`minioadmin` to inspect the storage
 
 You'll have to read the rest to figure out wth is going on.
 
