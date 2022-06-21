@@ -75,6 +75,26 @@ services:
       - ./minio_data:/data
     entrypoint: minio server /data --console-address ":9001"
 
+  frontend:
+    image: node:16-alpine
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    ports:
+      - "1234:1234"
+    environment:
+      - BACKEND_URL=http://localhost:8080
+      - STORAGE_URL=http://localhost:9000/words/
+      - APP_VERSION=development
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        npm install
+        npm run serve
+    depends_on:
+      - backend
+      - minio
+
 # volumes:
 #   postgres_data:
 #   minio_data:

@@ -35,10 +35,6 @@ docker-compose run --rm cli
 # go to http://localhost:9001, log as minioadmin/minioadmin and create a PUBLIC bucket named `words`
 > PAGE_FILTER=ARBEI_19190109_001 npm exec ts-node src/quack/os_seeder.ts
 > exit
-cd frontend
-# install Node.js if you don't have it
-npm install
-npm run serve
 # go to http://localhost:1234 to play game
 # go to http://localhost:8080 and log as admin/admin to use dashboard
 # go to http://localhost:8080/api/doc to inspect API docs
