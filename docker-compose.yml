@@ -34,6 +34,7 @@ services:
       - minio
 
   cli: # USAGE: docker-compose run --rm cli
+    profiles: ["cli"]
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     build: *be-build
