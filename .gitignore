@@ -1,3 +1,6 @@
+minio_data
+postgres_data
+
 .gitsecret/keys/random_seed
 !*.secret
 k8s/overlays/stg/*.secrets.env

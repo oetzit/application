@@ -1,0 +1,80 @@
+version: "3.7"
+
+services:
+
+  backend:
+    build: &be-build
+      context: backend
+      target: base
+    volumes: &be-volumes
+      - ./backend/src:/app/src
+      - ./backend/templates:/app/templates
+      - ./backend/public:/app/public
+      - ./backend/seeds:/app/seeds
+      - ./backend/migrations:/app/migrations
+      - ./backend/nodemon.json:/app/nodemon.json
+    ports:
+      - "8080:8080"
+    environment: &be-environment
+      - PORT=8080
+      - APP_VERSION=development
+      - DASHBOARD_USERNAME=admin
+      - DASHBOARD_PASSWORD=admin
+      # interface w/ postgres
+      - DATABASE_URL=postgres://db_user:db_pass@postgres/db_name
+      # interface w/ minio
+      - STORAGE_ACCESS_KEY=minioadmin
+      - STORAGE_SECRET_KEY=minioadmin
+      - STORAGE_ENDPOINT=minio
+      - STORAGE_PORT=9000
+      - STORAGE_BUCKET=words
+    command: npm run serve
+    depends_on:
+      - postgres
+      - minio
+
+  cli: # USAGE: docker-compose run --rm cli
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    build: *be-build
+    volumes: *be-volumes
+    environment: *be-environment
+    command: /bin/sh
+
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=db_name
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=db_pass
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      # - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    restart: always
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      # - MINIO_BROWSER_REDIRECT_URL=
+    expose:
+      - "9000"
+      - "9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      # - minio_data:/data
+      - ./minio_data:/data
+    entrypoint: minio server /data --console-address ":9001"
+
+# volumes:
+#   postgres_data:
+#   minio_data:

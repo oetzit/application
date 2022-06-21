@@ -11,6 +11,7 @@ Its name is
 
 - [Ötzit!](#ötzit)
   - [Table of contents](#table-of-contents)
+  - [Quickstart](#quickstart)
   - [Overview](#overview)
   - [Backend](#backend)
   - [Frontend](#frontend)
@@ -20,6 +21,30 @@ Its name is
   - [K8s: deployment](#k8s-deployment)
   - [K8s: development](#k8s-development)
       - [Tentatively reproducing the cluster](#tentatively-reproducing-the-cluster)
+
+## Quickstart
+
+This will let you run everything locally in ~5m:
+
+```bash
+# install docker (and docker compose) if you don't have it
+docker-compose up -d
+docker-compose run --rm cli
+> npm exec knex migrate:latest
+> PAGE_FILTER=ARBEI_19190109_001 npm exec knex seed:run
+# go to http://localhost:9001, log as minioadmin/minioadmin and create a PUBLIC bucket named `words`
+> PAGE_FILTER=ARBEI_19190109_001 npm exec ts-node src/quack/os_seeder.ts
+> exit
+cd frontend
+# install Node.js if you don't have it
+npm install
+npm run serve
+# go to http://localhost:1234 to play game
+# go to http://localhost:8080 and log as admin/admin to use dashboard
+# go to http://localhost:8080/api/doc to inspect API docs
+```
+
+You'll have to read the rest to figure out wth is going on.
 
 ## Overview
 
@@ -46,7 +71,7 @@ This repo contains
 
 - `/frontend/`: the code for the `frontend`
 - `/backend/`: the code for the `backend`
-- `/backend/docker-compose.yml`: a Docker Compose blueprint to run all components (except `frontend`) in development;
+- `/docker-compose.yml`: a Docker Compose blueprint to run all components (except `frontend`) in development;
 - `/k8s/`: a collection of Kubernetes manifests to provision the architecture for staging and production;
 - `/itch/`: the contents for the Itch.io page where the `frontend` is deployed;
 - `/.gitlab-ci.yml`: the configuration file for out GitLab instance providing continuous builds and deployment.
@@ -59,7 +84,6 @@ It exposes some APIs for the `frontend` and an administrative dashboard with som
 It requires PostgreSQL to run, so for development it's better to use the provided Docker Compose blueprint:
 
 ```bash
-cd backend
 docker-compose up
 ```
 
@@ -68,9 +92,8 @@ The webserver will then be available at `http://localhost:8080`.
 You can spin up a `cli` container to run commands directly:
 
 ```bash
-cd backend
 docker-compose run --rm cli
-# ...
+# do your thing in the container's shell
 ```
 
 ## Frontend
@@ -112,7 +135,7 @@ Set an env var with a regexp like `PAGE_FILTER=^ARBEI_1919` to filter issues.
 You can seed your MinIO instance with images from Quack using
 
 ```bash
-npm exec ts-**node** src/quack/os_seeder.ts
+npm exec ts-node src/quack/os_seeder.ts
 ```
 
 Set an env var with a regexp like `PAGE_FILTER=^ARBEI_1919` to filter issues.
