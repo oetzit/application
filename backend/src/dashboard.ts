@@ -66,6 +66,16 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         )
         .groupByRaw("DATE(began_at), ended");
 
+      const cluesByDuration = await connection
+        .table("clues")
+        .select(
+          connection.raw(
+            "width_bucket(ended_at_gmtm - began_at_gmtm, 0, 150*100, 100)*150 as bucket, count(*)",
+          ),
+        )
+        .groupBy("bucket")
+        .orderBy("bucket");
+
       const shotsByDuration = await connection
         .table("shots")
         .select(
@@ -121,6 +131,7 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         shotsCount,
         devicesByDate,
         gamesByDate,
+        cluesByDuration,
         shotsByDuration,
         shotsBySimilarity,
         devicesBehaviour,

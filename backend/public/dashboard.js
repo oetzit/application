@@ -66,6 +66,58 @@ const gamesByDateConfig = {
 
 new Chart(document.getElementById("gamesByDateChart"), gamesByDateConfig);
 
+//=[ Clues by duration ]========================================================
+
+const cluesByDurationData = JSON.parse(
+  document.getElementById("cluesByDurationData").textContent,
+).filter((item) => item.bucket != null);
+
+const cluesByDurationConfig = {
+  type: "bar",
+  data: {
+    datasets: [
+      {
+        data: cluesByDurationData,
+        backgroundColor: [
+          ...Array(cluesByDurationData.length - 1).fill("blue"),
+          "red",
+        ],
+      },
+    ],
+  },
+  options: {
+    scales: {
+      x: {
+        type: "linear",
+        min: 0,
+        max: 15000,
+      },
+      y: {},
+    },
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: "Clues screen time [ms] distribution",
+      },
+
+      subtitle: {
+        display: true,
+        text: "Bins are 150ms wide, labeled by upper bound; clues >15s are lumped in the last bar.",
+      },
+    },
+    parsing: {
+      xAxisKey: "bucket",
+      yAxisKey: "count",
+    },
+  },
+};
+
+new Chart(
+  document.getElementById("cluesByDurationChart"),
+  cluesByDurationConfig,
+);
+
 //=[ Shots by duration ]========================================================
 
 const shotsByDurationData = JSON.parse(
@@ -86,7 +138,6 @@ const shotsByDurationConfig = {
     ],
   },
   options: {
-    title: "ASD",
     scales: {
       x: {
         type: "linear",
