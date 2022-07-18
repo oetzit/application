@@ -138,15 +138,14 @@
 
                         <thead>
                             <tr>
-                                <th scope="col" class="text-end">User entropy</th>
-                                <th scope="col" class="text-end">User distrib.</th>
-                                <th scope="col" class="text-end">User transcr.</th>
-                                <th scope="col" class="text-end">OCR transcr.</th>
+                                <th scope="col" class="text-end">Entropy</th>
+                                <th scope="col">User transcr.</th>
+                                <th scope="col">OCR transcr.</th>
+                                <th scope="col">Original</th>
                             </tr>
                         </thead>
 
-                        <% const transcriptionsEntropyTail=transcriptionsEntropy.filter(e=> e.usr_entropy > 0.5)
-                            %>
+                        <% const transcriptionsEntropyTail=transcriptionsEntropy.filter(e=> e.usr_entropy > 0.5) %>
 
                             <% for(var i=0; i < transcriptionsEntropyTail.length; i++) { %>
                                 <tr>
@@ -154,22 +153,28 @@
                                         <%= transcriptionsEntropyTail[i].usr_entropy.toFixed(5) %>
                                     </th>
                                     <td>
-                                        <%= transcriptionsEntropyTail[i].usr_tot %>/[<%=
-                                                transcriptionsEntropyTail[i].usr_counts.sort((a,b)=>b-a) %>]
-                                    </td>
-                                    <td>
                                         <details>
                                             <% const
                                                 stuff=Object.entries(transcriptionsEntropyTail[i].usr_transcripts).sort((a,b)=>
-                                                b[1]-a[1]) %>
-                                                <summary>
-                                                    <%= stuff[0][0] %>
+                                                b[1]-a[1]);
+                                                const summary =
+                                                `${transcriptionsEntropyTail[i].usr_tot}/[${transcriptionsEntropyTail[i].usr_counts.sort((a,b)=>b-a)}]`;
+                                                %>
+                                                <summary title="<%= summary %>"
+                                                    style="white-space:nowrap;overflow:hidden;width:10rem;text-overflow:ellipsis;">
+                                                    <%= summary %>
+
                                                 </summary>
                                                 <pre><%= stuff.map(([w,c])=>[c,w].join(" ")).join("\n") _%></pre>
                                         </details>
                                     </td>
                                     <td>
                                         <%= transcriptionsEntropyTail[i].ocr_transcript %>
+                                    </td>
+                                    <td>
+                                        <img style="height:1.5rem"
+                                            src="<%= `/oetzit-storage-api/words/${transcriptionsEntropyTail[i].page_id}/${transcriptionsEntropyTail[i].word_id}.png` %>">
+
                                     </td>
                                 </tr>
                                 <% } %>
