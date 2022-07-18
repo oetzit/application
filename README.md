@@ -18,6 +18,8 @@ Its name is
   - [Seeding](#seeding)
     - [Database](#database)
     - [Storage](#storage)
+  - [Dumping](#dumping)
+    - [Database](#database-1)
   - [K8s: deployment](#k8s-deployment)
   - [K8s: development](#k8s-development)
       - [Tentatively reproducing the cluster](#tentatively-reproducing-the-cluster)
@@ -143,6 +145,23 @@ npm exec ts-node src/quack/os_seeder.ts
 Set an env var with a regexp like `PAGE_FILTER=^ARBEI_1919` to filter issues.
 
 Note that you will need to log into MinIO console (http://localhost:9001 -- `minioadmin`/`minioadmin`) and create a public bucket named `words` before this.
+
+## Dumping
+
+### Database
+
+First you get the name of your pod, then do something along the lines of
+
+```bash
+kubectl exec -n kommul-dev oetzit-database-deployment-bd99cc866-mdfdx -- pg_dump --format=custom --compress=9 --verbose --username=oetzit_stg_un --dbname=oetzit_stg_db > stg.pgdump
+kubectl exec -n kommul oetzit-database-deployment-6b457cbddc-ccpfp -- pg_dump --format=custom --compress=9 --verbose --username=oetzit_prd_un --dbname=oetzit_prd_db > prd.pgdump
+```
+
+Then to restore `down` the pg container and
+
+```bash
+docker exec -i oetzi_postgres_1 pg_restore -U db_user -v -d db_name --no-owner --role=db_user < ./prd.pgdump
+```
 
 ## K8s: deployment
 
