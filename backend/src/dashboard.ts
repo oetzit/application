@@ -66,6 +66,47 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         )
         .groupByRaw("DATE(began_at), ended");
 
+      const transcriptions = connection
+        .table("words")
+        .select(
+          connection.raw(
+            "words.id, lower(words.ocr_transcript) as ocr, lower(shots.final) as usr, count(shots.id)",
+          ),
+        )
+        .join("clues", "words.id", "clues.word_id")
+        .join("shots", "clues.id", "shots.clue_id")
+        .groupBy(connection.raw("words.id, lower(shots.final)"));
+
+      const transcriptionsConfirmed = connection
+        .select(
+          connection.raw("distinct on (t.id) t.id, t.count, t.usr, t.ocr"),
+        )
+        .from(transcriptions.as("t"))
+        .where(connection.raw("t.usr = t.ocr AND t.count > 2"))
+        .orderBy("t.id", "t.count DESC");
+
+      const transcriptionsImproved = connection
+        .select(
+          connection.raw("distinct on (t.id) t.id, t.count, t.usr, t.ocr"),
+        )
+        .from(transcriptions.as("t"))
+        .where(connection.raw("t.usr != t.ocr AND t.count > 2"))
+        .orderBy("t.id", "t.count DESC");
+
+      const transcriptionsTotalCount = (
+        await connection.from(transcriptions.as("t")).count()
+      )[0].count;
+      const transcriptionsConfirmedCount = (
+        await connection.from(transcriptionsConfirmed.as("tc")).count()
+      )[0].count;
+      const transcriptionsImprovedCount = (
+        await connection.from(transcriptionsImproved.as("ti")).count()
+      )[0].count;
+      const transcriptionsPendingCount = // TODO: this conversion is ridiculous
+        parseInt(transcriptionsTotalCount.toString()) -
+        parseInt(transcriptionsConfirmedCount.toString()) -
+        parseInt(transcriptionsImprovedCount.toString());
+
       const cluesByDuration = await connection
         .table("clues")
         .select(
@@ -131,6 +172,10 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         shotsCount,
         devicesByDate,
         gamesByDate,
+        transcriptionsTotalCount,
+        transcriptionsConfirmedCount,
+        transcriptionsImprovedCount,
+        transcriptionsPendingCount,
         cluesByDuration,
         shotsByDuration,
         shotsBySimilarity,

@@ -86,6 +86,52 @@
                 <script id="devicesByDateData" type="application/json"><%- JSON.stringify(devicesByDate) %></script>
                 <canvas id="gamesByDateChart"></canvas>
 
+                <h1>Transcriptions statistics</h1>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="card text-dark bg-light m-2">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= transcriptionsPendingCount %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Words pending</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-dark bg-light m-2">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= transcriptionsTotalCount %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Words transcribed</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-dark bg-light m-2">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= transcriptionsConfirmedCount %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Words confirmed</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-dark bg-light m-2">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= transcriptionsImprovedCount %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Words improved</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <h1>Clues statistics</h1>
 
                 <script id="cluesByDurationData" type="application/json"><%- JSON.stringify(cluesByDuration) %></script>
