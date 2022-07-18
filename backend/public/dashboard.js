@@ -66,6 +66,57 @@ const gamesByDateConfig = {
 
 new Chart(document.getElementById("gamesByDateChart"), gamesByDateConfig);
 
+//=[ Transcriptions entropy ]===================================================
+
+const transcriptionsEntropyData = JSON.parse(
+  document.getElementById("transcriptionsEntropyData").textContent,
+).map((item) => [item.usr_entropy, item.usr_tot, item.usr_counts.length]);
+
+const transcriptionsEntropyConfig = {
+  type: "bubble",
+  data: {
+    datasets: [
+      {
+        data: transcriptionsEntropyData,
+        backgroundColor: "rgba(0,0,255,250)",
+      },
+    ],
+  },
+  options: {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Shannon entropy",
+        },
+      },
+      y: {
+        type: "logarithmic",
+        title: {
+          display: true,
+          text: "Transcriptions count",
+        },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: "Transcriptions distribution wrt Shannon entropy",
+      },
+      subtitle: {
+        display: true,
+        text: "Y axis is the count of transcriptions; bubble radius is the count of unique transcriptions.",
+      },
+    },
+  },
+};
+
+new Chart(
+  document.getElementById("transcriptionsEntropyChart"),
+  transcriptionsEntropyConfig,
+);
+
 //=[ Clues by duration ]========================================================
 
 const cluesByDurationData = JSON.parse(

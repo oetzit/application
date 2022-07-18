@@ -145,33 +145,40 @@
                             </tr>
                         </thead>
 
-                        <% for(var i=0; i < transcriptionsEntropy.length; i++) { %>
-                            <tr>
-                                <th scope="row" class="text-end">
-                                    <%= transcriptionsEntropy[i].usr_entropy.toFixed(5) %>
-                                </th>
-                                <td>
-                                    <%= transcriptionsEntropy[i].usr_tot %>/[<%=
-                                            transcriptionsEntropy[i].usr_counts.sort((a,b)=>b-a) %>]
-                                </td>
-                                <td>
-                                    <details>
-                                        <% const
-                                            stuff=Object.entries(transcriptionsEntropy[i].usr_transcripts).sort((a,b)=>
-                                            b[1]-a[1]) %>
-                                            <summary>
-                                                <%= stuff[0][0] %>
-                                            </summary>
-                                            <pre><%= stuff.map(([w,c])=>[c,w].join(" ")).join("\n") _%></pre>
-                                    </details>
-                                </td>
-                                <td>
-                                    <%= transcriptionsEntropy[i].ocr_transcript %>
-                                </td>
-                            </tr>
-                            <% } %>
+                        <% const transcriptionsEntropyTail=transcriptionsEntropy.filter(e=> e.usr_entropy > 0.5)
+                            %>
+
+                            <% for(var i=0; i < transcriptionsEntropyTail.length; i++) { %>
+                                <tr>
+                                    <th scope="row" class="text-end">
+                                        <%= transcriptionsEntropyTail[i].usr_entropy.toFixed(5) %>
+                                    </th>
+                                    <td>
+                                        <%= transcriptionsEntropyTail[i].usr_tot %>/[<%=
+                                                transcriptionsEntropyTail[i].usr_counts.sort((a,b)=>b-a) %>]
+                                    </td>
+                                    <td>
+                                        <details>
+                                            <% const
+                                                stuff=Object.entries(transcriptionsEntropyTail[i].usr_transcripts).sort((a,b)=>
+                                                b[1]-a[1]) %>
+                                                <summary>
+                                                    <%= stuff[0][0] %>
+                                                </summary>
+                                                <pre><%= stuff.map(([w,c])=>[c,w].join(" ")).join("\n") _%></pre>
+                                        </details>
+                                    </td>
+                                    <td>
+                                        <%= transcriptionsEntropyTail[i].ocr_transcript %>
+                                    </td>
+                                </tr>
+                                <% } %>
                     </tbody>
                 </table>
+
+                <script id="transcriptionsEntropyData"
+                    type="application/json"><%- JSON.stringify(transcriptionsEntropy) %></script>
+                <canvas id="transcriptionsEntropyChart"></canvas>
 
                 <h1>Clues statistics</h1>
 

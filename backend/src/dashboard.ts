@@ -102,16 +102,14 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .from(transcriptions.as("t"))
         .groupBy(connection.raw("id, ocr"));
 
-      const transcriptionsEntropy = (
-        await connection
-          .select(
-            connection.raw(
-              "id, usr_tot, usr_counts, (select sum(-(n::float/usr_tot)*log(n::float/usr_tot)) from unnest(usr_counts) as n) as usr_entropy, ocr_transcript, usr_transcripts",
-            ),
-          )
-          .from(transcriptionsAggregates.as("ta"))
-          .orderByRaw(connection.raw("usr_entropy DESC"))
-      ).filter((e: any) => e.usr_entropy > 0.5);
+      const transcriptionsEntropy = await connection
+        .select(
+          connection.raw(
+            "id, usr_tot, usr_counts, (select sum(-(n::float/usr_tot)*log(n::float/usr_tot)) from unnest(usr_counts) as n) as usr_entropy, ocr_transcript, usr_transcripts",
+          ),
+        )
+        .from(transcriptionsAggregates.as("ta"))
+        .orderByRaw(connection.raw("usr_entropy DESC"));
 
       const transcriptionsTotalCount = (
         await connection.from(transcriptions.as("t")).count()
