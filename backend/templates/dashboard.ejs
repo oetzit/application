@@ -131,6 +131,47 @@
                     </div>
                 </div>
 
+                <table class="table table-sm table-borderless table-striped">
+                    <caption>This table shows words with user transcription distributions with high (&gt; 0.5 Hart)
+                        Shannon entropy.</caption>
+                    <tbody>
+
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-end">User entropy</th>
+                                <th scope="col" class="text-end">User distrib.</th>
+                                <th scope="col" class="text-end">User transcr.</th>
+                                <th scope="col" class="text-end">OCR transcr.</th>
+                            </tr>
+                        </thead>
+
+                        <% for(var i=0; i < transcriptionsEntropy.length; i++) { %>
+                            <tr>
+                                <th scope="row" class="text-end">
+                                    <%= transcriptionsEntropy[i].usr_entropy.toFixed(5) %>
+                                </th>
+                                <td>
+                                    <%= transcriptionsEntropy[i].usr_tot %>/[<%=
+                                            transcriptionsEntropy[i].usr_counts.sort((a,b)=>b-a) %>]
+                                </td>
+                                <td>
+                                    <details>
+                                        <% const
+                                            stuff=Object.entries(transcriptionsEntropy[i].usr_transcripts).sort((a,b)=>
+                                            b[1]-a[1]) %>
+                                            <summary>
+                                                <%= stuff[0][0] %>
+                                            </summary>
+                                            <pre><%= stuff.map(([w,c])=>[c,w].join(" ")).join("\n") _%></pre>
+                                    </details>
+                                </td>
+                                <td>
+                                    <%= transcriptionsEntropy[i].ocr_transcript %>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
 
                 <h1>Clues statistics</h1>
 

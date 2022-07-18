@@ -93,6 +93,26 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .where(connection.raw("t.usr != t.ocr AND t.count > 2"))
         .orderBy("t.id", "t.count DESC");
 
+      const transcriptionsAggregates = connection
+        .select(
+          connection.raw(
+            "id, sum(count) as usr_tot, array_agg(count) as usr_counts, json_object_agg(usr, count) as usr_transcripts, ocr as ocr_transcript",
+          ),
+        )
+        .from(transcriptions.as("t"))
+        .groupBy(connection.raw("id, ocr"));
+
+      const transcriptionsEntropy = (
+        await connection
+          .select(
+            connection.raw(
+              "id, usr_tot, usr_counts, (select sum(-(n::float/usr_tot)*log(n::float/usr_tot)) from unnest(usr_counts) as n) as usr_entropy, ocr_transcript, usr_transcripts",
+            ),
+          )
+          .from(transcriptionsAggregates.as("ta"))
+          .orderByRaw(connection.raw("usr_entropy DESC"))
+      ).filter((e: any) => e.usr_entropy > 0.5);
+
       const transcriptionsTotalCount = (
         await connection.from(transcriptions.as("t")).count()
       )[0].count;
@@ -176,6 +196,7 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         transcriptionsConfirmedCount,
         transcriptionsImprovedCount,
         transcriptionsPendingCount,
+        transcriptionsEntropy,
         cluesByDuration,
         shotsByDuration,
         shotsBySimilarity,
