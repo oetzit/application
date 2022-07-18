@@ -78,20 +78,34 @@ const shotsByDurationConfig = {
     datasets: [
       {
         data: shotsByDurationData,
-        backgroundColor: "blue",
+        backgroundColor: [
+          ...Array(shotsByDurationData.length - 1).fill("blue"),
+          "red",
+        ],
       },
     ],
   },
   options: {
+    title: "ASD",
     scales: {
       x: {
         type: "linear",
         min: 0,
+        max: 10000,
       },
       y: {},
     },
     plugins: {
       legend: { display: false },
+      title: {
+        display: true,
+        text: "Shots duration [ms] distribution",
+      },
+
+      subtitle: {
+        display: true,
+        text: "Bins are 100ms wide, labeled by upper bound; shots >10s are lumped in the last bar.",
+      },
     },
     parsing: {
       xAxisKey: "bucket",
@@ -103,6 +117,58 @@ const shotsByDurationConfig = {
 new Chart(
   document.getElementById("shotsByDurationChart"),
   shotsByDurationConfig,
+);
+
+//=[ Shots by similarity ]======================================================
+
+const shotsBySimilarityData = JSON.parse(
+  document.getElementById("shotsBySimilarityData").textContent,
+).filter((item) => item.bucket != null);
+
+const shotsBySimilarityConfig = {
+  type: "bar",
+  data: {
+    datasets: [
+      {
+        data: shotsBySimilarityData,
+        backgroundColor: [
+          "red",
+          ...Array(shotsBySimilarityData.length - 1).fill("blue"),
+        ],
+      },
+    ],
+  },
+  options: {
+    scales: {
+      x: {
+        type: "linear",
+      },
+      y: {
+        type: "logarithmic",
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: "Shots similarity distribution",
+      },
+
+      subtitle: {
+        display: true,
+        text: "Bins are 0.1 wide, labeled by upper bound; unmatched shots are lumped in the first bar.",
+      },
+    },
+    parsing: {
+      xAxisKey: "bucket",
+      yAxisKey: "count",
+    },
+  },
+};
+
+new Chart(
+  document.getElementById("shotsBySimilarityChart"),
+  shotsBySimilarityConfig,
 );
 
 //=[ Devices behaviour ]========================================================

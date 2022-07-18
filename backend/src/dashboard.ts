@@ -70,9 +70,20 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .table("shots")
         .select(
           connection.raw(
-            "width_bucket(ended_at_gmtm - began_at_gmtm, 0, 60*1000, 60*5)*200 as bucket, count(*)",
+            "width_bucket(ended_at_gmtm - began_at_gmtm, 0, 10*1000, 100)*100 as bucket, count(*)",
           ),
         )
+        .groupBy("bucket")
+        .orderBy("bucket");
+
+      const shotsBySimilarity = await connection
+        .table("shots")
+        .select(
+          connection.raw(
+            "width_bucket(similarity, 0, 1, 9)*0.1 as bucket, count(*)",
+          ),
+        )
+        // .whereNot("similarity", -1)
         .groupBy("bucket")
         .orderBy("bucket");
 
@@ -111,6 +122,7 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         devicesByDate,
         gamesByDate,
         shotsByDuration,
+        shotsBySimilarity,
         devicesBehaviour,
         wordsPerformance,
         topWeeklyPlayers,

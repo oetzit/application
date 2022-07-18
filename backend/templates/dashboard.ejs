@@ -86,9 +86,14 @@
                 <script id="devicesByDateData" type="application/json"><%- JSON.stringify(devicesByDate) %></script>
                 <canvas id="gamesByDateChart"></canvas>
 
-                <h1>Shot count by duration [ms]</h1>
+                <h1>Shots statistics</h1>
+
                 <script id="shotsByDurationData" type="application/json"><%- JSON.stringify(shotsByDuration) %></script>
                 <canvas id="shotsByDurationChart"></canvas>
+
+                <script id="shotsBySimilarityData"
+                    type="application/json"><%- JSON.stringify(shotsBySimilarity) %></script>
+                <canvas id="shotsBySimilarityChart"></canvas>
 
                 <h1>Total gametime per device [m]</h1>
                 <script id="devicesBehaviourData"
