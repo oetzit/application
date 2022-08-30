@@ -103,7 +103,7 @@
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <%= transcriptionsConfirmedCount %>
+                                    🟢 <%= transcriptionsConfirmedCount %>
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Words confirmed</h6>
                             </div>
@@ -113,7 +113,7 @@
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <%= transcriptionsImprovedCount %>
+                                    🔴 <%= transcriptionsImprovedCount %>
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Words improved</h6>
                             </div>
@@ -123,7 +123,7 @@
                         <div class="card text-dark bg-light m-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <%= transcriptionsPendingCount %>
+                                    🟡 <%= transcriptionsPendingCount %>
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Words pending</h6>
                             </div>
@@ -142,6 +142,7 @@
                                 <th scope="col">User transcr.</th>
                                 <th scope="col">OCR transcr.</th>
                                 <th scope="col">Original</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
 
@@ -175,6 +176,13 @@
                                         <img style="height:1.5rem"
                                             src="<%= `/oetzit-storage-api/words/${transcriptionsEntropyTail[i].page_id}/${transcriptionsEntropyTail[i].word_id}.png` %>">
 
+                                    </td>
+                                    <td>
+                                        <% const
+                                            [topKey,topVal]=Object.entries(transcriptionsEntropyTail[i].usr_transcripts).sort((x,y)=>
+                                            y[1]-x[1])[0] %>
+                                            <%= topVal <=2 ? '🟡' : (topKey==transcriptionsEntropyTail[i].ocr_transcript
+                                                ? '🟢' : '🔴' ) %>
                                     </td>
                                 </tr>
                                 <% } %>
