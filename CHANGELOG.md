@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2022-08-30
+
 ### Added
 
 - Add status markers on dashboard distributions list.
@@ -290,7 +292,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.5.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...development
+[1.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.6.0...v1.7.0
+[1.6.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.5.0...v1.6.0
 [1.5.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.1...v1.5.0
 [1.4.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.0...v1.4.1
 [1.4.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.3.0...v1.4.0
