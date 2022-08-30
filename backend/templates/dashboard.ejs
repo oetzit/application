@@ -140,7 +140,7 @@
                             <tr>
                                 <th scope="col" class="text-end">Entropy</th>
                                 <th scope="col">User transcr.</th>
-                                <th scope="col">OCR transcr.</th>
+                                <th scope="col">OCR transcr. (conf.)</th>
                                 <th scope="col">Original</th>
                                 <th scope="col">Status</th>
                             </tr>
@@ -170,7 +170,8 @@
                                         </details>
                                     </td>
                                     <td>
-                                        <%= transcriptionsEntropyTail[i].ocr_transcript %>
+                                        <code><%= transcriptionsEntropyTail[i].ocr_transcript %></code>
+                                        (<%= transcriptionsEntropyTail[i].ocr_confidence.toFixed(2) %>)
                                     </td>
                                     <td>
                                         <img style="height:1.5rem"

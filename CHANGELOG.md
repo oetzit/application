@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add status markers on dashboard distributions list.
+- Add OCR confidence on dashboard distributions list.
 
 ## [1.6.0] - 2022-07-18
 

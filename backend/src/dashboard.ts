@@ -70,7 +70,7 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
         .table("words")
         .select(
           connection.raw(
-            "words.page_id, words.word_id, words.id, lower(words.ocr_transcript) as ocr, lower(shots.final) as usr, count(shots.id)",
+            "words.page_id, words.word_id, words.id, lower(words.ocr_transcript) as ocr, words.ocr_confidence, lower(shots.final) as usr, count(shots.id)",
           ),
         )
         .join("clues", "words.id", "clues.word_id")
@@ -96,16 +96,16 @@ const dashboardPlugin: FastifyPluginCallback = (fastify, options, next) => {
       const transcriptionsAggregates = connection
         .select(
           connection.raw(
-            "id, page_id, word_id, sum(count) as usr_tot, array_agg(count) as usr_counts, json_object_agg(usr, count) as usr_transcripts, ocr as ocr_transcript",
+            "id, page_id, word_id, sum(count) as usr_tot, array_agg(count) as usr_counts, json_object_agg(usr, count) as usr_transcripts, ocr as ocr_transcript, ocr_confidence",
           ),
         )
         .from(transcriptions.as("t"))
-        .groupBy(connection.raw("id, page_id, word_id, ocr"));
+        .groupBy(connection.raw("id, page_id, word_id, ocr, ocr_confidence"));
 
       const transcriptionsEntropy = await connection
         .select(
           connection.raw(
-            "id, page_id, word_id, usr_tot, usr_counts, (select sum(-(n::float/usr_tot)*log(n::float/usr_tot)) from unnest(usr_counts) as n) as usr_entropy, ocr_transcript, usr_transcripts",
+            "id, page_id, word_id, usr_tot, usr_counts, (select sum(-(n::float/usr_tot)*log(n::float/usr_tot)) from unnest(usr_counts) as n) as usr_entropy, ocr_transcript, ocr_confidence, usr_transcripts",
           ),
         )
         .from(transcriptionsAggregates.as("ta"))
