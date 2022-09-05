@@ -74,6 +74,9 @@ server.register(pointOfView, {
 import dashboardRoutes from "./dashboard";
 server.register(dashboardRoutes);
 
+import workshopRoutes from "./workshop";
+server.register(workshopRoutes, { prefix: "workshop" });
+
 // TODO: this is an horrible kludge
 import fastifyStatic from "fastify-static";
 import path from "path";

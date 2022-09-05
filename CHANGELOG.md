@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2022-09-05
+
+- Add a leaderboard view to backoffice for usage in workshops.
+
 ## [1.7.0] - 2022-08-30
 
 ### Added
@@ -292,7 +296,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.8.0...development
+[1.8.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...v1.8.0
 [1.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.6.0...v1.7.0
 [1.6.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.5.0...v1.6.0
 [1.5.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.4.1...v1.5.0

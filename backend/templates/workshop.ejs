@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./public/favicon.png">
+
+    <title>Ötzit! workshop</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+        integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"
+        integrity="sha512-OvBgP9A2JBgiRad/mM36mkzXSXaJE9BEIENnVEmeZdITvwT09xnxLtT4twkCa8m/loMbPHsvPl0T8lRGVBwjlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"
+        integrity="sha256-ErZ09KkZnzjpqcane4SCyyHsKAXMvID9/xwbl/Aq1pc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"
+        integrity="sha256-sFB24K2xU2EOgWAtb3ySAGjhMqcUvUJGmwjDcTQa04k=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <header class="navbar navbar-dark bg-dark p-1">
+        <a class="navbar-brand px-2" href="#">Ötzit! workshop</a>
+        <span class="text-light px-2">
+            <%= appVersion %>
+        </span>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-lg-8 col-md-10 mx-auto p-md-4">
+
+                <% if(mail) { %>
+
+                    <h1>Leaderboard</h1>
+                    <table class="table table-sm table-borderless table-striped">
+                        <tbody>
+                            <colgroup>
+                                <col style="width:20%">
+                                <col style="width:20%">
+                                <col style="width:20%">
+                                <col style="width:40%">
+                            </colgroup>
+
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-end">Best score</th>
+                                    <th scope="col" class="text-end">Total score</th>
+                                    <th scope="col" class="text-end">Games played</th>
+                                    <th scope="col">Player</th>
+                                </tr>
+                            </thead>
+
+                            <% for(var i=0; i < scoresByDevice.length; i++) { %>
+                                <tr>
+                                    <th scope="row" class="text-end">
+                                        <%= scoresByDevice[i].max_score %>
+                                    </th>
+                                    <td class="text-end" title="<%= JSON.stringify(scoresByDevice[i].all_scores) %>">
+                                        <%= scoresByDevice[i].sum_score %>
+                                    </td>
+                                    <td class="text-end">
+                                        <%= scoresByDevice[i].games_count %>
+                                    </td>
+                                    <td title="<%= scoresByDevice[i].device_id %>">
+                                        <%= scoresByDevice[i].email %>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+
+                    <h1>Transcriptions</h1>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card text-dark bg-light m-2">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= transcriptionsTotalCount %>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Words transcribed</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card text-dark bg-light m-2">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        🟢 <%= transcriptionsConfirmedCount %>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Words confirmed</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card text-dark bg-light m-2">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        🔴 <%= transcriptionsImprovedCount %>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Words improved</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card text-dark bg-light m-2">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        🟡 <%= transcriptionsPendingCount %>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Words pending</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-borderless table-striped">
+                        <caption>This table is sorted by entropy of the transcription distributions. Status is
+                            determined by
+                            a fitness function on the distribution (difference of top two values divided by size) with
+                            threshold 0.5. You can see both values hovering on the status dots.</caption>
+                        <tbody>
+
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Original</th>
+                                    <th scope="col">OCR transcr. (conf.)</th>
+                                    <th scope="col">User transcr.</th>
+                                </tr>
+                            </thead>
+
+                            <% for(var i=0; i < transcriptionsEntropy.length; i++) { %>
+                                <tr>
+                                    <td
+                                        title="<%= JSON.stringify({ fitness: transcriptionsEntropy[i].fitness, entropy: transcriptionsEntropy[i].usr_entropy }) %>">
+                                        <%= { pending: '🟡' , confirmed: '🟢' , improved: '🔴'
+                                            }[transcriptionsEntropy[i].status] %>
+                                    </td>
+                                    <td>
+                                        <img style="height:1.5rem"
+                                            src="<%= `/oetzit-storage-api/words/${transcriptionsEntropy[i].page_id}/${transcriptionsEntropy[i].word_id}.png` %>">
+
+                                    </td>
+                                    <td>
+                                        <code><%= transcriptionsEntropy[i].ocr_transcript %></code>
+                                        (<%= transcriptionsEntropy[i].ocr_confidence.toFixed(2) %>)
+                                    </td>
+                                    <td>
+                                        <details>
+                                            <% const
+                                                stuff=Object.entries(transcriptionsEntropy[i].usr_transcripts).sort((a,b)=>
+                                                b[1]-a[1]);
+                                                const summary =
+                                                `${transcriptionsEntropy[i].usr_tot}/[${transcriptionsEntropy[i].usr_counts}]`;
+                                                %>
+                                                <summary title="<%= summary %>"
+                                                    style="white-space:nowrap;overflow:hidden;width:10rem;text-overflow:ellipsis;">
+                                                    <%= summary %>
+
+                                                </summary>
+                                                <pre><%= stuff.map(([w,c])=>[c,w].join(" ")).join("\n") _%></pre>
+                                        </details>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" viewBox="0 0 16 16" width="24" height="24">
+                                <path fill="currentColor"
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            <div>
+                                To use this page you need to specify via the URL the mail domain you're using for the
+                                emails assigned to the devices you are giving out to teams at your workshop.<br />
+                                E.g. if your emails are
+                                <code>team-wolf@ws-1.tessmann.it</code>,
+                                <code>team-bear@ws-1.tessmann.it</code>,
+                                etc. then the correct URL to use is
+                                <a href="/workshop?mail=ws-1.tessmann.it">/workshop?mail=ws-1.tessmann.it</a>
+                            </div>
+                        </div>
+                        <% } %>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
