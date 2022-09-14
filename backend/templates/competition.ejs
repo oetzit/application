@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./public/favicon.png">
+
+    <title>Ötzit! competition</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+        integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"
+        integrity="sha512-OvBgP9A2JBgiRad/mM36mkzXSXaJE9BEIENnVEmeZdITvwT09xnxLtT4twkCa8m/loMbPHsvPl0T8lRGVBwjlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"
+        integrity="sha256-ErZ09KkZnzjpqcane4SCyyHsKAXMvID9/xwbl/Aq1pc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"
+        integrity="sha256-sFB24K2xU2EOgWAtb3ySAGjhMqcUvUJGmwjDcTQa04k=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <header class="navbar navbar-dark bg-dark p-1">
+        <a class="navbar-brand px-2" href="#">Ötzit! competition</a>
+        <span class="text-light px-2">
+            <%= appVersion %>
+        </span>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-lg-8 col-md-10 mx-auto p-md-4">
+                <h1>Top weekly players</h1>
+                <table class="table table-sm table-borderless table-striped">
+                    <tbody>
+                        <colgroup>
+                            <col style="width:8%">
+                            <col style="width:8%">
+                            <col style="width:14%">
+                            <col style="width:70%">
+                        </colgroup>
+
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-end">Week</th>
+                                <th scope="col" class="text-end">Rank</th>
+                                <th scope="col" class="text-end">Score</th>
+                                <th scope="col">Player email</th>
+                            </tr>
+                        </thead>
+
+                        <% for(var i=0; i < topWeeklyPlayers.length; i++) { %>
+                            <tr
+                                style="<%= topWeeklyPlayers[i].week != topWeeklyPlayers[i-1]?.week ? 'border-top: 2px solid black' : '' %>">
+                                <th scope="row" class="text-end">
+                                    <%= topWeeklyPlayers[i].week %>
+                                </th>
+                                <td class="text-end">
+                                    <%= topWeeklyPlayers[i].week_rank %>
+                                </td>
+                                <td class="text-end">
+                                    <%= topWeeklyPlayers[i].best_score %>
+                                </td>
+                                <td>
+                                    <span title="<%= topWeeklyPlayers[i].device_id %>">
+                                        <%= topWeeklyPlayers[i].email ?? "N/A" %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

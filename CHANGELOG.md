@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2022-09-14
+
+### Added
+
+- Whip up competition dashboard.
+
 ## [1.8.1] - 2022-09-05
 
 ### Fixed
@@ -304,7 +310,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.8.1...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.9.0...development
+[1.9.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.8.1...v1.9.0
 [1.8.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...v1.8.1
 [1.8.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...v1.8.0
 [1.7.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.6.0...v1.7.0

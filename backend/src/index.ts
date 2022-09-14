@@ -77,6 +77,9 @@ server.register(dashboardRoutes);
 import workshopRoutes from "./workshop";
 server.register(workshopRoutes, { prefix: "workshop" });
 
+import competitionRoutes from "./competition";
+server.register(competitionRoutes, { prefix: "competition" });
+
 // TODO: this is an horrible kludge
 import fastifyStatic from "fastify-static";
 import path from "path";
