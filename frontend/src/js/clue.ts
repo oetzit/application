@@ -21,18 +21,33 @@ class Clue {
   }
 
   spotlight() {
+    const freeze = () => {
+      const body = this.payload.body as Phaser.Physics.Arcade.Body;
+      if (body) {
+        body.allowGravity = false;
+        body.checkCollision.none = true;
+      }
+    };
+    freeze();
     const bounds = this.scene.uiDimensions.cluesBounds;
-    const x = bounds.centerX + this.payload.displayWidth * 0.5;
-    const y = bounds.centerY + this.payload.displayHeight * 0.5;
+    // FIXME: the very first word seems to always be too big
+    const scale = Math.min(
+      (bounds.width * 0.9) / this.payload.width,
+      (bounds.height * 0.9) / this.payload.height,
+      2 * this.payload.scale,
+    );
+    this.payload.depth = 1;
+    this.payload.setAlpha(1);
     this.scene.tweens.add({
-      scaleX: 2,
-      scaleY: 2,
-      x: x,
-      y: y,
+      alpha: 1,
+      scale: scale,
+      x: bounds.centerX,
+      y: bounds.centerY,
       targets: [this.payload],
       duration: 600,
       ease: "Elastic",
       easeParams: [1.2, 0.8],
+      onComplete: freeze.bind(this),
     });
   }
 
@@ -61,8 +76,7 @@ class Clue {
   }
 
   setPositionForDrop() {
-    const bounds = (this.payload.body as Phaser.Physics.Arcade.Body)
-      .customBoundsRectangle;
+    const bounds = this.scene.uiDimensions.cluesBounds;
     const children = this.scene.cluesGroup.children as Phaser.Structs.Set<
       Phaser.GameObjects.Text | Phaser.GameObjects.Sprite
     >;
@@ -130,7 +144,7 @@ class Clue {
   fadeIn(onComplete?: Phaser.Types.Tweens.TweenOnCompleteCallback) {
     this.scene.tweens.add({
       targets: this.payload,
-      alpha: 1,
+      alpha: 0.5,
       ease: "Linear",
       delay: 0,
       duration: 100,

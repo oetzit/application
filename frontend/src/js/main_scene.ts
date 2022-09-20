@@ -39,6 +39,8 @@ export default class MainScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
   player!: Player;
 
+  focusedFoe: Foe | undefined;
+
   async create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
 
@@ -58,6 +60,8 @@ export default class MainScene extends Phaser.Scene {
 
     this.createPhysics();
     this.initCluesGroup();
+
+    this.focusedFoe = undefined;
 
     this.player = new Player(this);
 
@@ -395,38 +399,42 @@ export default class MainScene extends Phaser.Scene {
       },
     };
 
-    // NOTE: we iterate in order, so older words are preferred
-    this.foes.forEach((foe) => {
-      // NOTE: case insensitive match is done by lowercasing because
-      // "ẞ".toLowerCase() == 'ß' (square and fair)
-      // "ß".toUpperCase() == 'SS' (weird)
-      const caselessLevenshtein = levenshtein(
-        transcription.toLowerCase(),
-        foe.beWord.ocr_transcript.toLowerCase(),
-      );
+    if (this.focusedFoe === undefined) return result;
+    const foe = this.focusedFoe;
 
-      const casefullLevenshtein = levenshtein(
-        transcription,
-        foe.beWord.ocr_transcript,
-      );
+    // NOTE: case insensitive match is done by lowercasing because
+    // "ẞ".toLowerCase() == 'ß' (square and fair)
+    // "ß".toUpperCase() == 'SS' (weird)
+    const caselessLevenshtein = levenshtein(
+      transcription.toLowerCase(),
+      foe.beWord.ocr_transcript.toLowerCase(),
+    );
 
-      // NOTE: bare minimum threshold for match
-      if (caselessLevenshtein.similarity < 0.5) return;
+    const casefullLevenshtein = levenshtein(
+      transcription,
+      foe.beWord.ocr_transcript,
+    );
 
-      // NOTE: caselessLevenshtein.similarity >= casefullLevenshtein.similarity
-      const caselessMatchImproved =
-        caselessLevenshtein.similarity > result.caselessLevenshtein.similarity;
-      const casefullMatchImproved =
-        casefullLevenshtein.similarity > result.casefullLevenshtein.similarity;
+    // NOTE: bare minimum threshold for match
+    // if (caselessLevenshtein.similarity < 0.5) return;
 
-      //  CL/CF - = +
-      //      -     ?  -> CL-/CF+ should be impossible
-      //      =     Y  -> CL=/CF+ means improved casing
-      //      + Y Y Y  -> CL+ means more correct letters
-      if (!caselessMatchImproved && !casefullMatchImproved) return;
+    // NOTE: caselessLevenshtein.similarity >= casefullLevenshtein.similarity
+    // const caselessMatchImproved =
+    //   caselessLevenshtein.similarity > result.caselessLevenshtein.similarity;
+    // const casefullMatchImproved =
+    //   casefullLevenshtein.similarity > result.casefullLevenshtein.similarity;
 
-      result = { match: foe, casefullLevenshtein, caselessLevenshtein };
-    });
+    //  CL/CF - = +
+    //      -     ?  -> CL-/CF+ should be impossible
+    //      =     Y  -> CL=/CF+ means improved casing
+    //      + Y Y Y  -> CL+ means more correct letters
+    // if (!caselessMatchImproved && !casefullMatchImproved) return;
+
+    result = {
+      match: foe,
+      casefullLevenshtein,
+      caselessLevenshtein,
+    };
     return result;
   }
 

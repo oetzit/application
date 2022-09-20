@@ -165,9 +165,11 @@ export default class FightScene extends MainScene {
       });
       this.updateScore(score);
       this.popFoe(match);
+      this.focusedFoe = undefined;
       match.handleSuccess();
       this.hud.showSubmitFeedback("green", inputStatus.final);
       new Spear(this, this.player, match.critter);
+      this.spotlight();
     }
   };
 
@@ -265,5 +267,13 @@ export default class FightScene extends MainScene {
     const foe = new Foe(this, timeout);
     foe.initialize(length, beWord, beClue, payload);
     payload.loadWord(beWord, texture);
+    this.spotlight();
+  }
+
+  spotlight() {
+    if (this.focusedFoe) return;
+    if (this.foes.length < 1) return;
+    this.focusedFoe = this.foes[0];
+    this.focusedFoe.clue.spotlight();
   }
 }

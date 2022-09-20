@@ -59,6 +59,8 @@ class Foe {
     this.critter.escape();
     this.scene.player.hitFlash();
     this.scene.updateHealth(-this.beWord.ocr_transcript.length);
+    if (this.scene.focusedFoe == this) this.scene.focusedFoe = undefined;
+    this.scene!.spotlight();
   }
 
   async handleSuccess() {
