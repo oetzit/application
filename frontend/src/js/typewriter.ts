@@ -1,3 +1,4 @@
+import SimpleKeyboard from "simple-keyboard";
 import Keyboard from "simple-keyboard";
 import { KeyboardOptions } from "simple-keyboard/build/interfaces";
 import PhysicalKeyboard from "simple-keyboard/build/services/PhysicalKeyboard";
@@ -89,7 +90,7 @@ const hackPhysicalKeyboardKeyUp = function (
 ): void {
   const buttonPressed = this.getSimpleKeyboardLayoutKey(event);
 
-  this.dispatch((instance: any) => {
+  this.dispatch((instance: SimpleKeyboard) => {
     const standardButtonPressed = instance.getButtonElement(buttonPressed);
     const functionButtonPressed = instance.getButtonElement(
       `{${buttonPressed}}`,
@@ -107,7 +108,7 @@ const hackPhysicalKeyboardKeyUp = function (
       return;
     }
 
-    if (buttonDOM && buttonDOM.removeAttribute) {
+    if (buttonDOM && !Array.isArray(buttonDOM)) {
       buttonDOM.removeAttribute("style");
 
       instance.handleButtonMouseUp(buttonName, event);
@@ -123,7 +124,7 @@ class Typewriter {
 
   onChange: (inputStatus: InputStatus) => unknown;
   onSubmit: (inputStatus: InputStatus) => unknown;
-  getGameTime: () => number; // NOTE: sigh.
+  getGameTime!: () => number; // TODO: needs to be set externally, find better api
 
   constructor(desktop: boolean) {
     this.onChange = () => undefined;

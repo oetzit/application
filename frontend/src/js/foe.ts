@@ -6,6 +6,7 @@ import MainScene from "./main_scene";
 import * as Types from "../../../backend/src/types";
 
 class Foe {
+  // TODO: too much stuff initialized outside constructor
   beWord: Types.Word;
   beClue: Types.Clue;
 

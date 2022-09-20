@@ -12,6 +12,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
   source: Player;
   target: Critter | undefined;
   body: Phaser.Physics.Arcade.Body;
+  collider!: Phaser.Physics.Arcade.Collider;
 
   constructor(scene: MainScene, source: Player, target: Critter | undefined) {
     super(scene, scene.player.x, scene.player.y, "spear");
@@ -40,10 +41,11 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
   }
 
   shootTarget() {
+    if (this.target === undefined) return;
     const theta = this.calculateSuccessfulLaunchAngle(this.source, this.target);
     if (theta) {
       this.body.setVelocity(SPEED * Math.cos(theta), SPEED * Math.sin(theta));
-      this.scene.physics.add.overlap(
+      this.collider = this.scene.physics.add.overlap(
         this,
         this.target,
         this.hitTarget.bind(this),
@@ -54,7 +56,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
   }
 
   hitTarget() {
-    this.scene.physics.world.removeCollider(this);
+    this.scene.physics.world.removeCollider(this.collider);
     this.scene.sound.play("sfx_hit_critter");
     // TODO: bounce?
     this.destroy();
@@ -83,7 +85,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
-  preUpdate(time, delta): void {
+  preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta); // NOTE: this preserves sprite animations
     if (this.body.enable) this.alignToVelocity();
   }

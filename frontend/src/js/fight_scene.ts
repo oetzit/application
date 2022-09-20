@@ -13,15 +13,14 @@ import {
   randomPareto,
   sawtoothRamp,
 } from "./utils";
-import { FightOutcome } from "./game_over_scene";
 
 export default class FightScene extends MainScene {
   game!: Game;
   tapoutEnabled = true;
   typewriterEnabled = true;
 
-  beGame: Types.Game;
-  spawner: Phaser.Time.TimerEvent;
+  beGame!: Types.Game;
+  spawner!: Phaser.Time.TimerEvent;
 
   constructor() {
     super("fight");
@@ -137,7 +136,7 @@ export default class FightScene extends MainScene {
         (casefullLevenshtein.similarity + caselessLevenshtein.similarity) / 2;
       const speedBonus =
         2 -
-        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
+        (inputStatus.ended_at_gmtm - (match.beClue.began_at_gmtm || 0)) /
           (match.duration * 1000);
       score = Math.round(lengthScore * accuracyMalus * speedBonus);
     }
@@ -236,6 +235,8 @@ export default class FightScene extends MainScene {
   async spawnFoe(length: number, timeout: number) {
     const beWord = (
       await backend.createWordChoice({
+        ocr_confidence_min: 0.4,
+        ocr_confidence_max: 0.8,
         ocr_transcript_length_min: length,
         ocr_transcript_length_max: length,
       })

@@ -22,6 +22,7 @@ const RELATIVE_SCALE_ADJUSTMENT: { [key: string]: number } = {
 };
 
 enum CritterState {
+  Initialized,
   Moving,
   Escaping,
   Fleeing,
@@ -29,7 +30,7 @@ enum CritterState {
 
 class Critter extends Phaser.Physics.Arcade.Sprite {
   baseVelocity: number;
-  state: CritterState;
+  state = CritterState.Initialized;
   scene: MainScene;
   species: string;
   body: Phaser.Physics.Arcade.Body;
@@ -67,7 +68,7 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.walk();
   }
 
-  preUpdate(time, delta) {
+  preUpdate(time: number, delta: number) {
     super.preUpdate(time, delta);
     if (
       (this.state === CritterState.Escaping && this.isOutsideRightBound()) ||

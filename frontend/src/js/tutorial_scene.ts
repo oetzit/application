@@ -48,8 +48,8 @@ export default class TutorialScene extends MainScene {
   }
 
   emptyBucket() {
-    while (this.bucket.length) {
-      this.bucket.pop()!.destroy();
+    while (this.bucket.length > 0) {
+      this.bucket.pop()?.destroy();
     }
   }
 
@@ -94,7 +94,7 @@ export default class TutorialScene extends MainScene {
         (casefullLevenshtein.similarity + caselessLevenshtein.similarity) / 2;
       const speedBonus =
         2 -
-        (inputStatus.ended_at_gmtm - match.beClue.began_at_gmtm) /
+        (inputStatus.ended_at_gmtm - (match.beClue.began_at_gmtm || 0)) /
           (match.duration * 1000);
       score = Math.round(lengthScore * accuracyMalus * speedBonus);
     }

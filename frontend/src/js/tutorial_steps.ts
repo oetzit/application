@@ -51,10 +51,19 @@ function trialRound({
         1,
         {
           id: "",
+          word_id: "",
+          page_id: "",
+          ocr_confidence: 1,
           ocr_transcript: word,
         },
         {
+          id: "",
+          word_id: "",
+          game_id: "",
+          began_at: null,
+          ended_at: null,
           began_at_gmtm: scene.getGameTime(),
+          ended_at_gmtm: null,
         },
       );
     },

@@ -28,10 +28,27 @@ class Clue {
     this.payload.loadWord(word);
   }
 
+  spotlight() {
+    const bounds = this.scene.uiDimensions.cluesBounds;
+    const x = bounds.centerX + this.payload.displayWidth * 0.5;
+    const y = bounds.centerY + this.payload.displayHeight * 0.5;
+    this.scene.tweens.add({
+      scaleX: 2,
+      scaleY: 2,
+      x: x,
+      y: y,
+      targets: [this.payload],
+      duration: 600,
+      ease: "Elastic",
+      easeParams: [1.2, 0.8],
+    });
+  }
+
   showPayload() {
     if (!this.scene.scene.isActive()) return;
-    this.scene.physics.add.existing(this.payload);
+    // this.scene.physics.add.existing(this.payload);
     this.scene.cluesGroup.add(this.payload);
+    // this.spotlight();
     this.setPositionForDrop();
     this.fadeIn();
     this.createExpirationTween();
@@ -52,8 +69,12 @@ class Clue {
   }
 
   setPositionForDrop() {
-    const bounds = this.payload.body.customBoundsRectangle;
-    const x = this.findBestDropPosition(bounds, this.scene.cluesGroup.children);
+    const bounds = (this.payload.body as Phaser.Physics.Arcade.Body)
+      .customBoundsRectangle;
+    const children = this.scene.cluesGroup.children as Phaser.Structs.Set<
+      Phaser.GameObjects.Text | Phaser.GameObjects.Sprite
+    >;
+    const x = this.findBestDropPosition(bounds, children);
     // const x = this.findRandDropPosition(bounds);
     const y = bounds.top + this.payload.displayHeight * 0.5;
     this.payload.setPosition(x, y);

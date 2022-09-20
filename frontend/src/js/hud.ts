@@ -35,7 +35,7 @@ export default class HUD {
   clock: Phaser.GameObjects.Text;
   health: Phaser.GameObjects.Text;
 
-  lowHealthPulse: Phaser.Tweens.Tween;
+  lowHealthPulse: Phaser.Tweens.Tween | undefined;
 
   constructor(scene: Phaser.Scene, options?: HudOptions) {
     this.scene = scene;
