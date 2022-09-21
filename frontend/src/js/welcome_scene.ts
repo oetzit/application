@@ -1,7 +1,9 @@
 import "phaser";
+import Game from "./game";
 import TEXT_STYLES, { makeButtonHoverable } from "./text_styles";
 
 export default class WelcomeScene extends Phaser.Scene {
+  game!: Game;
   music!: Phaser.Sound.BaseSound;
   titleText!: Phaser.GameObjects.Text;
   helpButton!: Phaser.GameObjects.Text;
@@ -26,10 +28,33 @@ export default class WelcomeScene extends Phaser.Scene {
     this.helpButton = this.createMainButton("Tutorial", 0);
     this.playButton = this.createMainButton("Play", 1);
     this.leadButton = this.createMainButton("Leaderboard", 2);
-    this.rewardsButton = this.createMainButton("Rewards", 3);
+    this.rewardsButton = this.createMainButton("🎁 Rewards 🎁", 3);
+    this.createRewardsButtonPulse();
     this.createVersionText();
 
     this.bindEvents();
+  }
+
+  createRewardsButtonPulse() {
+    if (this.game.beDevice.email) return;
+    this.tweens.addCounter({
+      from: 0,
+      to: 255,
+      duration: 1000,
+      ease: Phaser.Math.Easing.Quintic.InOut,
+      repeat: -1,
+      yoyo: true,
+      onUpdate: (tween) => {
+        const value = Math.floor(tween.getValue());
+        this.rewardsButton.setTint(
+          Phaser.Display.Color.GetColor(
+            0xff + ((0xff - 0xff) * value) / 255,
+            0xff + ((0x8c - 0xff) * value) / 255,
+            0xff + ((0x00 - 0xff) * value) / 255,
+          ),
+        );
+      },
+    });
   }
 
   createMainButton(text: string, index: number) {

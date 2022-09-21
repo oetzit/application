@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2022-09-21
+
+### Added
+
+- Rewards: rephrase to improve clarity.
+- Rewards: button flashes if email is missing
+- Rewards: added links to forms.
+
 ## [1.9.1] - 2022-09-20
 
 ### Fixed
