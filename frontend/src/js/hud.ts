@@ -104,20 +104,24 @@ export default class HUD {
   }
 
   setInput(input: string) {
-    this.input.text = input;
+    this.ifActiveSetText(this.input, input);
   }
 
   setScore(score: number) {
-    this.score.text = `${ICONS.SCORE}${THIN_SPACE}${score}`;
+    this.ifActiveSetText(this.score, `${ICONS.SCORE}${THIN_SPACE}${score}`);
   }
 
   setHealth(health: number) {
-    this.health.text = `${health}${THIN_SPACE}${ICONS.HEALTH}`;
+    this.ifActiveSetText(this.health, `${health}${THIN_SPACE}${ICONS.HEALTH}`);
   }
 
   setClock(milliseconds: number) {
-    this.clock.text = formatTime(milliseconds);
-    // this.clock.text = `${formatTime(milliseconds)}${THIN_SPACE}${ICONS.CLOCK}`;
+    this.ifActiveSetText(this.clock, formatTime(milliseconds));
+  }
+
+  ifActiveSetText(object: Phaser.GameObjects.Text, text: string) {
+    // NOTE: this is necessary because delayed event might arrive after the scene is already inactive (e.g. often happened when changing or submitting user input concurrently to game over).
+    if (object.active) object.text = text;
   }
 
   showSubmitFeedback(color: string, input: string) {
