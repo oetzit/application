@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1] - 2022-09-27
+
 ### Fixed
 
 - Crash occurring when changing/submitting input concurrently to game over.
