@@ -1,3 +1,5 @@
+import Storage from "./storage";
+
 export interface FightOutcome {
   level: number;
   words: number;
@@ -13,8 +15,10 @@ const SS_KEYS = {
 };
 
 export default class Records {
-  best = this.loadBest();
-  last = this.best;
+  storage: Storage;
+
+  best: FightOutcome;
+  last: FightOutcome;
   improved = {
     level: false,
     words: false,
@@ -22,20 +26,26 @@ export default class Records {
     timer: false,
   };
 
-  loadBest() {
+  constructor(storage: Storage) {
+    this.storage = storage;
+    this.best = this.loadBest();
+    this.last = this.best;
+  }
+
+  loadBest(): FightOutcome {
     return {
-      level: parseInt(sessionStorage.getItem(SS_KEYS.BEST_LEVEL) ?? "0"),
-      score: parseInt(sessionStorage.getItem(SS_KEYS.BEST_SCORE) ?? "0"),
-      timer: parseInt(sessionStorage.getItem(SS_KEYS.BEST_TIMER) ?? "0"),
-      words: parseInt(sessionStorage.getItem(SS_KEYS.BEST_WORDS) ?? "0"),
+      level: parseInt(this.storage.getItem(SS_KEYS.BEST_LEVEL) ?? "0"),
+      score: parseInt(this.storage.getItem(SS_KEYS.BEST_SCORE) ?? "0"),
+      timer: parseInt(this.storage.getItem(SS_KEYS.BEST_TIMER) ?? "0"),
+      words: parseInt(this.storage.getItem(SS_KEYS.BEST_WORDS) ?? "0"),
     };
   }
 
   saveBest() {
-    sessionStorage.setItem(SS_KEYS.BEST_LEVEL, this.best.level.toString());
-    sessionStorage.setItem(SS_KEYS.BEST_SCORE, this.best.score.toString());
-    sessionStorage.setItem(SS_KEYS.BEST_TIMER, this.best.timer.toString());
-    sessionStorage.setItem(SS_KEYS.BEST_WORDS, this.best.words.toString());
+    this.storage.setItem(SS_KEYS.BEST_LEVEL, this.best.level.toString());
+    this.storage.setItem(SS_KEYS.BEST_SCORE, this.best.score.toString());
+    this.storage.setItem(SS_KEYS.BEST_TIMER, this.best.timer.toString());
+    this.storage.setItem(SS_KEYS.BEST_WORDS, this.best.words.toString());
   }
 
   updateLast(last: FightOutcome) {

@@ -13,6 +13,7 @@ import RewardsScene from "./rewards_scene";
 import * as Types from "../../../backend/src/types";
 import backend from "./backend";
 import Records from "./records";
+import Storage from "./storage";
 
 const DEVICE_ID_KEY = "OETZIT/DEVICE_ID";
 
@@ -46,7 +47,8 @@ const CONFIG = {
 
 export default class Game extends Phaser.Game {
   beDevice!: Types.Device;
-  records = new Records();
+  storage = new Storage();
+  records = new Records(this.storage);
 
   constructor() {
     super(CONFIG);
@@ -55,13 +57,13 @@ export default class Game extends Phaser.Game {
   }
 
   async initBeDevice() {
-    const deviceId = sessionStorage.getItem(DEVICE_ID_KEY);
+    const deviceId = this.storage.getItem(DEVICE_ID_KEY);
     if (deviceId === null) {
       this.beDevice = (await backend.createDevice()).data;
     } else {
       this.beDevice = (await backend.getDevice(deviceId)).data;
     }
-    sessionStorage.setItem(DEVICE_ID_KEY, this.beDevice.id);
+    this.storage.setItem(DEVICE_ID_KEY, this.beDevice.id);
   }
 
   bindFocusEvents() {
