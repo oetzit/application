@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Implement fallback storage for users disabling cookies.
+- Switch (gradually) from `sessionStorage` to `localStorage`.
 
 ## [1.10.1] - 2022-09-27
 

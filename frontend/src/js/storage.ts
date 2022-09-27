@@ -4,6 +4,7 @@ export default class Storage {
 
   constructor() {
     try {
+      window.localStorage;
       window.sessionStorage;
     } catch {
       this.fallingBack = true;
@@ -17,7 +18,7 @@ export default class Storage {
     if (this.fallingBack) {
       this.fallback[key] = value;
     } else {
-      sessionStorage.setItem(key, value);
+      localStorage.setItem(key, value);
     }
   }
 
@@ -27,7 +28,8 @@ export default class Storage {
         ? this.fallback[key]
         : null;
     } else {
-      return sessionStorage.getItem(key);
+      // NOTE: sessionStorage is there because we started using that, silly me and silly Chrome. It can be removed safely in future.
+      return localStorage.getItem(key) || sessionStorage.getItem(key);
     }
   }
 }
