@@ -6,6 +6,7 @@ import HUD from "./hud";
 import Player from "./player";
 import Typewriter from "./typewriter";
 import PauseScene from "./pause_scene";
+import Logger from "./logger";
 
 export interface InputStatus {
   began_at: string;
@@ -29,6 +30,8 @@ interface UIDimensions {
 }
 
 export default class MainScene extends Phaser.Scene {
+  log = new Logger("MainScene");
+
   typewriterEnabled!: boolean;
   tapoutEnabled!: boolean;
   lastTapoutTimestamp = 0;
@@ -74,7 +77,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   async beforeGameStart() {
-    console.error("beforeGameStart not implemented");
+    this.log.error("beforeGameStart not implemented");
   }
 
   async endGame() {
@@ -88,7 +91,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   async afterGameEnd() {
-    console.error("afterGameEnd not implemented");
+    this.log.error("afterGameEnd not implemented");
   }
 
   //=[ Sprite animations ]======================================================
@@ -447,6 +450,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   submitTranscription(_inputStatus: InputStatus) {
-    console.error("submitTranscription not implemented");
+    this.log.error("submitTranscription not implemented");
   }
 }

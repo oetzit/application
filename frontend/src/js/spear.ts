@@ -5,10 +5,13 @@ import Critter from "./critter";
 import { GRAVITY_Y } from "./game";
 import newtonRaphson from "newton-raphson-method"; // TODO: TS signatures
 import Player from "./player";
+import Logger from "./logger";
 
 const SPEED = 550;
 
 class Spear extends Phaser.Physics.Arcade.Sprite {
+  log = new Logger("Spear");
+
   source: Player;
   target: Critter | undefined;
   body: Phaser.Physics.Arcade.Body;
@@ -51,7 +54,7 @@ class Spear extends Phaser.Physics.Arcade.Sprite {
         this.hitTarget.bind(this),
       );
     } else {
-      console.error("Cannot hit critter. :(");
+      this.log.error("Cannot hit critter!");
     }
   }
 

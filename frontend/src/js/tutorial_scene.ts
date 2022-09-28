@@ -1,4 +1,5 @@
 import "phaser";
+import Logger from "./logger";
 
 import MainScene, { InputStatus } from "./main_scene";
 import Spear from "./spear";
@@ -22,6 +23,8 @@ interface CreateTextOptions {
 }
 
 export default class TutorialScene extends MainScene {
+  log = new Logger("TutorialScene");
+
   tapoutEnabled = false;
   typewriterEnabled = false;
 

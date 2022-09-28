@@ -7,9 +7,12 @@ import {
   SoundEffects,
   SpriteSheets,
 } from "./assets";
+import Logger from "./logger";
 import TEXT_STYLES from "./text_styles";
 
 export default class LoadingScene extends Phaser.Scene {
+  log = new Logger("LoadingScene");
+
   progressBar!: Phaser.GameObjects.Graphics;
   progressBox!: Phaser.GameObjects.Graphics;
   progressTxt!: Phaser.GameObjects.Text;
@@ -85,7 +88,7 @@ export default class LoadingScene extends Phaser.Scene {
   }
 
   onLoadFileProgress(file: Phaser.Loader.File, _percentComplete: number) {
-    console.debug("Preloading", file.type, "asset", file.key, "from", file.url);
+    this.log.info("Preloading", file.type, "asset", file.key, "from", file.url);
   }
 
   onLoadComplete(
@@ -93,7 +96,7 @@ export default class LoadingScene extends Phaser.Scene {
     totalComplete: number,
     totalFailed: number,
   ) {
-    console.debug(
+    this.log.info(
       `Assets preloading completed. Succesful: ${totalComplete}. Failed: ${totalFailed}`,
     );
   }

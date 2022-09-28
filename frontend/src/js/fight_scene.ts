@@ -13,8 +13,11 @@ import {
   randomPareto,
   sawtoothRamp,
 } from "./utils";
+import Logger from "./logger";
 
 export default class FightScene extends MainScene {
+  log = new Logger("FightScene");
+
   game!: Game;
   tapoutEnabled = true;
   typewriterEnabled = true;
