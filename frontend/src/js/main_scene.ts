@@ -81,6 +81,9 @@ export default class MainScene extends Phaser.Scene {
   }
 
   async endGame() {
+    this.tweens.killAll();
+    this.time.removeAllEvents();
+    // TODO: are we being thorough? will the next frame always arrive in time to guarantee cleanup?
     this.setGameTimePaused(true);
     this.foes.forEach((foe) => foe.destroy());
     this.sound.play("sfx_game_over");

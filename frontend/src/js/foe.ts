@@ -49,7 +49,7 @@ class Foe {
     this.scene.sound.play("sfx_hit_player");
     this.scene.physics.world.removeCollider(this.collider);
     this.scene.popFoe(this);
-    this.clue.delete();
+    this.clue.fadeDelete();
     this.critter.escape();
     this.scene.player.hitFlash();
     this.scene.updateHealth(-this.beWord.ocr_transcript.length);
@@ -57,7 +57,7 @@ class Foe {
 
   async handleSuccess() {
     if (navigator.vibrate) navigator.vibrate([30, 60, 30]);
-    this.clue.delete();
+    this.clue.fadeDelete();
   }
 
   async handleFailure() {

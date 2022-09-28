@@ -126,8 +126,12 @@ class Clue {
   }
 
   delete() {
+    this.payload.delete();
+  }
+
+  fadeDelete() {
     this.fadeOut(() => {
-      this.payload.delete();
+      this.delete();
     });
   }
 

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Change hud check from activity to visibility.
+- Clean up timers and tweens on game over.
 
 ## [1.10.4] - 2022-09-28
 
