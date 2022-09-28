@@ -16,7 +16,7 @@ export default class WelcomeScene extends Phaser.Scene {
     super("welcome");
   }
 
-  create(data: { music?: Phaser.Sound.BaseSound }) {
+  async create(data: { music?: Phaser.Sound.BaseSound }) {
     if (data.music) {
       this.music = data.music;
     } else {
@@ -29,8 +29,11 @@ export default class WelcomeScene extends Phaser.Scene {
     this.playButton = this.createMainButton("Play", 1);
     this.leadButton = this.createMainButton("Leaderboard", 2);
     this.rewardsButton = this.createMainButton("🎁 Rewards 🎁", 3);
-    this.createRewardsButtonPulse();
+
     this.createVersionText();
+
+    await this.game.initBeDevice();
+    this.createRewardsButtonPulse();
 
     this.bindEvents();
   }

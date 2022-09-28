@@ -53,7 +53,6 @@ export default class Game extends Phaser.Game {
   constructor() {
     super(CONFIG);
     this.bindFocusEvents();
-    this.events.on(Phaser.Core.Events.READY, this.initBeDevice.bind(this));
   }
 
   async initBeDevice() {
