@@ -103,28 +103,33 @@ export default class HUD {
       .setOrigin(0.5, 0);
   }
 
+  isInactive() {
+    // NOTE: this is necessary because delayed event might arrive after the scene is already inactive (e.g. often happened when changing or submitting user input concurrently to game over) and all kind of bugs would happen then.
+    return !this.scene.scene.isActive();
+  }
+
   setInput(input: string) {
-    this.ifActiveSetText(this.input, input);
+    if (this.isInactive()) return;
+    this.input.text = input;
   }
 
   setScore(score: number) {
-    this.ifActiveSetText(this.score, `${ICONS.SCORE}${THIN_SPACE}${score}`);
+    if (this.isInactive()) return;
+    this.score.text = `${ICONS.SCORE}${THIN_SPACE}${score}`;
   }
 
   setHealth(health: number) {
-    this.ifActiveSetText(this.health, `${health}${THIN_SPACE}${ICONS.HEALTH}`);
+    if (this.isInactive()) return;
+    this.health.text = `${health}${THIN_SPACE}${ICONS.HEALTH}`;
   }
 
   setClock(milliseconds: number) {
-    this.ifActiveSetText(this.clock, formatTime(milliseconds));
-  }
-
-  ifActiveSetText(object: Phaser.GameObjects.Text, text: string) {
-    // NOTE: this is necessary because delayed event might arrive after the scene is already inactive (e.g. often happened when changing or submitting user input concurrently to game over).
-    if (object.active) object.text = text;
+    if (this.isInactive()) return;
+    this.clock.text = formatTime(milliseconds);
   }
 
   showSubmitFeedback(color: string, input: string) {
+    if (this.isInactive()) return;
     const text = this.scene.add
       .text(
         this.scene.cameras.main.width / 2,
@@ -148,6 +153,7 @@ export default class HUD {
   }
 
   announceWave(input: string) {
+    if (this.isInactive()) return;
     const text = this.scene.add
       .text(
         this.scene.cameras.main.width / 2,
@@ -173,11 +179,13 @@ export default class HUD {
   }
 
   changeFlash(object: Phaser.GameObjects.Text, color: number) {
+    if (this.isInactive()) return;
     object.setTintFill(color);
     this.scene.time.delayedCall(100, () => object.clearTint());
   }
 
   startLowHealthPulse() {
+    if (this.isInactive()) return;
     this.lowHealthPulse ??= this.scene.tweens.addCounter({
       from: 0,
       to: 255,
