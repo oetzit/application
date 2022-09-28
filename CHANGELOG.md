@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.5] - 2022-09-28
+
 ### Added
 
 - Implement improved logging.
@@ -358,7 +360,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.9.0...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.5...development
+[1.10.5]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.4...v1.10.5
+[1.10.4]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.3...v1.10.4
+[1.10.3]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.2...v1.10.3
+[1.10.2]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.1...v1.10.2
+[1.10.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.0...v1.10.1
+[1.10.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.9.1...v1.10.0
+[1.9.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.9.0...v1.9.1
 [1.9.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.8.1...v1.9.0
 [1.8.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...v1.8.1
 [1.8.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.7.0...v1.8.0
