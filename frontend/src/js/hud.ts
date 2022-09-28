@@ -103,33 +103,33 @@ export default class HUD {
       .setOrigin(0.5, 0);
   }
 
-  isInactive() {
+  isInvisible() {
     // NOTE: this is necessary because delayed event might arrive after the scene is already inactive (e.g. often happened when changing or submitting user input concurrently to game over) and all kind of bugs would happen then.
-    return !this.scene.scene.isActive();
+    return !this.scene.scene.isVisible();
   }
 
   setInput(input: string) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     this.input.text = input;
   }
 
   setScore(score: number) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     this.score.text = `${ICONS.SCORE}${THIN_SPACE}${score}`;
   }
 
   setHealth(health: number) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     this.health.text = `${health}${THIN_SPACE}${ICONS.HEALTH}`;
   }
 
   setClock(milliseconds: number) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     this.clock.text = formatTime(milliseconds);
   }
 
   showSubmitFeedback(color: string, input: string) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     const text = this.scene.add
       .text(
         this.scene.cameras.main.width / 2,
@@ -153,7 +153,7 @@ export default class HUD {
   }
 
   announceWave(input: string) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     const text = this.scene.add
       .text(
         this.scene.cameras.main.width / 2,
@@ -179,13 +179,13 @@ export default class HUD {
   }
 
   changeFlash(object: Phaser.GameObjects.Text, color: number) {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     object.setTintFill(color);
     this.scene.time.delayedCall(100, () => object.clearTint());
   }
 
   startLowHealthPulse() {
-    if (this.isInactive()) return;
+    if (this.isInvisible()) return;
     this.lowHealthPulse ??= this.scene.tweens.addCounter({
       from: 0,
       to: 255,
