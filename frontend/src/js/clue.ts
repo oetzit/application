@@ -1,31 +1,23 @@
 import "phaser";
 import MainScene from "./main_scene";
 
-import * as Types from "../../../backend/src/types";
 import { SpriteCluePayload, TextCluePayload } from "./clue_payloads";
 
 const CONCEAL_TINT = 0xaaaaaa;
 class Clue {
   scene: MainScene;
-  word: Types.Word;
   duration: number;
   payload: SpriteCluePayload | TextCluePayload;
 
-  constructor(scene: MainScene, word: Types.Word, duration: number) {
+  constructor(
+    scene: MainScene,
+    duration: number,
+    payload: SpriteCluePayload | TextCluePayload,
+  ) {
     this.scene = scene;
-    this.word = word;
     this.duration = duration;
-
-    // TODO: is this size really ok?
-    const baseHeight = Math.max(this.scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px)
-
-    this.payload =
-      this.word.id == ""
-        ? new TextCluePayload(this.scene, baseHeight)
-        : new SpriteCluePayload(this.scene, baseHeight);
-
+    this.payload = payload;
     this.payload.once("addedtoscene", this.showPayload.bind(this));
-    this.payload.loadWord(word);
   }
 
   spotlight() {

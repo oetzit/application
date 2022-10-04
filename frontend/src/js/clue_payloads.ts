@@ -1,12 +1,11 @@
 import "phaser";
 
 import { Word } from "../../../backend/src/types";
-import backend from "./backend";
 import TEXT_STYLES from "./text_styles";
 
 interface CluePayload {
   baseHeight: number;
-  loadWord: (word: Word) => void;
+  loadWord: (word: Word, texture?: { key: string; data: string }) => void;
   delete: () => void;
 }
 
@@ -55,28 +54,29 @@ export class SpriteCluePayload
     this.baseHeight = baseHeight;
   }
 
-  loadWord(word: {
-    id: string;
-    page_id: string;
-    word_id: string;
-    ocr_transcript: string;
-  }) {
-    // NOTE: this is a throwaway key, we're not leveraging cache
-    const textureKey = `${word.id}-${Date.now()}`;
-
-    backend.getWordImage(word.page_id, word.word_id).then((response) => {
-      const data = Buffer.from(response.data, "binary").toString("base64");
-      this.scene.textures.addBase64(
-        textureKey,
-        `data:image/png;base64,${data}`,
-      );
-    });
-
+  loadWord(
+    word: {
+      id: string;
+      page_id: string;
+      word_id: string;
+      ocr_transcript: string;
+    },
+    texture?: {
+      key: string;
+      data: string;
+    },
+  ) {
+    if (texture === undefined) {
+      console.error("Come on, dude. You need a texture.");
+      return;
+    }
     this.scene.textures.once("addtexture", () => {
-      this.setTexture(textureKey);
+      this.setTexture(texture.key);
       this.adjustTextureScale(word);
       this.scene.add.existing(this);
     });
+    // NOTE: async handling w/ event binding is necessary because this is SLOW
+    this.scene.textures.addBase64(texture.key, texture.data);
   }
 
   adjustTextureScale(word: { ocr_transcript: string }) {

@@ -43,29 +43,30 @@ function trialRound({
     callback: () => {
       const index = timer.repeat - timer.repeatCount;
       const word = words[index];
+      const baseHeight = Math.max(scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px) // TODO: is this size really ok?
+      const payload = new TextCluePayload(scene, baseHeight);
       const foe = new Foe(
         scene,
         fixedDuration === undefined ? word.length * 2 : fixedDuration / 1000,
       );
-      foe.initialize(
-        1,
-        {
-          id: "",
-          word_id: "",
-          page_id: "",
-          ocr_confidence: 1,
-          ocr_transcript: word,
-        },
-        {
-          id: "",
-          word_id: "",
-          game_id: "",
-          began_at: null,
-          ended_at: null,
-          began_at_gmtm: scene.getGameTime(),
-          ended_at_gmtm: null,
-        },
-      );
+      const beWord = {
+        id: "",
+        word_id: "",
+        page_id: "",
+        ocr_confidence: 1,
+        ocr_transcript: word,
+      };
+      const beClue = {
+        id: "",
+        word_id: "",
+        game_id: "",
+        began_at: null,
+        ended_at: null,
+        began_at_gmtm: scene.getGameTime(),
+        ended_at_gmtm: null,
+      };
+      foe.initialize(1, beWord, beClue, payload);
+      payload.loadWord(beWord);
     },
   });
 }

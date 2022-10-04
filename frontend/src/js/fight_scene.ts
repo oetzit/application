@@ -14,6 +14,7 @@ import {
   sawtoothRamp,
 } from "./utils";
 import Logger from "./logger";
+import { SpriteCluePayload } from "./clue_payloads";
 
 export default class FightScene extends MainScene {
   log = new Logger("FightScene");
@@ -255,7 +256,18 @@ export default class FightScene extends MainScene {
 
     if (!this.scene.isActive()) return;
 
+    const response = await backend.getWordImage(beWord.page_id, beWord.word_id);
+    const texture = {
+      key: `${beWord.id}-${Date.now()}`,
+      data: `data:image/png;base64,${Buffer.from(
+        response.data,
+        "binary",
+      ).toString("base64")}`,
+    };
+    const baseHeight = Math.max(this.cameras.main.width * 0.035, 30); // max(3.5vw,32px) // TODO: is this size really ok?
+    const payload = new SpriteCluePayload(this, baseHeight);
     const foe = new Foe(this, timeout);
-    foe.initialize(length, beWord, beClue);
+    foe.initialize(length, beWord, beClue, payload);
+    payload.loadWord(beWord, texture);
   }
 }
