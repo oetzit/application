@@ -233,7 +233,7 @@ export default class FightScene extends MainScene {
       await this.spawnFoe(length, duration);
     }
 
-    this.spawner = this.time.delayedCall(delay, this.spawnFoes.bind(this));
+    if (!this.scene.isActive()) return;
   }
 
   async spawnFoe(length: number, timeout: number) {
@@ -254,8 +254,6 @@ export default class FightScene extends MainScene {
       })
     ).data;
 
-    if (!this.scene.isActive()) return;
-
     const response = await backend.getWordImage(beWord.page_id, beWord.word_id);
     const texture = {
       key: `${beWord.id}-${Date.now()}`,
@@ -264,6 +262,9 @@ export default class FightScene extends MainScene {
         "binary",
       ).toString("base64")}`,
     };
+
+    if (!this.scene.isActive()) return;
+
     const baseHeight = Math.max(this.cameras.main.width * 0.035, 30); // max(3.5vw,32px) // TODO: is this size really ok?
     const payload = new SpriteCluePayload(this, baseHeight);
     const foe = new Foe(this, timeout);
