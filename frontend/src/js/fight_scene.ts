@@ -49,19 +49,12 @@ export default class FightScene extends MainScene {
       })
     ).data;
 
-    this.spawner.remove();
-
-    this.music.stop();
-    this.music.destroy();
-
     this.game.records.updateLast({
       level: this.getDifficulty(this.beGame.ended_at_gmtm ?? 0),
       words: this.acceptedWords,
       score: this.beGame.score ?? 0,
       timer: this.beGame.ended_at_gmtm ?? 0,
     });
-
-    this.scene.start("game_over");
   }
 
   //=[ Ambient transitions ]====================================================

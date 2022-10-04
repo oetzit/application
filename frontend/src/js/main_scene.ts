@@ -83,6 +83,12 @@ export default class MainScene extends Phaser.Scene {
   async endGame() {
     this.tweens.killAll();
     this.time.removeAllEvents();
+    // TODO: this sucks, but it will be a FightScene
+    (this as any).spawner.remove();
+
+    this.music.stop();
+    this.music.destroy();
+
     // TODO: are we being thorough? will the next frame always arrive in time to guarantee cleanup?
     this.setGameTimePaused(true);
     this.foes.forEach((foe) => foe.destroy());
@@ -91,6 +97,8 @@ export default class MainScene extends Phaser.Scene {
     this.typewriter.resetInputStatus();
 
     await this.afterGameEnd();
+
+    this.scene.start("game_over");
   }
 
   async afterGameEnd() {
