@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.6] - 2022-10-04
+
 ### Fixed
 
 - Delegate word API requests to scene in order to avoid scrambled events after game over.
@@ -366,7 +368,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.5...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.6...development
+[1.10.6]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.5...v1.10.6
 [1.10.5]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.4...v1.10.5
 [1.10.4]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.3...v1.10.4
 [1.10.3]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.2...v1.10.3
