@@ -227,6 +227,8 @@ export default class FightScene extends MainScene {
     }
 
     if (!this.scene.isActive()) return;
+
+    this.spawner = this.time.delayedCall(delay, this.spawnFoes.bind(this));
   }
 
   async spawnFoe(length: number, timeout: number) {
