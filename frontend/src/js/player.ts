@@ -9,7 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.setScale(
       // NOTE: this is a magic number related to critter height
-      (scene.cameras.main.width * 0.15) / this.displayHeight,
+      90 / this.displayHeight,
     );
     this.setPosition(
       // NOTE: just outside the bound and above the ground

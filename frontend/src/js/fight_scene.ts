@@ -260,7 +260,7 @@ export default class FightScene extends MainScene {
 
     if (!this.scene.isActive()) return;
 
-    const baseHeight = Math.max(this.cameras.main.width * 0.035, 30); // max(3.5vw,32px) // TODO: is this size really ok?
+    const baseHeight = 28;
     const payload = new SpriteCluePayload(this, baseHeight);
     const foe = new Foe(this, timeout);
     foe.initialize(length, beWord, beClue, payload);

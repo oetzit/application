@@ -12,13 +12,14 @@ const SPECIES = [
   "Deer",
 ];
 const RELATIVE_SCALE_ADJUSTMENT: { [key: string]: number } = {
-  Bear: 1.0,
-  Boar: 0.6,
-  Deer: 1.0,
-  Fox: 0.6,
-  Horse: 1.2,
-  Rabbit: 0.5,
-  Wolf: 0.7,
+  // Magic numbers yay!
+  Bear: 1.0 * 2.5,
+  Boar: 0.6 * 2.5,
+  Deer: 1.0 * 2.5,
+  Fox: 0.6 * 2.5,
+  Horse: 1.2 * 2.5,
+  Rabbit: 0.5 * 2.5,
+  Wolf: 0.7 * 2.5,
 };
 
 enum CritterState {
@@ -52,12 +53,7 @@ class Critter extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.add(this.body);
     this.setCollideWorldBounds(true);
 
-    const averageWidth = 50; // NOTE: magic number
-    const targetAverageWidth = this.scene.cameras.main.width * 0.2;
-    this.setScale(
-      (targetAverageWidth / averageWidth) *
-        RELATIVE_SCALE_ADJUSTMENT[this.species],
-    );
+    this.setScale(RELATIVE_SCALE_ADJUSTMENT[this.species]);
 
     // NOTE: just outside the bound and above the ground
     this.setPosition(

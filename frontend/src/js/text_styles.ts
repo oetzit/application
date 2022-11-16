@@ -13,6 +13,16 @@ const TEXT_STYLES: {
     testString:
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 !?;:,.-()",
   },
+  TITLE: {
+    align: "center",
+    color: "white",
+    fontFamily: FONTS.MONO,
+    fontSize: "96px",
+    fontStyle: "bold",
+    stroke: "black",
+    strokeThickness: 8,
+    testString: "ÖTZIT!",
+  },
   BUTTON: {
     color: "white",
     fontFamily: FONTS.MONO,
@@ -21,7 +31,7 @@ const TEXT_STYLES: {
     stroke: "black",
     strokeThickness: 8,
     testString: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    padding: { x: 8, y: 8 },
+    padding: { x: 4, y: 4 },
   },
   BUTTON_HOVER: {
     stroke: "darkorange",

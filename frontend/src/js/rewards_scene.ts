@@ -14,7 +14,6 @@ const RFC_5322 = new RegExp(
 export default class RewardsScene extends Phaser.Scene {
   game!: Game;
   music!: Phaser.Sound.BaseSound;
-  fontSize!: number;
   heading!: Phaser.GameObjects.Text;
   stepOne!: Phaser.GameObjects.Text;
   privacy!: Phaser.GameObjects.Text;
@@ -30,11 +29,6 @@ export default class RewardsScene extends Phaser.Scene {
 
   create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
-
-    this.fontSize = Math.min(
-      this.cameras.main.height * 0.06,
-      this.cameras.main.width * 0.03,
-    );
 
     this.heading = this.createHeading();
     this.stepOne = this.createStepOne();
@@ -63,20 +57,18 @@ export default class RewardsScene extends Phaser.Scene {
       "Are you a young South Tyrolean?\nYou can play to win prizes in two steps!";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(this.fontSize)
       .setOrigin(0.5, 0)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.05);
+      .setPosition(this.cameras.main.centerX, 32);
   }
 
   createStepOne() {
     const text = "1. Enter your email here:";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(this.fontSize)
       .setOrigin(0.5, 0)
       .setPosition(
         this.cameras.main.centerX,
-        this.heading.getBounds().bottom + this.fontSize * 0.6,
+        this.heading.getBounds().bottom + 32,
       );
   }
 
@@ -88,20 +80,20 @@ export default class RewardsScene extends Phaser.Scene {
         "",
         TEXT_STYLES.BUTTON,
       )
-      .setFontSize(this.fontSize)
+      .setFontSize(18)
       .setOrigin(0.5, 0);
   }
 
   createPrivacy() {
     const verb = this.game.device.os.desktop ? "Click" : "Tap";
-    const text = `Filling in the input you accept our privacy policy. ${verb} read it.`;
+    const text = `Filling in the input you accept our privacy policy.\n${verb} here to read it.`;
     return this.add
       .text(this.cameras.main.centerX, this.mailBox.getBounds().bottom, text, {
         ...TEXT_STYLES.BUTTON,
         testString: text,
         align: "center",
       })
-      .setFontSize(this.fontSize * 0.6)
+      .setFontSize(12)
       .setOrigin(0.5, 0);
   }
 
@@ -109,11 +101,10 @@ export default class RewardsScene extends Phaser.Scene {
     const text = "2. Register on either form:";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(this.fontSize)
       .setOrigin(0.5, 0)
       .setPosition(
         this.cameras.main.centerX,
-        this.privacy.getBounds().bottom + this.fontSize * 0.6,
+        this.privacy.getBounds().bottom + 32,
       );
   }
 
@@ -121,11 +112,10 @@ export default class RewardsScene extends Phaser.Scene {
     const text = "Italiano";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(this.fontSize)
       .setOrigin(1, 0)
       .setPosition(
-        this.cameras.main.centerX - this.fontSize * 0.5,
-        this.stepTwo.getBounds().bottom + this.fontSize * 0.25,
+        this.cameras.main.centerX - 8,
+        this.stepTwo.getBounds().bottom + 8,
       );
   }
 
@@ -133,22 +123,19 @@ export default class RewardsScene extends Phaser.Scene {
     const text = "Deutsch";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(this.fontSize)
       .setOrigin(0, 0)
       .setPosition(
-        this.cameras.main.centerX + this.fontSize * 0.5,
-        this.stepTwo.getBounds().bottom + this.fontSize * 0.25,
+        this.cameras.main.centerX + 8,
+        this.stepTwo.getBounds().bottom + 8,
       );
   }
 
   createBackBtn() {
     const text = "Back to menu";
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 32);
     return this.add
       .text(0, 0, text, TEXT_STYLES.BUTTON)
-      .setFontSize(fontSize)
       .setOrigin(0.5, 1)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95);
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height - 16);
   }
 
   bindEvents() {

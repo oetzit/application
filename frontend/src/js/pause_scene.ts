@@ -33,15 +33,11 @@ export default class PauseScene extends Phaser.Scene {
 
   drawTitle() {
     const text = "PAUSED";
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 64);
     this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(fontSize)
+      .setFontSize(64)
       .setOrigin(0.5, 1)
-      .setPosition(
-        this.cameras.main.width * 0.5,
-        this.cameras.main.height * 0.475,
-      );
+      .setPosition(this.cameras.main.centerX, this.cameras.main.centerY - 16);
   }
 
   drawCTA() {
@@ -51,15 +47,11 @@ export default class PauseScene extends Phaser.Scene {
       ? "ESC"
       : "tap";
     const text = `TAKE A BREATH\n${verb} to resume`;
-    const fontSize = Math.min(this.cameras.main.height * 0.125, 32);
     this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setFontSize(fontSize)
+      .setFontSize(32)
       .setOrigin(0.5, 0)
-      .setPosition(
-        this.cameras.main.width * 0.5,
-        this.cameras.main.height * 0.525,
-      );
+      .setPosition(this.cameras.main.centerX, this.cameras.main.centerY + 16);
   }
 
   focusPause(manual: boolean) {

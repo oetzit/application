@@ -69,8 +69,8 @@ export default class LoadingScene extends Phaser.Scene {
 
   createProgressTxt() {
     return this.make.text({
-      x: this.cameras.main.width / 2,
-      y: this.cameras.main.height / 2,
+      x: this.cameras.main.centerX,
+      y: this.cameras.main.centerY,
       origin: 0.5,
       text: "LOADING: 0%",
       style: {

@@ -25,10 +25,16 @@ export default class WelcomeScene extends Phaser.Scene {
     }
 
     this.createTitleText();
-    this.helpButton = this.createMainButton("Tutorial", 0);
-    this.playButton = this.createMainButton("Play", 1);
-    this.leadButton = this.createMainButton("Leaderboard", 2);
-    this.rewardsButton = this.createMainButton("🎁 Rewards 🎁", 3);
+
+    this.helpButton = this.createMainButton("Tutorial");
+    this.playButton = this.createMainButton("Play");
+    this.leadButton = this.createMainButton("Leaderboard");
+    this.rewardsButton = this.createMainButton("🎁 Rewards 🎁");
+
+    this.playButton.setY(this.cameras.main.centerY);
+    this.helpButton.setY(this.playButton.y - this.playButton.height);
+    this.leadButton.setY(this.playButton.y + this.playButton.height);
+    this.rewardsButton.setY(this.leadButton.y + this.leadButton.height);
 
     this.createVersionText();
 
@@ -60,32 +66,25 @@ export default class WelcomeScene extends Phaser.Scene {
     });
   }
 
-  createMainButton(text: string, index: number) {
-    const fontSize = Math.min((this.cameras.main.height * 0.5) / 4 / 1.4, 48);
+  createMainButton(text: string) {
     const button = this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY + index * fontSize * 1.4,
+        this.cameras.main.centerY,
         text,
         TEXT_STYLES.BUTTON,
       )
-      .setFontSize(fontSize)
-      .setOrigin(0.5, 1);
+      .setOrigin(0.5, 0);
     makeButtonHoverable(button);
     return button;
   }
 
   createTitleText() {
     const text = "ÖTZIT!";
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 128);
     this.titleText = this.add
-      .text(0, 0, text, {
-        ...TEXT_STYLES.BASE,
-        testString: text,
-      })
-      .setFontSize(fontSize)
-      .setOrigin(0.5, 1)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.3);
+      .text(0, 0, text, TEXT_STYLES.TITLE)
+      .setOrigin(0.5, 0)
+      .setPosition(this.cameras.main.centerX, 32);
   }
 
   createVersionText() {

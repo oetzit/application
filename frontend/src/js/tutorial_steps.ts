@@ -43,7 +43,7 @@ function trialRound({
     callback: () => {
       const index = timer.repeat - timer.repeatCount;
       const word = words[index];
-      const baseHeight = Math.max(scene.cameras.main.width * 0.035, 30); // max(3.5vw,32px) // TODO: is this size really ok?
+      const baseHeight = 32;
       const payload = new TextCluePayload(scene, baseHeight);
       const foe = new Foe(
         scene,

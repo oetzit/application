@@ -54,15 +54,10 @@ export default class LeaderboardScene extends Phaser.Scene {
 
   async createRankings() {
     const renderedRankings = this.renderRankings(this.leaderboardView);
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 24);
     this.rankings = this.add
-      .text(0, 0, renderedRankings, {
-        ...TEXT_STYLES.BASE,
-        testString: renderedRankings,
-      })
-      .setFontSize(fontSize)
+      .text(0, 0, renderedRankings, TEXT_STYLES.BASE)
       .setOrigin(0.5, 0)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.1);
+      .setPosition(this.cameras.main.centerX, 32);
   }
 
   renderRankings(leaderboardItems: LeaderboardSafeItem[]) {
@@ -120,11 +115,9 @@ export default class LeaderboardScene extends Phaser.Scene {
 
   createMessage() {
     const renderedMessage = this.renderMessage();
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 24);
     this.message = this.add
       .text(0, 0, renderedMessage, TEXT_STYLES.BASE)
       .setOrigin(0.5, 0)
-      .setFontSize(fontSize)
       .setPosition(
         this.cameras.main.centerX,
         this.rankings.getBounds().bottom + 32,
@@ -141,12 +134,10 @@ export default class LeaderboardScene extends Phaser.Scene {
 
   createBackBtn() {
     const text = "Back to menu";
-    const fontSize = Math.min(this.cameras.main.height * 0.25, 32);
     this.backBtn = this.add
       .text(0, 0, text, TEXT_STYLES.BUTTON)
       .setOrigin(0.5, 1)
-      .setFontSize(fontSize)
-      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.95);
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height - 16);
     makeButtonHoverable(this.backBtn);
   }
 

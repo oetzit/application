@@ -10,6 +10,11 @@ export default class GameOverScene extends Phaser.Scene {
   music!: Phaser.Sound.BaseSound;
   continueButton!: Phaser.GameObjects.Text;
 
+  title!: Phaser.GameObjects.Text;
+  subtitle!: Phaser.GameObjects.Text;
+  resultsCaption!: Phaser.GameObjects.Text;
+  resultsTable!: Phaser.GameObjects.Text;
+
   constructor() {
     super("game_over");
   }
@@ -22,41 +27,38 @@ export default class GameOverScene extends Phaser.Scene {
     this.music = this.sound.add("bkg_failure", { loop: false });
     this.music.play();
 
-    this.drawTitle();
-    this.drawSubtitle();
-    this.drawResult();
-    this.drawCTA();
+    this.title = this.createTitle();
+    this.subtitle = this.createSubtitle();
+    this.resultsTable = this.createResultsTable();
+    this.resultsCaption = this.createResultsCaption();
+    this.createContinueBtn();
     this.bindEvents();
   }
 
-  drawTitle() {
+  createTitle() {
     const text = "GAME OVER";
-    const title = this.add.text(0, 0, text, {
-      ...TEXT_STYLES.BASE,
-      fontSize: "48px",
-      color: "#ff0000",
-      testString: text,
-    });
-    title.setOrigin(0.5, 0);
-    title.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.1,
-    );
+    return this.add
+      .text(0, 0, text, {
+        ...TEXT_STYLES.BASE,
+        fontSize: "48px",
+        color: "#ff0000",
+        testString: text,
+      })
+      .setOrigin(0.5, 0)
+      .setPosition(this.cameras.main.centerX, 32);
   }
 
-  drawSubtitle() {
-    const text = `You contributed\n${ICONS.HEALTH} to our research! ${ICONS.HEALTH}\nThank you!`; //
-    const subtitle = this.add.text(0, 0, text, {
-      ...TEXT_STYLES.BASE,
-      fontSize: "28px",
-      color: "#aaff00",
-      testString: text,
-    });
-    subtitle.setOrigin(0.5, 0);
-    subtitle.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.2 + 16,
-    );
+  createSubtitle() {
+    const text = "You contributed to research!";
+    return this.add
+      .text(0, 0, text, {
+        ...TEXT_STYLES.BASE,
+        fontSize: "24px",
+        color: "#aaff00",
+        testString: text,
+      })
+      .setOrigin(0.5, 0)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.height * 0.25);
   }
 
   formatResult({ score, timer, words }: FightOutcome) {
@@ -77,46 +79,49 @@ export default class GameOverScene extends Phaser.Scene {
     return [wordsLabel, scoreLabel, timerLabel].join("\n");
   }
 
-  drawResult() {
+  createResultsTable() {
     const text = this.formatResult(this.game.records.last);
-    const title = this.add.text(0, 0, text, {
-      ...TEXT_STYLES.BASE,
-      fontSize: "28px",
-      testString: text,
-    });
-    title.setOrigin(0.5, 0);
-    title.setPosition(
-      this.cameras.main.width * 0.5,
-      this.cameras.main.height * 0.5,
-    );
-    if (
+    return this.add
+      .text(0, 0, text, {
+        ...TEXT_STYLES.BASE,
+        fontSize: "24px",
+        testString: text,
+      })
+      .setOrigin(0.5, 0)
+      .setPosition(this.cameras.main.centerX, this.cameras.main.centerY);
+  }
+
+  createResultsCaption() {
+    const text =
       this.game.records.improved.score ||
       this.game.records.improved.timer ||
       this.game.records.improved.words
-    ) {
-      const newPB = this.add.text(0, 0, "You set new records!", {
+        ? "You set new personal records:"
+        : "Here are your scores:";
+    return this.add
+      .text(0, 0, text, {
         ...TEXT_STYLES.BASE,
-        fontSize: "28px",
+        fontSize: "24px",
         testString: text,
-      });
-      newPB.setOrigin(0.5, 0);
-      newPB.setPosition(
+      })
+      .setOrigin(0.5, 1)
+      .setPosition(
         this.cameras.main.width * 0.5,
-        title.getBounds().bottom + 16,
+        this.resultsTable.getBounds().top - 16,
       );
-    }
   }
 
-  drawCTA() {
+  createContinueBtn() {
     const verb = this.game.device.os.desktop ? "Click" : "Tap";
     const text = `${verb} to continue`;
     this.continueButton = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.height * 0.9, text, {
-        ...TEXT_STYLES.BUTTON,
-        fontSize: "32px",
-      })
-      .setOrigin(0.5, 1)
-      .setPadding(4);
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.height - 16,
+        text,
+        TEXT_STYLES.BUTTON,
+      )
+      .setOrigin(0.5, 1);
     makeButtonHoverable(this.continueButton);
   }
 

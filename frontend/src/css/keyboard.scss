@@ -12,8 +12,8 @@ $key-width: 8vw; // 100/12 ~ 8.3
   box-sizing: border-box;
   overflow: hidden;
   width: 100%;
-  height: 100%;
-  max-height: min(40vh, 6 * $key-width);
+  height: 40vh;
+  max-height: 6 * $key-width;
 
   /* rows layout */
 
