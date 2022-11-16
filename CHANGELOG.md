@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2022-11-16
+
+### Changed
+
+- Rebrand "Rewards" as "Register".
+- Remove responsivity and hardcode sizes to bound load on old devices.
+
 ## [1.10.6] - 2022-10-04
 
 ### Fixed
@@ -368,7 +375,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.6...development
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.11.0...development
+[1.10.6]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.6...v1.11.0
 [1.10.6]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.5...v1.10.6
 [1.10.5]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.4...v1.10.5
 [1.10.4]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.3...v1.10.4
