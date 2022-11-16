@@ -21,10 +21,12 @@ export const GRAVITY_Y = 200;
 
 const CONFIG = {
   type: Phaser.AUTO,
-  // TODO: bound height, with responsive aspect ratio
   pixelArt: true,
+  width: 640,
+  height: 400,
+  autoRound: true,
   autoCenter: Phaser.Scale.CENTER_BOTH,
-  scaleMode: Phaser.Scale.RESIZE,
+  scaleMode: Phaser.Scale.FIT,
   physics: {
     default: "arcade",
     arcade: {
