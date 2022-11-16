@@ -9,7 +9,7 @@ export default class WelcomeScene extends Phaser.Scene {
   helpButton!: Phaser.GameObjects.Text;
   playButton!: Phaser.GameObjects.Text;
   leadButton!: Phaser.GameObjects.Text;
-  rewardsButton!: Phaser.GameObjects.Text;
+  registerButton!: Phaser.GameObjects.Text;
   versionText!: Phaser.GameObjects.Text;
 
   constructor() {
@@ -29,41 +29,18 @@ export default class WelcomeScene extends Phaser.Scene {
     this.helpButton = this.createMainButton("Tutorial");
     this.playButton = this.createMainButton("Play");
     this.leadButton = this.createMainButton("Leaderboard");
-    this.rewardsButton = this.createMainButton("🎁 Rewards 🎁");
+    this.registerButton = this.createMainButton("Register");
 
     this.playButton.setY(this.cameras.main.centerY);
     this.helpButton.setY(this.playButton.y - this.playButton.height);
     this.leadButton.setY(this.playButton.y + this.playButton.height);
-    this.rewardsButton.setY(this.leadButton.y + this.leadButton.height);
+    this.registerButton.setY(this.leadButton.y + this.leadButton.height);
 
     this.createVersionText();
 
     await this.game.initBeDevice();
-    this.createRewardsButtonPulse();
 
     this.bindEvents();
-  }
-
-  createRewardsButtonPulse() {
-    if (this.game.beDevice.email) return;
-    this.tweens.addCounter({
-      from: 0,
-      to: 255,
-      duration: 1000,
-      ease: Phaser.Math.Easing.Quintic.InOut,
-      repeat: -1,
-      yoyo: true,
-      onUpdate: (tween) => {
-        const value = Math.floor(tween.getValue());
-        this.rewardsButton.setTint(
-          Phaser.Display.Color.GetColor(
-            0xff + ((0xff - 0xff) * value) / 255,
-            0xff + ((0x8c - 0xff) * value) / 255,
-            0xff + ((0x00 - 0xff) * value) / 255,
-          ),
-        );
-      },
-    });
   }
 
   createMainButton(text: string) {
@@ -99,7 +76,7 @@ export default class WelcomeScene extends Phaser.Scene {
     this.helpButton.on("pointerup", this.startTutorial.bind(this));
     this.playButton.on("pointerup", this.startFight.bind(this));
     this.leadButton.on("pointerup", this.startLeaderboard.bind(this));
-    this.rewardsButton.on("pointerup", this.startRewards.bind(this));
+    this.registerButton.on("pointerup", this.startRegister.bind(this));
   }
 
   startTutorial() {
@@ -114,7 +91,7 @@ export default class WelcomeScene extends Phaser.Scene {
     this.scene.start("leaderboard", { music: this.music });
   }
 
-  startRewards() {
-    this.scene.start("rewards", { music: this.music });
+  startRegister() {
+    this.scene.start("register", { music: this.music });
   }
 }

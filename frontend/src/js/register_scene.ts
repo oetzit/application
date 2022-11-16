@@ -11,40 +11,30 @@ const RFC_5322 = new RegExp(
   /^([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])$/,
 );
 
-export default class RewardsScene extends Phaser.Scene {
+export default class RegisterScene extends Phaser.Scene {
   game!: Game;
   music!: Phaser.Sound.BaseSound;
   heading!: Phaser.GameObjects.Text;
-  stepOne!: Phaser.GameObjects.Text;
   privacy!: Phaser.GameObjects.Text;
   mailBox!: Phaser.GameObjects.Text;
-  stepTwo!: Phaser.GameObjects.Text;
-  formIta!: Phaser.GameObjects.Text;
-  formDeu!: Phaser.GameObjects.Text;
   backBtn!: Phaser.GameObjects.Text;
 
   constructor() {
-    super("rewards");
+    super("register");
   }
 
   create(data: { music: Phaser.Sound.BaseSound }) {
     this.music = data.music;
 
-    this.heading = this.createHeading();
-    this.stepOne = this.createStepOne();
     this.mailBox = this.createMailBox();
+    this.heading = this.createHeading();
     this.privacy = this.createPrivacy();
-    this.stepTwo = this.createStepTwo();
-    this.formIta = this.createFormIta();
-    this.formDeu = this.createFormDeu();
     this.backBtn = this.createBackBtn();
 
     this.refreshMailBox();
 
     makeButtonHoverable(this.mailBox);
     makeButtonHoverable(this.privacy);
-    makeButtonHoverable(this.formIta);
-    makeButtonHoverable(this.formDeu);
     makeButtonHoverable(this.backBtn);
 
     this.bindEvents();
@@ -54,21 +44,13 @@ export default class RewardsScene extends Phaser.Scene {
 
   createHeading() {
     const text =
-      "Are you a young South Tyrolean?\nYou can play to win prizes in two steps!";
+      "Are you a participating\nin a workshop/competition?\n\nEnter your email below\nto identify yourself:";
     return this.add
       .text(0, 0, text, TEXT_STYLES.BASE)
-      .setOrigin(0.5, 0)
-      .setPosition(this.cameras.main.centerX, 32);
-  }
-
-  createStepOne() {
-    const text = "1. Enter your email here:";
-    return this.add
-      .text(0, 0, text, TEXT_STYLES.BASE)
-      .setOrigin(0.5, 0)
+      .setOrigin(0.5, 1)
       .setPosition(
         this.cameras.main.centerX,
-        this.heading.getBounds().bottom + 32,
+        this.mailBox.getBounds().top - 32,
       );
   }
 
@@ -76,57 +58,28 @@ export default class RewardsScene extends Phaser.Scene {
     return this.add
       .text(
         this.cameras.main.centerX,
-        this.stepOne.getBounds().bottom,
+        this.cameras.main.centerY,
         "",
         TEXT_STYLES.BUTTON,
       )
-      .setFontSize(18)
-      .setOrigin(0.5, 0);
+      .setFontSize(20)
+      .setOrigin(0.5, 0.5);
   }
 
   createPrivacy() {
     const verb = this.game.device.os.desktop ? "Click" : "Tap";
-    const text = `Filling in the input you accept our privacy policy.\n${verb} here to read it.`;
+    const text = `Please note that by filling in the input you\naccept our privacy policy. ${verb} here to read it.`;
     return this.add
-      .text(this.cameras.main.centerX, this.mailBox.getBounds().bottom, text, {
+      .text(0, 0, text, {
         ...TEXT_STYLES.BUTTON,
         testString: text,
         align: "center",
       })
       .setFontSize(12)
-      .setOrigin(0.5, 0);
-  }
-
-  createStepTwo() {
-    const text = "2. Register on either form:";
-    return this.add
-      .text(0, 0, text, TEXT_STYLES.BASE)
       .setOrigin(0.5, 0)
       .setPosition(
         this.cameras.main.centerX,
-        this.privacy.getBounds().bottom + 32,
-      );
-  }
-
-  createFormIta() {
-    const text = "Italiano";
-    return this.add
-      .text(0, 0, text, TEXT_STYLES.BASE)
-      .setOrigin(1, 0)
-      .setPosition(
-        this.cameras.main.centerX - 8,
-        this.stepTwo.getBounds().bottom + 8,
-      );
-  }
-
-  createFormDeu() {
-    const text = "Deutsch";
-    return this.add
-      .text(0, 0, text, TEXT_STYLES.BASE)
-      .setOrigin(0, 0)
-      .setPosition(
-        this.cameras.main.centerX + 8,
-        this.stepTwo.getBounds().bottom + 8,
+        this.mailBox.getBounds().bottom + 32,
       );
   }
 
@@ -142,8 +95,6 @@ export default class RewardsScene extends Phaser.Scene {
     this.mailBox.on("pointerup", this.changeEmail.bind(this));
     this.backBtn.on("pointerup", this.backToWelcome.bind(this));
     this.privacy.on("pointerup", this.openPrivacyPolicy.bind(this));
-    this.formIta.on("pointerup", this.openFormIta.bind(this));
-    this.formDeu.on("pointerup", this.openFormDeu.bind(this));
   }
 
   async changeEmail() {
@@ -192,18 +143,6 @@ export default class RewardsScene extends Phaser.Scene {
 
   openPrivacyPolicy() {
     const url = "https://www.eurac.edu/en/static/privacy-policy-website";
-    window.open(url, "_blank");
-  }
-
-  openFormIta() {
-    const url =
-      "https://docs.google.com/forms/d/e/1FAIpQLSd8z7OTUN_cUWJmQGnsq_tjcnFq0g_fJut6rexIBZrFE68NcQ/viewform";
-    window.open(url, "_blank");
-  }
-
-  openFormDeu() {
-    const url =
-      "https://docs.google.com/forms/d/e/1FAIpQLSfIjqC-3REfQwUHRUCuIkhZ0oa1nQMCr7m5UDJwwhBidl1MDg/viewform";
     window.open(url, "_blank");
   }
 }
