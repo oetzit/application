@@ -13,7 +13,8 @@ GLIBC_KEY=https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
 
 wget -P /etc/apk/keys $GLIBC_KEY
 wget -O glibc.apk $GLIBC_URL
-apk add glibc.apk
+# NOTE: --force overwrite is just a workaround for https://github.com/sgerrand/alpine-pkg-glibc/issues/185
+apk add --force-overwrite glibc.apk
 rm glibc.apk
 
 echo "Installing unzip..."
