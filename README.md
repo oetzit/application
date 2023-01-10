@@ -180,8 +180,8 @@ Keep in mind there's a bit of back-and-forth to be done:
 
 1. apply your manifests
 2. configure MinIO from its web console
-   1. create a service account and put its credentials into `storage.secrets.env`
-   2. create a **public** bucket and put its name into `storage.secrets.env`
+   1. create a service account and put its credentials into `storage.secret.env`
+   2. create a **public** bucket and put its name into `storage.secret.env`
 3. re-apply your manifests
 4. seed the database and the storage as explained above in this guide
 5. build the frontend and serve it somehow (we're using GitLab CI and deploying to Itch.io, so you can refer to `.gitlab-ci.yml`)
