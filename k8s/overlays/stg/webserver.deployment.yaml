@@ -1,55 +1,53 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: oetzit-webserver-deployment
+  name: webserver-deployment
 spec:
   template:
     spec:
       containers:
-        - name: oetzit
-          imagePullPolicy: Always
+        - name: webserver
           env: &env
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-database-credentials
+                  name: database-secret
                   key: url
             - name: DASHBOARD_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-dashboard-credentials
+                  name: dashboard-secret
                   key: username
             - name: DASHBOARD_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-dashboard-credentials
+                  name: dashboard-secret
                   key: password
             - name: STORAGE_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: STORAGE_ACCESS_KEY
             - name: STORAGE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: STORAGE_SECRET_KEY
             - name: STORAGE_ENDPOINT
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: STORAGE_ENDPOINT
             - name: STORAGE_PORT
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: STORAGE_PORT
             - name: STORAGE_BUCKET
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: STORAGE_BUCKET
       initContainers: # TODO: use job?
-        - name: oetzit-migrator
-          imagePullPolicy: Always
+        - name: migrator
           env: *env # TODO: use configMap?

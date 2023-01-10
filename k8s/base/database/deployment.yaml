@@ -11,7 +11,8 @@ spec:
         - name: pg
           image: postgres:14-alpine
           ports:
-            - containerPort: 5432
+            - name: tcp
+              containerPort: 5432
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data

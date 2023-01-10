@@ -6,9 +6,12 @@ spec:
   replicas: 1
   template:
     spec:
+      imagePullSecrets:
+        - name: dockerconfigjson-secret
       containers:
-        - name: oetzit
-          image: oetzit-webserver-image
+        - name: webserver
+          image: backend-image
+          imagePullPolicy: Always
           resources: {}
           ports:
             - name: http
@@ -24,8 +27,9 @@ spec:
             - name: STORAGE_PORT
             - name: STORAGE_BUCKET
       initContainers:
-        - name: oetzit-migrator
-          image: oetzit-webserver-image
+        - name: migrator
+          image: backend-image
+          imagePullPolicy: Always
           resources: {}
           command: ["npm", "exec", "knex", "migrate:latest"]
           env: *env # TODO: use configMap?

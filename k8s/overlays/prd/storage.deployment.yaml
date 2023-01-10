@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: oetzit-storage-deployment
+  name: storage-deployment
 spec:
   template:
     spec:
@@ -11,15 +11,15 @@ spec:
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: MINIO_ROOT_USER
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: MINIO_ROOT_PASSWORD
             - name: MINIO_BROWSER_REDIRECT_URL
               valueFrom:
                 secretKeyRef:
-                  name: oetzit-storage-credentials
+                  name: storage-secret
                   key: MINIO_BROWSER_REDIRECT_URL

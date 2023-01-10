@@ -1,15 +1,20 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: oetzit-webserver-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
+  name: webserver-ingress
 spec:
   rules:
-    - host: kommul-dev.eurac.edu
+    - host: lt-dev.eurac.edu
       http:
         paths:
-          - path: /oetzit/
+          - path: /oetzit/backend(/|$)(.*)
+            pathType: Prefix
             backend:
-              serviceName: oetzit-webserver-service
-              servicePort: 80
+              service:
+                name: service
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - lt-dev.eurac.edu
+      secretName: lt-stg-tls

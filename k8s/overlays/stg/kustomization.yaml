@@ -1,10 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - namespace.yaml
   - ../../base
-  - webserver.ingress.yaml
-  - storage.ingress.yaml
-namespace: kommul-dev
+namespace: stg-oetzit
 commonLabels:
   eurac.edu/environment: stg
   app.kubernetes.io/part-of: oetzit
@@ -12,21 +11,25 @@ commonLabels:
 patchesStrategicMerge:
   - database.deployment.yaml
   - webserver.deployment.yaml
+  - webserver.ingress.yaml
   - storage.deployment.yaml
+  - storage.ingress.yaml
 images:
-  - name: oetzit-webserver-image
-    newName: gitlab.inf.unibz.it:4567/commul/oetzit/backend
+  - name: backend-image
+    newName: re.eurac.edu/commul/oetzit/backend
     newTag: development
+    # newName: re.eurac.edu/commul/az/helloworld
+    # newTag: latest
 secretGenerator:
   - envs:
-      - database.secrets.env
-    name: oetzit-database-credentials
+      - database.secret.env
+    name: database-secret
     type: Opaque
   - envs:
-      - dashboard.secrets.env
-    name: oetzit-dashboard-credentials
+      - dashboard.secret.env
+    name: dashboard-secret
     type: Opaque
   - envs:
-      - storage.secrets.env
-    name: oetzit-storage-credentials
+      - storage.secret.env
+    name: storage-secret
     type: Opaque

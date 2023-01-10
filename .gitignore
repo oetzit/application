@@ -3,8 +3,9 @@ postgres_data
 
 .gitsecret/keys/random_seed
 !*.secret
-k8s/overlays/stg/*.secrets.env
-k8s/overlays/prd/*.secrets.env
+k8s/base/dockerconfigjson.secret.yaml
+k8s/overlays/stg/*.secret.env
+k8s/overlays/prd/*.secret.env
 
 butler
 butler.zip
@@ -12,4 +13,3 @@ butler.zip
 libc7zip.so
 
 Makefile.env
-k8s/kubeconfig.yml

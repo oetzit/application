@@ -1,19 +1,29 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: oetzit-storage-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
+  name: storage-ingress
 spec:
   rules:
-    - host: kommul-dev.eurac.edu
+    - host: lt-dev.eurac.edu
       http:
         paths:
-          - path: /oetzit-storage-api/
+          - # NOTE: signatures are broken, but we use only public buckets anyways; I also can't be bothered to fix this on nginx side
+            path: /oetzit/storage(/|$)(.*)
+            pathType: Prefix
             backend:
-              serviceName: oetzit-storage-service
-              servicePort: 9000
-          - path: /oetzit-storage-console/
+              service:
+                name: service
+                port:
+                  name: api
+          - # NOTE: UX works only with trailing slash and I can't be bothered to fix this on nginx side
+            path: /oetzit/storage/console(/|$)(.*)
+            pathType: Prefix
             backend:
-              serviceName: oetzit-storage-service
-              servicePort: 9001
+              service:
+                name: service
+                port:
+                  name: console
+  tls:
+    - hosts:
+        - lt-dev.eurac.edu
+      secretName: lt-stg-tls
