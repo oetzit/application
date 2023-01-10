@@ -13,8 +13,6 @@ stages:
 
 .node-job: &node-job
   image: node:16-alpine
-  # tags:
-  #   - shared
   only:
     - pushes
 
@@ -216,9 +214,6 @@ stg-be-build-job:
 .fe-deploy-job:
   image: alpine:latest
   stage: deploy
-  # tags:
-  #   - shared
-  #   - commul # NOTE: we used to require commul because extended seccomp policies are needed
   before_script:
     - ./ci/install-butler-on-alpine.sh
   script:
@@ -264,18 +259,11 @@ stg-fe-deploy-job:
 
 #--[ Backend ]------------------------------------------------------------------
 
-.be-deploy-job:
-  image: alpine:latest
-  stage: deploy
-  variables:
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
-  before_script:
-    - ./ci/install-kubectl-on-alpine.sh
-  script:
-    - kubectl set image deployment/${K8S_DEPLOYMENT} oetzit=${IMAGE_NAME}:${APP_VERSION} --namespace=${K8S_NAMESPACE}
-
 prd-be-deploy-job:
-  extends: .be-deploy-job
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
   needs:
     - app-tagger-job
     - job: prd-be-build-job
@@ -283,15 +271,21 @@ prd-be-deploy-job:
   environment:
     name: production/backend
     deployment_tier: production
-    url: https://kommul.eurac.edu/oetzit
-  variables:
-    K8S_NAMESPACE: kommul
-    K8S_DEPLOYMENT: oetzit-webserver-deployment
+    url: https://lt.eurac.edu/oetzit/backend/
+  script: >-
+    kubectl set image
+    deployment/webserver-deployment
+    webserver=re.eurac.edu/${CI_PROJECT_PATH}/backend:${APP_VERSION}
+    --namespace=prd-oetzit
+    --kubeconfig=${PRD_KUBECONFIG}
   only:
     - tags
 
 stg-be-deploy-job:
-  extends: .be-deploy-job
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
   needs:
     - app-tagger-job
     - job: stg-be-build-job
@@ -299,9 +293,12 @@ stg-be-deploy-job:
   environment:
     name: staging/backend
     deployment_tier: staging
-    url: https://kommul-dev.eurac.edu/oetzit
-  variables:
-    K8S_NAMESPACE: kommul-dev
-    K8S_DEPLOYMENT: oetzit-webserver-deployment
+    url: https://lt-dev.eurac.edu/oetzit/backend/
+  script: >-
+    kubectl set image
+    deployment/webserver-deployment
+    webserver=re.eurac.edu/${CI_PROJECT_PATH}/backend:${APP_VERSION}
+    --namespace=stg-oetzit
+    --kubeconfig=${STG_KUBECONFIG}
   only:
     - development
