@@ -21,8 +21,6 @@ Its name is
   - [Dumping](#dumping)
     - [Database](#database-1)
   - [K8s: deployment](#k8s-deployment)
-  - [K8s: development](#k8s-development)
-      - [Tentatively reproducing the cluster](#tentatively-reproducing-the-cluster)
 
 ## Quickstart
 
@@ -170,15 +168,10 @@ kaz kubectl exec -n prd-oetzit -it database-deployment-7b5bdb79cf-dr9tl -- rm /t
 
 ## K8s: deployment
 
-**IMPORTANT:** while the cluster has `k8s 1.10.11` and you can easily get `kubectl 1.10.11`, **you must use `kubectl 1.11.0`** because `1.10.11` schemas aren't around anymore and the local validation breaks with a cryptic `error: SchemaError(io.k8s.apimachinery.pkg.apis.meta.v1.APIGroup_v2): invalid object doesn't have additional properties`.
-
 Whether you're deploying to staging or producton (with the `stg` or the `prd` overlays respectively), the basic command is the same:
 
 ```bash
-# Please validate before deploying (1.11.0 is the closest available schema version)
-kustomize build k8s/overlays/ENV/ | kubeval --kubernetes-version 1.11.0
-# We're on an old version and there's no -k flag:
-kustomize build k8s/overlays/ENV/ | kubectl apply -f -
+kubectl apply -k k8s/overlays/ENV/
 ```
 
 Keep in mind there's a bit of back-and-forth to be done:
@@ -192,51 +185,3 @@ Keep in mind there's a bit of back-and-forth to be done:
 5. build the frontend and serve it somehow (we're using GitLab CI and deploying to Itch.io, so you can refer to `.gitlab-ci.yml`)
 
 Also, always be careful when handling secrets -- we're keeping them in-repo using `git-secret`. Refer to its manual for usage instructions.
-
-## K8s: development
-
-**NOTE:** the k8s manifests for the `dev` overlay are out of date, so consider them and this section out of date.
-
-**NOTE:** currently we have `k8s 1.10.11` on cluster. This causes quite a few problems in reproducing the environment easily, mostly due to the fact that `1.10.11` schemas aren't around anymore and early versions of `minikube` are not easy to get.
-
-```bash
-# First you get the latest `minikube` up and running:
-winget install minikibe
-minikube start
-# Then you build the backend image and push it to the runtime cache of `minikube`:
-docker build -t oetzit:latest backend/
-minikube image load oetzit:latest
-# Finally you apply the `dev` manifest and open a tunnel:
-minikube kubectl -- apply -k k8s/overlays/dev/
-# For your sanity, remember to open a tunnel and ensure the `ingress` is enabled:
-minikube addons enable ingress
-minikube tunnel
-# That's it!
-```
-
-#### Tentatively reproducing the cluster
-
-Our current cluster has `k8s 1.10.11`.
-
-The earliest `minikube` available via `choco` reaches that, but apparently even `minikube 1.11.0` only supports up to `k8s 1.13.0` so there's no use going down that road.
-
-The earliest `minikube` available via `winget` is `1.15.1`, so we might as well go with it.
-
-```bash
-winget install minikibe --version=1.15.1
-```
-
-This way we can get back to `k8s 1.13.0`:
-
-```bash
-minikube start --kubernetes-version=v1.13.0
-```
-
-Finally, we can deploy:
-
-```bash
-# NOTE: we're using an updated kubectl on the host machine to run kustomize...
-kubectl kustomize k8s/overlays/dev | minikube kubectl -- apply -f -
-# NOTE: ... a modern version would afford us this instead
-#   minikube kubectl -- apply -k dev
-```
