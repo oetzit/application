@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: storage-ingress
+  annotations:
+    # NOTE: minio console UX works only with trailing slash
+    nginx.ingress.kubernetes.io/configuration-snippet: rewrite ^(/oetzit/storage/console)$ $1/ permanent;
 spec:
   rules:
     - host: lt-dev.eurac.edu
@@ -15,8 +18,7 @@ spec:
                 name: service
                 port:
                   name: api
-          - # NOTE: UX works only with trailing slash and I can't be bothered to fix this on nginx side
-            path: /oetzit/storage/console(/|$)(.*)
+          - path: /oetzit/storage/console(/|$)(.*)
             pathType: Prefix
             backend:
               service:
