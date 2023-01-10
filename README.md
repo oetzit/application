@@ -150,17 +150,22 @@ Note that you will need to log into MinIO console (http://localhost:9001 -- `min
 
 ### Database
 
-First you get the name of your pod, then do something along the lines of
+YMMV, but this is how you migrate from a cluster to another; this should cover all bases.
 
 ```bash
-kubectl exec -n kommul-dev oetzit-database-deployment-bd99cc866-mdfdx -- pg_dump --format=custom --compress=9 --verbose --username=oetzit_stg_un --dbname=oetzit_stg_db > stg.pgdump
-kubectl exec -n kommul oetzit-database-deployment-6b457cbddc-ccpfp -- pg_dump --format=custom --compress=9 --verbose --username=oetzit_prd_un --dbname=oetzit_prd_db > prd.pgdump
-```
-
-Then to restore `down` the pg container and
-
-```bash
-docker exec -i oetzi_postgres_1 pg_restore -U db_user -v -d db_name --no-owner --role=db_user < ./prd.pgdump
+# 1. get db pod name from old cluster
+KUBECONFIG=k8s/kubeconfig.yml kubectl get pod -n kommul
+# 2. make full dump of all db
+KUBECONFIG=k8s/kubeconfig.yml kubectl exec -n kommul oetzit-database-deployment-6b457cbddc-srxnk -- pg_dumpall --username=oetzit_prd_un > prd-dump.sql
+# 3. get db pod name from new cluster
+kaz kubectl get pod -n prd-oetzit
+# 4. copy db dump to pod
+kaz kubectl cp prd-dump.sql prd-oetzit/database-deployment-7b5bdb79cf-dr9tl:/tmp/prd-dump.sql
+# 5. load dump on new db
+# NOTE: fkeys are wonky, you might need to run it a couple of times to get all data in (yikes!)
+kaz kubectl exec -n prd-oetzit -it database-deployment-7b5bdb79cf-dr9tl -- psql --username=oetzit_prd_un --dbname=oetzit_prd_db -f /tmp/prd-dump.sql
+# 6. delete temp file
+kaz kubectl exec -n prd-oetzit -it database-deployment-7b5bdb79cf-dr9tl -- rm /tmp/prd-dump.sql
 ```
 
 ## K8s: deployment
