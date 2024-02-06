@@ -1,5 +1,8 @@
 # Ötzit!
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10623663.svg)](https://doi.org/10.5281/zenodo.10623663)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/oetzit/application/blob/main/LICENCE)
+
 This is an Ötzi-themed typing webgame.
 Its name is
 
