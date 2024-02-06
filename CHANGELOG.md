@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.1] - 2023-01-10
+
+### Changed
+
+- Update some architecture details.
+
 ## [1.11.0] - 2022-11-16
 
 ### Changed
@@ -375,8 +381,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - POC by [Giovanni Moretti](https://www.giovannimoretti.it/).
 
-[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.11.0...development
-[1.10.6]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.6...v1.11.0
+[unreleased]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.11.1...development
+[1.11.1]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.11.0...v1.11.1
+[1.11.0]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.6...v1.11.0
 [1.10.6]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.5...v1.10.6
 [1.10.5]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.4...v1.10.5
 [1.10.4]: https://gitlab.inf.unibz.it/commul/oetzit/compare/v1.10.3...v1.10.4
